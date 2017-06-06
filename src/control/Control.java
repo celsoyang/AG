@@ -16,12 +16,13 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author ceolivei
+ * @author Celso Souza
+ * @version 1.0
  */
 public class Control {
 
     /**
-     *
+     * 
      * @param obj Objeto a ser salvo
      * @param file Arquivo onde o objeto será salvo
      */
@@ -41,9 +42,8 @@ public class Control {
     }
 
     /**
-     *
      * @param file
-     * @return
+     * @return Lista de objetos Funcionario
      */
     @SuppressWarnings("Convert2Diamond")
     public static List<Funcionario> carregarFuncionarios(File file) {
@@ -69,7 +69,7 @@ public class Control {
     /**
      *
      * @param file
-     * @return
+     * @return Lista de objetos Atividade
      */
     @SuppressWarnings("Convert2Diamond")
     public static List<Atividade> carregarAtividades(File file) {

@@ -7,7 +7,7 @@ package utils;
 
 /**
  *
- * @author ceolivei
+ * @author Celso Souza
  */
 public class StringsUtils {
 

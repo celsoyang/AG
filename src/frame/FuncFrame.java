@@ -16,6 +16,8 @@ import utils.StringsUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -25,7 +27,7 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * @author ceolivei
+ * @author Celso Souza
  * 
  */
 @SuppressWarnings("FieldMayBeFinal")
@@ -52,6 +54,10 @@ public class FuncFrame extends BorderPane{
     private GridPane pnCenter = new GridPane();
     private GridPane pnButton = new GridPane();
     
+    private MenuOp menu;
+    private MenuItem menuFunc_add;
+    private MenuItem menuFunc_load;
+    
     private static Stage stage;
         
     @SuppressWarnings("Convert2Lambda")
@@ -59,6 +65,7 @@ public class FuncFrame extends BorderPane{
         setStage(stage);
         
         configCombo();
+        configMenu();
         
         pnMenu.add(new MenuOp(stage), 0, 0);
         
@@ -110,6 +117,13 @@ public class FuncFrame extends BorderPane{
             listaCargo.add(en.getDescricao());
         }
         comboCargo.getItems().addAll(listaCargo);
+    }
+
+    private void configMenu() {
+        menu = new MenuOp(stage);
+        menuFunc_add = new MenuItem("Adicionar");
+        menuFunc_load = new MenuItem("Carregar");
+        menu.getMenus().get(1).getItems().addAll(menuFunc_add, menuFunc_load);
     }
     
 }

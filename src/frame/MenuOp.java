@@ -9,49 +9,57 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 /**
  *
- * @author ceolivei
+ * @author Celso Souza
  */
 @SuppressWarnings("FieldMayBeFinal")
 public class MenuOp extends MenuBar{    
     
     private Menu menuInicio;
+    private MenuItem menuInicio_func;
+    private MenuItem menuInicio_atv;
+    private Menu menuFunc;
+    private Menu menuAtv;
     
-    private Menu menuFuncionario;
+    private Menu menuOp;
+    private MenuItem menuOp_distribuir;
     
-    private Menu menuAtividade;
-    
-    private Menu menuOpcoes;
     
     @SuppressWarnings("Convert2Lambda")
     public MenuOp(Stage stage){
         menuInicio = new Menu("Início");
-        menuFuncionario = new Menu("Funcionário");
-        menuAtividade = new Menu("Atividade");
-        menuOpcoes = new Menu("Outras");
+        menuInicio_func = new MenuItem("Perfil Funcionário");
+        menuInicio_atv = new MenuItem("Perfil Atividade");
         
-        menuInicio.getItems().addAll(menuFuncionario,menuAtividade,menuOpcoes);
+        menuInicio.getItems().addAll( menuInicio_func,menuInicio_atv);               
+        menuFunc = new Menu("Funcionário");        
+        menuAtv = new Menu("Atividade");        
+        menuOp = new Menu("Outras");
         
-        this.getMenus().addAll(menuInicio);
+        menuOp_distribuir = new MenuItem("Distribuir");
+        menuOp.getItems().addAll(menuOp_distribuir);
         
-        menuFuncionario.setOnAction(new EventHandler<ActionEvent>() {
+        this.getMenus().addAll(menuInicio, menuFunc, menuAtv, menuOp);
+        
+        menuInicio_func.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AG.loadInitialFrame(stage);
+                AG.loadFuncFrame(stage);
             }
         });
         
-        menuAtividade.setOnAction(new EventHandler<ActionEvent>() {
+        menuInicio_atv.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadAtvFrame(stage);
             }
         });
         
-        menuOpcoes.setOnAction(new EventHandler<ActionEvent>() {
+        menuOp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadOtherFrame(stage);

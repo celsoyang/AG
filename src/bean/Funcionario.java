@@ -11,7 +11,7 @@ import enums.CargoEnum;
 
 /**
  *
- * @author ceolivei
+ * @author Celso Souza
  */
 public class Funcionario {
 
