@@ -5,6 +5,8 @@
  */
 package utils;
 
+import javafx.scene.text.Font;
+
 /**
  *
  * @author Celso Souza
@@ -23,4 +25,5 @@ public class StringsUtils {
     public static final String AREA = "Área";    
     public static final String DOIS_PONTOS = ":";
     public static final String SALVAR = "Salvar";
+    public static final Font FONTE_SISTEMA = Font.font("Eras Demi ITC", 12);
 }

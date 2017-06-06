@@ -14,7 +14,7 @@ public class Numeros {
     /**
      * Altura do frame
      */
-    public static final Integer ALTURA_FRAME = 600;
+    public static final Integer ALTURA_FRAME = 300;
     
     /**
      * Largura do frame

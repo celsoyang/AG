@@ -20,6 +20,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -65,6 +66,7 @@ public class FuncFrame extends BorderPane{
         
         configCombo();
         configMenu();
+        configFields();
         
         pnMenu.add(menu, 0, 0);
         
@@ -111,7 +113,6 @@ public class FuncFrame extends BorderPane{
         }
         comboArea.getItems().addAll(listaArea);
         
-        
         for (CargoEnum en : CargoEnum.values()) {
             listaCargo.add(en.getDescricao());
         }
@@ -125,6 +126,20 @@ public class FuncFrame extends BorderPane{
         menu.getMenus().get(1).getItems().addAll(menuFunc_add, menuFunc_load);
         
         
+    }
+
+    private void configFields() {
+        lbArea.setFont(StringsUtils.FONTE_SISTEMA);
+        lbCargo.setFont(StringsUtils.FONTE_SISTEMA);
+        lbNome.setFont(StringsUtils.FONTE_SISTEMA);
+        lbTimeExp.setFont(StringsUtils.FONTE_SISTEMA);
+        lbTimeProj.setFont(StringsUtils.FONTE_SISTEMA);
+        
+        tfNome.setFont(StringsUtils.FONTE_SISTEMA);
+        tfTimeExp.setAlignment(Pos.BASELINE_RIGHT);
+        tfTimeExp.setFont(StringsUtils.FONTE_SISTEMA);
+        tfTimeProj.setAlignment(Pos.BASELINE_RIGHT);
+        tfTimeProj.setFont(StringsUtils.FONTE_SISTEMA);
     }
     
 }

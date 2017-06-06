@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  * @author Celso Souza
  */
 @SuppressWarnings("FieldMayBeFinal")
-public class MenuOp extends MenuBar{    
+public class MenuOp extends MenuBar {    
     
     private Menu menuInicio;
     private MenuItem menuInicio_func;
