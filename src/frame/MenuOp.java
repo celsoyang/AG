@@ -38,7 +38,7 @@ public class MenuOp extends MenuBar{
         menuInicio.getItems().addAll( menuInicio_func,menuInicio_atv);               
         menuFunc = new Menu("Funcionário");        
         menuAtv = new Menu("Atividade");        
-        menuOp = new Menu("Outras");
+        menuOp = new Menu("Opções");
         
         menuOp_distribuir = new MenuItem("Distribuir");
         menuOp.getItems().addAll(menuOp_distribuir);

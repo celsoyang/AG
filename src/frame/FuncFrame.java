@@ -16,7 +16,6 @@ import utils.StringsUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -42,7 +41,7 @@ public class FuncFrame extends BorderPane{
     private TextField tfNome = new TextField();
     private ComboBox<String> comboCargo = new ComboBox<>();
     private TextField tfTimeExp = new TextField();
-    private TextField tfTimeProj = new TextField();    
+    private TextField tfTimeProj = new TextField();
     private ComboBox<String> comboArea = new ComboBox<>();
     
     private FileChooser fcFunc = new FileChooser();
@@ -67,7 +66,7 @@ public class FuncFrame extends BorderPane{
         configCombo();
         configMenu();
         
-        pnMenu.add(new MenuOp(stage), 0, 0);
+        pnMenu.add(menu, 0, 0);
         
         pnCenter.add(lbNome, 0, 1);
         pnCenter.add(tfNome, 0, 2);
@@ -124,6 +123,8 @@ public class FuncFrame extends BorderPane{
         menuFunc_add = new MenuItem("Adicionar");
         menuFunc_load = new MenuItem("Carregar");
         menu.getMenus().get(1).getItems().addAll(menuFunc_add, menuFunc_load);
+        
+        
     }
     
 }
