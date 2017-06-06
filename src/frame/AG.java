@@ -15,7 +15,8 @@ import utils.Numeros;
 
 /**
  *
- * @author ceolivei
+ * @author Celso Souza
+ * @version 1.0
  */
 public class AG extends Application {
     

@@ -11,14 +11,9 @@ package utils;
  */
 public class Numeros {
     
-    /**
-     * Altura do frame
-     */
+    
     public static final Integer ALTURA_FRAME = 300;
     
-    /**
-     * Largura do frame
-     */
     public static final Integer LARGURA_FRAME = 700;
     
 }
