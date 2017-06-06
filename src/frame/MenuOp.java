@@ -18,40 +18,40 @@ import javafx.stage.Stage;
 @SuppressWarnings("FieldMayBeFinal")
 public class MenuOp extends MenuBar{    
     
-    private Menu menuPrinc;
+    private Menu menuInicio;
     
-    private Menu opFunc;
+    private Menu menuFuncionario;
     
-    private Menu opAtv;
+    private Menu menuAtividade;
     
-    private Menu opOther;
+    private Menu menuOpcoes;
     
     @SuppressWarnings("Convert2Lambda")
     public MenuOp(Stage stage){
-        opFunc = new Menu("Funcionário");
-        opAtv = new Menu("Atividade");
-        opOther = new Menu("Outras");        
-        menuPrinc = new Menu("Início");
+        menuInicio = new Menu("Início");
+        menuFuncionario = new Menu("Funcionário");
+        menuAtividade = new Menu("Atividade");
+        menuOpcoes = new Menu("Outras");
         
-        menuPrinc.getItems().addAll(opFunc,opAtv,opOther);
+        menuInicio.getItems().addAll(menuFuncionario,menuAtividade,menuOpcoes);
         
-        this.getMenus().addAll(menuPrinc);
+        this.getMenus().addAll(menuInicio);
         
-        opFunc.setOnAction(new EventHandler<ActionEvent>() {
+        menuFuncionario.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadInitialFrame(stage);
             }
         });
         
-        opAtv.setOnAction(new EventHandler<ActionEvent>() {
+        menuAtividade.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadAtvFrame(stage);
             }
         });
         
-        opOther.setOnAction(new EventHandler<ActionEvent>() {
+        menuOpcoes.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadOtherFrame(stage);
