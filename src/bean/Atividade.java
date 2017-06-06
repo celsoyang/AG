@@ -22,7 +22,37 @@ public class Atividade implements Serializable {
     private Integer nivel = null;
     
     private AreaEnum area = null;
-    
-    
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(Integer nivel) {
+        this.nivel = nivel;
+    }
+
+    public AreaEnum getArea() {
+        return area;
+    }
+
+    public void setArea(AreaEnum area) {
+        this.area = area;
+    }
     
 }
