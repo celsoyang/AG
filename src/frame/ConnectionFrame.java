@@ -29,13 +29,11 @@ public class ConnectionFrame extends BorderPane {
 
     private Label lbSgbd;
     private Label lbBanco;
-    private Label lbPorta;
     private Label lbUser;
     private Label lbSenha;
     
     private ComboBox<String> comboSgbd;
     private ComboBox<String> comboBanco;
-    private TextField tfPorta;
     private TextField tfUser;
     private PasswordField pfSenha;
 
@@ -49,12 +47,10 @@ public class ConnectionFrame extends BorderPane {
 
     public ConnectionFrame(Stage stage) {
         lbBanco = new Label("Banco");
-        lbPorta = new Label("Porta");
         lbSenha = new Label("Senha");
         lbSgbd = new Label("SGBD");
         lbUser = new Label("Usuário");
 
-        tfPorta = new TextField();
         pfSenha = new PasswordField();
         tfUser = new TextField();
 
@@ -72,8 +68,6 @@ public class ConnectionFrame extends BorderPane {
         pnCenter.add(comboSgbd, 0, 1);
         pnCenter.add(lbBanco, 0, 2);
         pnCenter.add(comboBanco, 0, 3);
-        pnCenter.add(lbPorta, 0, 4);
-        pnCenter.add(tfPorta, 0, 5);
         pnCenter.add(lbUser, 0, 6);
         pnCenter.add(tfUser, 0, 7);
         pnCenter.add(lbSenha, 0, 8);
@@ -84,6 +78,8 @@ public class ConnectionFrame extends BorderPane {
 
         pnBottom = new GridPane();
         pnBottom.add(btConectar, 0, 0);
+        
+        configFields();
 
         this.setTop(pnTop);
         this.setCenter(pnCenter);
@@ -104,9 +100,17 @@ public class ConnectionFrame extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 SgbdEnum en = SgbdEnum.getByDescricao(comboSgbd.getValue());
-                Conexao.startConnection(en.getUrlConnection(),
-                        StringsUtils.POSTGRE, comboBanco.getValue(), "localhost", en.getPorta(), tfUser.getText(), pfSenha.getText());
+                Conexao.startConnection(en.getUrlConnection(), StringsUtils.POSTGRE, 
+                        comboBanco.getValue(), en.getPorta(), tfUser.getText(), pfSenha.getText());
             }
         });
+    }
+
+    private void configFields() {
+        lbBanco.setFont(StringsUtils.FONTE_SISTEMA);
+        lbSenha.setFont(StringsUtils.FONTE_SISTEMA);
+        lbSgbd.setFont(StringsUtils.FONTE_SISTEMA);
+        lbUser.setFont(StringsUtils.FONTE_SISTEMA);
+        tfUser.setFont(StringsUtils.FONTE_SISTEMA);        
     }
 }

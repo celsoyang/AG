@@ -27,19 +27,19 @@ public class Conexao {
     private static String driver;
     private static String str_connection;
 
-    public static void startConnection(String url, String sgbd, String banco, String local, Integer porta, String user, String password) {
+    public static void startConnection(String url, String sgbd, String banco, Integer porta, String user, String password) {
 
         if (sgbd.equalsIgnoreCase("PostgreSql")) {
-            connectPostgre(url, banco, local, porta, user, password);
+            connectPostgre(url, banco, porta, user, password);
         } else if (sgbd.equalsIgnoreCase("SqlServer")) {
-            connectSqlServer(banco, local, porta, user, password);
+            connectSqlServer(banco, porta, user, password);
         }
     }
     
-    private static void connectPostgre(String url, String banco, String local, Integer porta, String user, String password) {
+    private static void connectPostgre(String url, String banco, Integer porta, String user, String password) {
         try {
             Class.forName(StringsUtils.DRIVER_POSTGRE);
-            setConention(DriverManager.getConnection(url + "://" + local + ":" + porta + "/" + banco, user, password));
+            setConention(DriverManager.getConnection(url + "://localhost:" + porta + "/" + banco, user, password));
             
             JOptionPane.showMessageDialog(null, "Connectado");
         } catch (ClassNotFoundException | SQLException ex) {
@@ -48,7 +48,7 @@ public class Conexao {
         }
     }
     
-    private static void connectSqlServer(String banco, String local, Integer porta, String user, String password) {
+    private static void connectSqlServer(String banco, Integer porta, String user, String password) {
     }
 
     public static Connection getConention() {
