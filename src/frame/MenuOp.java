@@ -5,12 +5,14 @@
  */
 package frame;
 
+import control.Conexao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import utils.StringsUtils;
 
 /**
  *
@@ -26,7 +28,7 @@ public class MenuOp extends MenuBar {
     private Menu menuAtv;
     
     private Menu menuOp;
-    private MenuItem menuOp_distribuir;
+    private MenuItem menuOp_conexao;
     
     
     @SuppressWarnings("Convert2Lambda")
@@ -40,8 +42,8 @@ public class MenuOp extends MenuBar {
         menuAtv = new Menu("Atividade");        
         menuOp = new Menu("Opções");
         
-        menuOp_distribuir = new MenuItem("Distribuir");
-        menuOp.getItems().addAll(menuOp_distribuir);
+        menuOp_conexao = new MenuItem("Distribuir");
+        menuOp.getItems().addAll(menuOp_conexao);
         
         this.getMenus().addAll(menuInicio, menuFunc, menuAtv, menuOp);
         
@@ -63,6 +65,13 @@ public class MenuOp extends MenuBar {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadOtherFrame(stage);
+            }
+        });
+        
+        menuOp_conexao.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Conexao.startConnection(StringsUtils.POSTGRE, "ag", "localhost", "5432", "postgres", "celsoyang");
             }
         });
         

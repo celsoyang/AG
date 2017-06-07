@@ -29,4 +29,7 @@ public class StringsUtils {
     public static final String PATH_FUNCIONARIOS = "../files/funcionarios.func";
     public static final String PATH_ATIVIDADES = "../files/atividades.atv";
     public static final String LIMPAR = "Limpar";
+    public static final String DRIVER_POSTGRE = "org.postgresql.Driver";
+    public static final String POSTGRE = "PostgreSql";
+    public static final String SQL_SERVER = "SqlServer";
 }

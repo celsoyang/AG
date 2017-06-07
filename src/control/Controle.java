@@ -73,9 +73,10 @@ public class Controle {
 
     /**
      * @return Lista de objetos Funcionario
+     * @throws java.io.IOException
      */
     @SuppressWarnings({"Convert2Diamond", "InfiniteRecursion"})
-    public static List<Funcionario> carregarFuncionarios() {
+    public static List<Funcionario> carregarFuncionarios() throws IOException {
         List<Funcionario> retorno = null;
         FileInputStream fis;
         ObjectInputStream ois;
@@ -89,6 +90,7 @@ public class Controle {
             retorno = (List<Funcionario>) ois.readObject();
         } catch (FileNotFoundException ex) {
             file.mkdir();
+            file.createNewFile();
             return carregarFuncionarios();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
