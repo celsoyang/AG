@@ -5,6 +5,7 @@
  */
 package enums;
 
+import java.util.Objects;
 import utils.StringsUtils;
 
 /**
@@ -21,11 +22,11 @@ public enum AreaEnum {
 
     Integer codigo = null;
 
-    String nome = StringsUtils.VAZIA;
+    String descricao = StringsUtils.VAZIA;
 
     private AreaEnum(Integer cod, String desc) {
         codigo = cod;
-        nome = desc;
+        descricao = desc;
     }
 
     public Integer getCodigo() {
@@ -36,12 +37,40 @@ public enum AreaEnum {
         this.codigo = codigo;
     }
 
-    public String getNome() {
-        return nome;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    /**
+     *
+     * @param desc
+     * @return enum correspondente
+     */
+    public static AreaEnum getByDescricao(String desc) {
+        for (AreaEnum en : AreaEnum.values()) {
+            if (en.getDescricao().equalsIgnoreCase(desc)) {
+                return en;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param cod
+     * @return enum correspondente
+     */
+    public static AreaEnum getByCodigo(Integer cod) {
+        for (AreaEnum en : AreaEnum.values()) {
+            if (Objects.equals(cod, en.getCodigo())) {
+                return en;
+            }
+        }
+        return null;
     }
 
 }

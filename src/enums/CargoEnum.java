@@ -5,6 +5,7 @@
  */
 package enums;
 
+import java.util.Objects;
 import utils.StringsUtils;
 
 /**
@@ -55,4 +56,31 @@ public enum CargoEnum {
         this.level = level;
     }
 
+    /**
+     *
+     * @param desc
+     * @return enum correspondente
+     */
+    public static CargoEnum getByDescricao(String desc) {
+        for (CargoEnum en : CargoEnum.values()) {
+            if (en.getDescricao().equalsIgnoreCase(desc)) {
+                return en;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param cod
+     * @return enum correspondente
+     */
+    public static CargoEnum getByCodigo(Integer cod) {
+        for (CargoEnum en : CargoEnum.values()) {
+            if (Objects.equals(en.getCodigo(), cod)) {
+                return en;
+            }
+        }
+        return null;
+    }
 }

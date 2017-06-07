@@ -26,4 +26,7 @@ public class StringsUtils {
     public static final String DOIS_PONTOS = ":";
     public static final String SALVAR = "Salvar";
     public static final Font FONTE_SISTEMA = Font.font("Georgia", 13);
+    public static final String PATH_FUNCIONARIOS = "../files/funcionarios.func";
+    public static final String PATH_ATIVIDADES = "../files/atividades.atv";
+    public static final String LIMPAR = "Limpar";
 }

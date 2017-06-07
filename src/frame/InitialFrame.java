@@ -44,8 +44,7 @@ public class InitialFrame extends BorderPane {
         
         pnTop.add(menu, 0, 0);
         
-        this.setTop(pnTop);
-        
+        this.setTop(pnTop);        
     }
 
     private void configMenu(Stage stage) {

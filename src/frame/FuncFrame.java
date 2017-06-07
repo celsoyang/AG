@@ -5,10 +5,13 @@
  */
 package frame;
 
+import bean.Funcionario;
+import control.Controle;
 import enums.AreaEnum;
 import enums.CargoEnum;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -48,7 +51,7 @@ public class FuncFrame extends BorderPane{
     private FileChooser fcFunc = new FileChooser();
     
     private Button btSalvar = new Button(StringsUtils.SALVAR);
-    private Button btCancel = new Button(StringsUtils.CANCELAR);
+    private Button btLimpar = new Button(StringsUtils.LIMPAR);
     
     private GridPane pnMenu = new GridPane();
     private GridPane pnCenter = new GridPane();
@@ -67,6 +70,7 @@ public class FuncFrame extends BorderPane{
         configCombo();
         configMenu();
         configFields();
+        configButton();
         
         pnMenu.add(menu, 0, 0);
         
@@ -82,7 +86,7 @@ public class FuncFrame extends BorderPane{
         pnCenter.add(comboArea, 0, 10);
         
         pnButton.setAlignment(Pos.CENTER);
-        pnButton.addRow(0, btSalvar, btCancel);
+        pnButton.addRow(0, btSalvar, btLimpar);
         
         this.setTop(pnMenu);
         this.setCenter(pnCenter);
@@ -109,7 +113,7 @@ public class FuncFrame extends BorderPane{
         List<String> listaArea = new ArrayList<>();
         List<String> listaCargo = new ArrayList<>();
         for (AreaEnum en: AreaEnum.values()) {
-            listaArea.add(en.getNome());
+            listaArea.add(en.getDescricao());
         }
         comboArea.getItems().addAll(listaArea);
         
@@ -140,6 +144,22 @@ public class FuncFrame extends BorderPane{
         tfTimeExp.setFont(StringsUtils.FONTE_SISTEMA);
         tfTimeProj.setAlignment(Pos.BASELINE_RIGHT);
         tfTimeProj.setFont(StringsUtils.FONTE_SISTEMA);
+    }
+
+    @SuppressWarnings("Convert2Lambda")
+    private void configButton() {
+        btSalvar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Funcionario func = new Funcionario();
+                func.setNome(tfNome.getText());
+                func.setCargo(CargoEnum.getByDescricao(comboCargo.getValue()));
+                func.setTempoExp(Double.valueOf(tfTimeExp.getText()));
+                func.setTempoProj(Double.valueOf(tfTimeProj.getText()));                
+                func.setArea(AreaEnum.getByDescricao(comboArea.getValue()));
+                Controle.salvarFuncionario(func);
+            }
+        });
     }
     
 }
