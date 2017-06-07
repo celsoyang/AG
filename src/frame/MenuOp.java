@@ -42,7 +42,7 @@ public class MenuOp extends MenuBar {
         menuAtv = new Menu("Atividade");        
         menuOp = new Menu("Opções");
         
-        menuOp_conexao = new MenuItem("Distribuir");
+        menuOp_conexao = new MenuItem("Abrir Conexão");
         menuOp.getItems().addAll(menuOp_conexao);
         
         this.getMenus().addAll(menuInicio, menuFunc, menuAtv, menuOp);
@@ -71,7 +71,7 @@ public class MenuOp extends MenuBar {
         menuOp_conexao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Conexao.startConnection(StringsUtils.POSTGRE, "ag", "localhost", "5432", "postgres", "celsoyang");
+                AG.loadConnectionFrame(stage);
             }
         });
         

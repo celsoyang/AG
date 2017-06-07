@@ -5,19 +5,28 @@
  */
 package frame;
 
+import control.Conexao;
+import enums.SgbdEnum;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import utils.StringsUtils;
 
 /**
  *
  * @author ceolivei
  */
-public class ConnectionFrame extends BorderPane{
-    
+@SuppressWarnings("FieldMayBeFinal")
+public class ConnectionFrame extends BorderPane {
+
     private Label lbSgbd;
     private Label lbBanco;
     private Label lbPorta;
@@ -28,13 +37,76 @@ public class ConnectionFrame extends BorderPane{
     private ComboBox<String> comboBanco;
     private TextField tfPorta;
     private TextField tfUser;
-    private TextField tfSenha;
-    
+    private PasswordField pfSenha;
+
+    private Button btConectar;
+
     private GridPane pnTop;
-    private GridPane pncenter;
+    private GridPane pnCenter;
     private GridPane pnBottom;
-    
-    public ConnectionFrame(Stage stage){
+
+    private MenuOp menu;
+
+    public ConnectionFrame(Stage stage) {
         lbBanco = new Label("Banco");
+        lbPorta = new Label("Porta");
+        lbSenha = new Label("Senha");
+        lbSgbd = new Label("SGBD");
+        lbUser = new Label("Usuário");
+
+        tfPorta = new TextField();
+        pfSenha = new PasswordField();
+        tfUser = new TextField();
+
+        comboBanco = new ComboBox<>();
+        comboSgbd = new ComboBox<>();
+
+        configCombo();
+
+        menu = new MenuOp(stage);
+        pnTop = new GridPane();
+        pnTop.add(menu, 0, 0);
+
+        pnCenter = new GridPane();
+        pnCenter.add(lbSgbd, 0, 0);
+        pnCenter.add(comboSgbd, 0, 1);
+        pnCenter.add(lbBanco, 0, 2);
+        pnCenter.add(comboBanco, 0, 3);
+        pnCenter.add(lbPorta, 0, 4);
+        pnCenter.add(tfPorta, 0, 5);
+        pnCenter.add(lbUser, 0, 6);
+        pnCenter.add(tfUser, 0, 7);
+        pnCenter.add(lbSenha, 0, 8);
+        pnCenter.add(pfSenha, 0, 9);
+
+        btConectar = new Button("Conectar");
+        configButton();
+
+        pnBottom = new GridPane();
+        pnBottom.add(btConectar, 0, 0);
+
+        this.setTop(pnTop);
+        this.setCenter(pnCenter);
+        this.setBottom(pnBottom);
+        this.setPadding(new Insets(0, 10, 10, 10));
+    }
+
+    private void configCombo() {
+        for (SgbdEnum en : SgbdEnum.values()) {
+            comboBanco.getItems().add(en.getBanco());
+            comboSgbd.getItems().add(en.getDescricao());
+        }
+    }
+
+    @SuppressWarnings("Convert2Lambda")
+    private void configButton() {
+        btConectar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                SgbdEnum en = SgbdEnum.getByDescricao(comboSgbd.getValue());
+                Conexao.startConnection(en.getUrlConnection(),
+                        StringsUtils.POSTGRE, comboBanco.getValue(), "localhost", en.getPorta(), tfUser.getText(), pfSenha.getText());
+            }
+        });
     }
 }
