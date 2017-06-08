@@ -41,5 +41,8 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="ag" match-schema="public"/>
+  <table-filter match-name="cargo"/>
+  <table-filter match-name="area"/>
   <table-filter match-name="funcionario"/>
+  <table-filter match-name="atividade"/>
 </hibernate-reverse-engineering>

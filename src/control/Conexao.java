@@ -35,19 +35,18 @@ public class Conexao {
             connectSqlServer(banco, porta, user, password);
         }
     }
-    
+
     private static void connectPostgre(String url, String banco, Integer porta, String user, String password) {
         try {
             Class.forName(StringsUtils.DRIVER_POSTGRE);
             setConention(DriverManager.getConnection(url + "://localhost:" + porta + "/" + banco, user, password));
-            
             JOptionPane.showMessageDialog(null, "Connectado");
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private static void connectSqlServer(String banco, Integer porta, String user, String password) {
     }
 
@@ -98,9 +97,5 @@ public class Conexao {
     public static void setStr_connection(String str_connection) {
         Conexao.str_connection = str_connection;
     }
-    
-    
-    
-    
 
 }

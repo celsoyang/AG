@@ -1,7 +1,8 @@
--- Database: ag
+/**
+ * CREATE DATABASE AND TABLES FOR POSTGRES SQL
+ */
 
--- DROP DATABASE ag;
-/*
+
 CREATE DATABASE ag
     WITH 
     OWNER = postgres
@@ -10,22 +11,18 @@ CREATE DATABASE ag
     LC_CTYPE = 'Portuguese_Brazil.1252'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
-    
-    alter table funcionario
-    add PRIMARY KEY (codigo)
-   */
+
    CREATE TABLE FUNCIONARIO
    (
-       CODIGO INT NOTNULL PRIMARY KEY,
+       CODIGO INT NOT NULL PRIMARY KEY,
        NOME VARCHAR(255),
-       CARGO INT FOREIGN KEY REFERENCES CARGO(CODIGO),
+       CARGO INT REFERENCES CARGO(CODIGO),
        TEMPO_EXP FLOAT,
        TEMPO_PROJ FLOAT,
-       AREA INT FOREIGN KEY REFERENCES AREA(CODIGO)
-       
+       AREA INT  REFERENCES AREA(CODIGO)       
    )
    
-   CREATE TABLE CARGO
+  CREATE TABLE CARGO
   (
       CODIGO INT PRIMARY KEY,
       DESCRICAO VARCHAR(255)
@@ -42,6 +39,25 @@ CREATE DATABASE ag
       CODIGO INT PRIMARY KEY,
       DESCRICAO VARCHAR(255),
       PRAZO FLOAT,
-      FUNCIONARIO  INT FOREIGN KEY REFERENCES FUNCIONARIO (CODIGO)
-      
+      FUNCIONARIO  INT REFERENCES FUNCIONARIO (CODIGO)      
   )
+  
+  select * from cargo
+  
+  insert into cargo values(1,'Programador Jr.')
+  insert into cargo values(2,'Programador Pleno')
+  insert into cargo values(3,'Analista Jr.')
+  insert into cargo values(4,'Analista Pleno')
+  insert into cargo values(5,'Analista Sênior')
+  insert into area values(1,'Desenvolvimento')
+  
+  select * from area
+  insert into area values(1,'Desenvolvimento')
+  insert into area values(2,'Análise de Software')
+  insert into area values(3,'Análise de Requisítos')
+  insert into area values(4,'Banco de Dados')
+  insert into area values(5,'Teste')
+  
+  select * from funcionario
+  
+  insert into funcionario values( 1, 'Celso Oliveira de Souza', 2, 2.5, 1.0,1)

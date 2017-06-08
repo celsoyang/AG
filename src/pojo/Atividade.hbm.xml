@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 08/06/2017 15:34:48 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pojo.Atividade" table="atividade" schema="public" optimistic-lock="version">
+        <id name="codigo" type="int">
+            <column name="codigo" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="funcionario" class="pojo.Funcionario" fetch="select">
+            <column name="funcionario" />
+        </many-to-one>
+        <property name="descricao" type="string">
+            <column name="descricao" />
+        </property>
+        <property name="prazo" type="java.lang.Double">
+            <column name="prazo" precision="17" scale="17" />
+        </property>
+    </class>
+</hibernate-mapping>
