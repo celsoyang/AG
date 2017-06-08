@@ -1,0 +1,47 @@
+-- Database: ag
+
+-- DROP DATABASE ag;
+/*
+CREATE DATABASE ag
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+    
+    alter table funcionario
+    add PRIMARY KEY (codigo)
+   */
+   CREATE TABLE FUNCIONARIO
+   (
+       CODIGO INT NOTNULL PRIMARY KEY,
+       NOME VARCHAR(255),
+       CARGO INT FOREIGN KEY REFERENCES CARGO(CODIGO),
+       TEMPO_EXP FLOAT,
+       TEMPO_PROJ FLOAT,
+       AREA INT FOREIGN KEY REFERENCES AREA(CODIGO)
+       
+   )
+   
+   CREATE TABLE CARGO
+  (
+      CODIGO INT PRIMARY KEY,
+      DESCRICAO VARCHAR(255)
+  )
+  
+  CREATE TABLE AREA
+  (
+      CODIGO INT PRIMARY KEY,
+      DESCRICAO VARCHAR(255)
+  )
+  
+  CREATE TABLE ATIVIDADE
+  (
+      CODIGO INT PRIMARY KEY,
+      DESCRICAO VARCHAR(255),
+      PRAZO FLOAT,
+      FUNCIONARIO  INT FOREIGN KEY REFERENCES FUNCIONARIO (CODIGO)
+      
+  )

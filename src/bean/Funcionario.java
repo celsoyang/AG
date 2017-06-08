@@ -15,6 +15,7 @@ import enums.CargoEnum;
  */
 public class Funcionario {
 
+    
     private Integer codigo = null;
 
     private String nome = StringsUtils.VAZIA;
