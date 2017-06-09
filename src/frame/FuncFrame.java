@@ -164,10 +164,9 @@ public class FuncFrame extends BorderPane{
                 func.setCargo(comboCargo.getValue());
                 func.setTempoExp(tfTimeExp.getText());
                 func.setTempoProj(tfTimeProj.getText());
-                func.setArea(comboArea.getValue());
-                
+                func.setArea(comboArea.getValue());                
 
-                EntityManagerFactory factory = Persistence.createEntityManagerFactory("");
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
                 
                 EntityManager entityManager = factory.createEntityManager();
                 
