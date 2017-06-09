@@ -8,25 +8,40 @@ package bean;
 import enums.AreaEnum;
 import utils.StringsUtils;
 import enums.CargoEnum;
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Celso Souza
  */
-public class Funcionario {
-
+@Entity
+@Table(name="funcionario")
+public class Funcionario implements Serializable {
     
+    @Id 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer codigo = null;
 
+    @Column
     private String nome = StringsUtils.VAZIA;
 
-    private CargoEnum cargo = null;
+    @Column
+    private String cargo = null;
 
-    private Double tempoExp = null;
+    @Column
+    private String tempoExp = null;
     
-    private Double tempoProj = null;
+    @Column
+    private String tempoProj = null;
     
-    private AreaEnum area = null;
+    @Column
+    private String area = null;
 
     public Integer getCodigo() {
         return codigo;
@@ -44,35 +59,36 @@ public class Funcionario {
         this.nome = nome;
     }
 
-    public CargoEnum getCargo() {
+    public String getCargo() {
         return cargo;
     }
 
-    public void setCargo(CargoEnum cargo) {
+    public void setCargo(String cargo) {
         this.cargo = cargo;
     }
 
-    public Double getTempoExp() {
+    public String getTempoExp() {
         return tempoExp;
     }
 
-    public void setTempoExp(Double tempoExp) {
+    public void setTempoExp(String tempoExp) {
         this.tempoExp = tempoExp;
     }
 
-    public Double getTempoProj() {
+    public String getTempoProj() {
         return tempoProj;
     }
 
-    public void setTempoProj(Double tempoProj) {
+    public void setTempoProj(String tempoProj) {
         this.tempoProj = tempoProj;
     }
 
-    public AreaEnum getArea() {
+    public String getArea() {
         return area;
     }
 
-    public void setArea(AreaEnum area) {
+    public void setArea(String area) {
         this.area = area;
-    }    
+    }
+    
 }

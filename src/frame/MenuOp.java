@@ -28,7 +28,7 @@ public class MenuOp extends MenuBar {
     private Menu menuAtv;
     
     private Menu menuOp;
-    private MenuItem menuOp_conexao;
+    private MenuItem menuOp_opcao;
     
     
     @SuppressWarnings("Convert2Lambda")
@@ -42,8 +42,8 @@ public class MenuOp extends MenuBar {
         menuAtv = new Menu("Atividade");        
         menuOp = new Menu("Opções");
         
-        menuOp_conexao = new MenuItem("Abrir Conexão");
-        menuOp.getItems().addAll(menuOp_conexao);
+        menuOp_opcao = new MenuItem("Opção");
+        menuOp.getItems().addAll(menuOp_opcao);
         
         this.getMenus().addAll(menuInicio, menuFunc, menuAtv, menuOp);
         
@@ -68,10 +68,9 @@ public class MenuOp extends MenuBar {
             }
         });
         
-        menuOp_conexao.setOnAction(new EventHandler<ActionEvent>() {
+        menuOp_opcao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AG.loadConnectionFrame(stage);
             }
         });
         

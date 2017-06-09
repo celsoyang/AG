@@ -23,10 +23,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -123,12 +125,18 @@ public class FuncFrame extends BorderPane{
         comboCargo.getItems().addAll(listaCargo);
     }
 
+    @SuppressWarnings("Convert2Lambda")
     private void configMenu() {
         menu = new MenuOp(stage);
         menuFunc_add = new MenuItem("Adicionar");
         menuFunc_load = new MenuItem("Carregar");
         menu.getMenus().get(1).getItems().addAll(menuFunc_add, menuFunc_load);
         
+        menuFunc_load.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            }
+        });
         
     }
 
@@ -153,11 +161,23 @@ public class FuncFrame extends BorderPane{
             public void handle(ActionEvent event) {
                 Funcionario func = new Funcionario();
                 func.setNome(tfNome.getText());
-                func.setCargo(CargoEnum.getByDescricao(comboCargo.getValue()));
-                func.setTempoExp(Double.valueOf(tfTimeExp.getText()));
-                func.setTempoProj(Double.valueOf(tfTimeProj.getText()));                
-                func.setArea(AreaEnum.getByDescricao(comboArea.getValue()));
-                Controle.salvarFuncionario(func);
+                func.setCargo(comboCargo.getValue());
+                func.setTempoExp(tfTimeExp.getText());
+                func.setTempoProj(tfTimeProj.getText());
+                func.setArea(comboArea.getValue());
+                
+
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory("");
+                
+                EntityManager entityManager = factory.createEntityManager();
+                
+                entityManager.getTransaction().begin();
+                
+                entityManager.persist(func);
+                
+                entityManager.getTransaction().commit();                
+                
+                entityManager.close();
             }
         });
     }
