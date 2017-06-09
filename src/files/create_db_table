@@ -3,7 +3,7 @@
  */
 
 
-CREATE DATABASE ag
+CREATE DATABASE AG
     WITH 
     OWNER = postgres
     ENCODING = 'UTF8'
