@@ -90,12 +90,13 @@ public class FuncListFrame extends BorderPane{
 
     private void carregarLista() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
-        EntityManager manager = factory.createEntityManager();                
+        EntityManager manager = factory.createEntityManager();
         
         List<Funcionario> func;
         func = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         
-        listaFunc.getItems().addAll(func);        
+        listaFunc.getItems().addAll(func);
+        
     }
 
     private void configMenu(Stage stage) {        

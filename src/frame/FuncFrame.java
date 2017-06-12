@@ -23,13 +23,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -79,6 +77,7 @@ public class FuncFrame extends BorderPane{
         carregarFunc(func);
     }
     
+    @SuppressWarnings("Convert2Lambda")
     private void carregarTela(){
         configCombo();
         configMenu();
