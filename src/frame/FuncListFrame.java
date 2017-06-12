@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JOptionPane;
 import utils.Numeros;
 
 /**
@@ -66,17 +65,17 @@ public class FuncListFrame extends BorderPane{
     }
 
     private void configTable() {
-        listaFunc = new TableView<Funcionario>();
+        listaFunc = new TableView<>();
         
         TableColumn columnNome = new TableColumn("Nome");
         TableColumn columnCargo = new TableColumn("Cargo");
         TableColumn columnArea = new TableColumn("Area");
         TableColumn columnExp = new TableColumn("Tempo de Experiência");
         
-        columnNome.setCellValueFactory(new PropertyValueFactory<Funcionario, String>("nome"));
-        columnCargo.setCellValueFactory(new PropertyValueFactory<Funcionario, String>("cargo"));
-        columnArea.setCellValueFactory(new PropertyValueFactory<Funcionario, String>("area"));
-        columnExp.setCellValueFactory(new PropertyValueFactory<Funcionario, String>("tempoExp"));
+        columnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        columnCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
+        columnArea.setCellValueFactory(new PropertyValueFactory<>("area"));
+        columnExp.setCellValueFactory(new PropertyValueFactory<>("tempoExp"));
         
         columnNome.setMinWidth(Numeros.LARGURA_TABELA * 0.35);
         columnCargo.setMinWidth(Numeros.LARGURA_TABELA * 0.20);

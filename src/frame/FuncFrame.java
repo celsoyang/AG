@@ -51,8 +51,6 @@ public class FuncFrame extends BorderPane{
     private TextField tfTimeProj = new TextField();
     private ComboBox<String> comboArea = new ComboBox<>();
     
-    private FileChooser fcFunc = new FileChooser();
-    
     private Button btSalvar = new Button(StringsUtils.SALVAR);
     private Button btLimpar = new Button(StringsUtils.LIMPAR);
     
@@ -81,7 +79,7 @@ public class FuncFrame extends BorderPane{
         carregarFunc(func);
     }
     
-    private void carregarTela(){        
+    private void carregarTela(){
         configCombo();
         configMenu();
         configFields();
@@ -89,7 +87,6 @@ public class FuncFrame extends BorderPane{
                 
         pnMenu.add(menu, 0, 0);
         
-        pnCenter.setAlignment(Pos.CENTER);
         pnCenter.add(lbNome, 0, 1);
         pnCenter.add(tfNome, 0, 2);
         pnCenter.add(lbCargo, 0, 3);

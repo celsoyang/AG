@@ -31,6 +31,9 @@ public class Atividade implements Serializable {
     
     @Column
     private String area = null;
+    
+    @Column
+    private String responsavel = null;
 
     public Integer getCodigo() {
         return codigo;
@@ -63,5 +66,14 @@ public class Atividade implements Serializable {
     public void setArea(String area) {
         this.area = area;
     }
+
+    public String getResponsavel() {
+        return responsavel;
+    }
+
+    public void setResponsavel(String responsavel) {
+        this.responsavel = responsavel;
+    }
+    
     
 }

@@ -34,10 +34,11 @@ public class MenuOp extends MenuBar {
     @SuppressWarnings("Convert2Lambda")
     public MenuOp(Stage stage){
         menuInicio = new Menu("Início");
-        menuInicio_func = new MenuItem("Perfil Funcionário");
-        menuInicio_atv = new MenuItem("Perfil Atividade");
+        menuInicio_func = new MenuItem("Funcionários");
+        menuInicio_atv = new MenuItem("Atividades");
         
         menuInicio.getItems().addAll( menuInicio_func,menuInicio_atv);               
+        
         menuFunc = new Menu("Funcionário");        
         menuAtv = new Menu("Atividade");        
         menuOp = new Menu("Opções");
@@ -57,7 +58,7 @@ public class MenuOp extends MenuBar {
         menuInicio_atv.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AG.loadAtvFrame(stage);
+                AG.loadAtvListFrame(stage);
             }
         });
         

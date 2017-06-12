@@ -22,7 +22,7 @@ public class AG extends Application {
     
     private static Scene scene;
     private static FuncFrame funcFrame;
-    private static AtvFrame atvFrame;
+    private static AtvListFrame atvListFrame;
     private static FuncListFrame funcLista;
     
     @Override
@@ -31,9 +31,9 @@ public class AG extends Application {
     }
     
     @SuppressWarnings("Convert2Lambda")
-    static void loadAtvFrame(Stage stage) {
-        atvFrame = new AtvFrame(stage);        
-        scene = new Scene(atvFrame, Numeros.LARGURA_FRAME, Numeros.ALTURA_FRAME);
+    static void loadAtvListFrame(Stage stage) {
+        atvListFrame = new AtvListFrame(stage);        
+        scene = new Scene(atvListFrame, Numeros.LARGURA_FRAME, Numeros.ALTURA_FRAME);
         
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -100,17 +100,6 @@ public class AG extends Application {
         stage.setResizable(true);
         stage.show();
     }
-    
-    @SuppressWarnings("Convert2Lambda")
-    public static void loadOtherFrame(Stage stage){
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     @SuppressWarnings("Convert2Lambda")
     private void loadInitialFrame(Stage stage) {                
@@ -127,6 +116,17 @@ public class AG extends Application {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
+    }
+    
+    @SuppressWarnings("Convert2Lambda")
+    public static void loadOtherFrame(Stage stage){
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
     
 }
