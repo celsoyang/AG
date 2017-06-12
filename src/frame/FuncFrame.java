@@ -29,6 +29,7 @@ import javafx.stage.WindowEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -64,11 +65,23 @@ public class FuncFrame extends BorderPane{
     private MenuItem menuFunc_load;
     
     private static Stage stage;
+    
+    private Funcionario funcionario = new Funcionario();
         
     @SuppressWarnings("Convert2Lambda")
     public FuncFrame(Stage stage){
         setStage(stage);
-        
+        carregarTela();
+    }
+    
+    public FuncFrame(Stage stage, Funcionario func){
+        funcionario = func;
+        setStage(stage);
+        carregarTela();
+        carregarFunc(func);
+    }
+    
+    private void carregarTela(){        
         configCombo();
         configMenu();
         configFields();
@@ -103,6 +116,14 @@ public class FuncFrame extends BorderPane{
             }
         });
     }
+    
+    private void carregarFunc(Funcionario func) {
+        tfNome.setText(func.getNome());
+        tfTimeExp.setText(func.getTempoExp());
+        tfTimeProj.setText(func.getTempoProj());
+        comboArea.setValue(func.getArea());
+        comboCargo.setValue(func.getCargo());
+    }
 
     public static Stage getStage() {
         return stage;
@@ -136,6 +157,7 @@ public class FuncFrame extends BorderPane{
         menuFunc_load.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Controle.loadFuncionario(stage);
             }
         });
         
@@ -180,6 +202,5 @@ public class FuncFrame extends BorderPane{
                 entityManager.close();
             }
         });
-    }
-    
+    }    
 }

@@ -5,6 +5,7 @@
  */
 package frame;
 
+import bean.Funcionario;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -50,6 +51,23 @@ public class AG extends Application {
     @SuppressWarnings("Convert2Lambda")
     public static void loadFuncFrame(Stage stage){
         funcFrame = new FuncFrame(stage);        
+        scene = new Scene(funcFrame, Numeros.LARGURA_FRAME,Numeros.ALTURA_FRAME);
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        stage.setTitle("AG");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
+    }
+    
+    public static void loadFuncFrame(Stage stage, Funcionario func){
+        funcFrame = new FuncFrame(stage, func);        
         scene = new Scene(funcFrame, Numeros.LARGURA_FRAME,Numeros.ALTURA_FRAME);
         
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

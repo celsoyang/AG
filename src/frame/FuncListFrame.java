@@ -6,10 +6,14 @@
 package frame;
 
 import bean.Funcionario;
+import control.Controle;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,11 +23,8 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
-import org.hibernate.jpa.internal.QueryImpl;
+import javax.swing.JOptionPane;
 import utils.Numeros;
-import utils.QueryUtils;
-import utils.StringsUtils;
 
 /**
  *
@@ -37,6 +38,8 @@ public class FuncListFrame extends BorderPane{
     private MenuOp menu;
     private GridPane pnTop;
     private GridPane pnCenter;
+    private MenuItem menuFunc_add;
+    private MenuItem menuFunc_load;
     
     /**
      *
@@ -44,8 +47,9 @@ public class FuncListFrame extends BorderPane{
      */
     public FuncListFrame(Stage stage){
         configTable();
+        configMenu(stage);
+        
         lbFunc = new Label("Funcionários");
-        menu = new MenuOp(stage);
         pnTop = new GridPane();
         pnTop.add(menu, 0, 0);
         
@@ -63,6 +67,7 @@ public class FuncListFrame extends BorderPane{
 
     private void configTable() {
         listaFunc = new TableView<Funcionario>();
+        
         TableColumn columnNome = new TableColumn("Nome");
         TableColumn columnCargo = new TableColumn("Cargo");
         TableColumn columnArea = new TableColumn("Area");
@@ -76,9 +81,7 @@ public class FuncListFrame extends BorderPane{
         columnNome.setMinWidth(Numeros.LARGURA_TABELA * 0.35);
         columnCargo.setMinWidth(Numeros.LARGURA_TABELA * 0.20);
         columnArea.setMinWidth(Numeros.LARGURA_TABELA * 0.25);
-        columnExp.setMinWidth(Numeros.LARGURA_TABELA * 0.20);
-        
-        
+        columnExp.setMinWidth(Numeros.LARGURA_TABELA * 0.20);        
         
         listaFunc.setMinHeight(Numeros.ALTURA_TABELA);
         listaFunc.setMinWidth(Numeros.LARGURA_TABELA);
@@ -88,14 +91,33 @@ public class FuncListFrame extends BorderPane{
 
     private void carregarLista() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
-        EntityManager manager = factory.createEntityManager();
-        
-        manager.getTransaction().begin();
+        EntityManager manager = factory.createEntityManager();                
         
         List<Funcionario> func;
         func = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         
-        listaFunc.getItems().addAll(func);
+        listaFunc.getItems().addAll(func);        
+    }
+
+    private void configMenu(Stage stage) {        
+        menu = new MenuOp(stage);
+        menuFunc_add = new MenuItem("Adicionar");
+        menuFunc_load = new MenuItem("Carregar");
+        menu.getMenus().get(1).getItems().addAll(menuFunc_add, menuFunc_load);
+        
+        menuFunc_load.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Controle.loadFuncionario(stage);
+            }
+        });
+        
+        menuFunc_add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadFuncFrame(stage);
+            }
+        });
     }
     
 }

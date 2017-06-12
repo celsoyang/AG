@@ -2,6 +2,7 @@ package control;
 
 import bean.Atividade;
 import bean.Funcionario;
+import frame.AG;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,6 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.stage.Stage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import utils.StringsUtils;
 
 /**
@@ -122,5 +128,16 @@ public class Controle {
             Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
         }
         return retorno;
+    }
+    
+    public static void loadFuncionario(Stage stage) {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
+
+        EntityManager entityManager = factory.createEntityManager();
+        Integer codigo = Integer.parseInt(JOptionPane.showInputDialog("Informe o código"));
+        Funcionario f = entityManager.find(Funcionario.class, codigo);
+
+        entityManager.close();
+        AG.loadFuncFrame(stage, f);
     }
 }
