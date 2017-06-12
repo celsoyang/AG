@@ -12,8 +12,11 @@ package utils;
 public class Numeros {
     
     
-    public static final Integer ALTURA_FRAME = 300;
+    public static final Integer ALTURA_FRAME = 600;
     
-    public static final Integer LARGURA_FRAME = 700;
+    public static final Integer LARGURA_FRAME = 800;
     
+    public static final Integer ALTURA_TABELA = 550;
+    
+    public static final Integer LARGURA_TABELA = 770;
 }

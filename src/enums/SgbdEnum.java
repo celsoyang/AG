@@ -92,6 +92,4 @@ public enum SgbdEnum {
         this.porta = porta;
     }
     
-    
-    
 }

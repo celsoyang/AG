@@ -22,6 +22,7 @@ public class AG extends Application {
     private static Scene scene;
     private static FuncFrame funcFrame;
     private static AtvFrame atvFrame;
+    private static FuncListFrame funcLista;
     
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -50,6 +51,24 @@ public class AG extends Application {
     public static void loadFuncFrame(Stage stage){
         funcFrame = new FuncFrame(stage);        
         scene = new Scene(funcFrame, Numeros.LARGURA_FRAME,Numeros.ALTURA_FRAME);
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        stage.setTitle("AG");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
+    }
+    
+    @SuppressWarnings("Convert2Lambda")
+    public static void loadFuncListaFrame(Stage stage){
+        funcLista = new FuncListFrame(stage);
+        scene = new Scene(funcLista, Numeros.LARGURA_FRAME,Numeros.ALTURA_FRAME);
         
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

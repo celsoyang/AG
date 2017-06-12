@@ -73,9 +73,10 @@ public class FuncFrame extends BorderPane{
         configMenu();
         configFields();
         configButton();
-        
+                
         pnMenu.add(menu, 0, 0);
         
+        pnCenter.setAlignment(Pos.CENTER);
         pnCenter.add(lbNome, 0, 1);
         pnCenter.add(tfNome, 0, 2);
         pnCenter.add(lbCargo, 0, 3);

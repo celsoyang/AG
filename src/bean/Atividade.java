@@ -5,23 +5,32 @@
  */
 package bean;
 
-import enums.AreaEnum;
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import utils.StringsUtils;
 
 /**
  *
  * @author ceolivei
  */
+@Entity
 public class Atividade implements Serializable {
     
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo = null;
-        
+    
+    @Column
     private String nome = StringsUtils.VAZIA;
     
-    private Integer nivel = null;
+    @Column
+    private String nivel = null;
     
-    private AreaEnum area = null;
+    @Column
+    private String area = null;
 
     public Integer getCodigo() {
         return codigo;
@@ -39,19 +48,19 @@ public class Atividade implements Serializable {
         this.nome = nome;
     }
 
-    public Integer getNivel() {
+    public String getNivel() {
         return nivel;
     }
 
-    public void setNivel(Integer nivel) {
+    public void setNivel(String nivel) {
         this.nivel = nivel;
     }
 
-    public AreaEnum getArea() {
+    public String getArea() {
         return area;
     }
 
-    public void setArea(AreaEnum area) {
+    public void setArea(String area) {
         this.area = area;
     }
     
