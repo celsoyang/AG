@@ -5,14 +5,12 @@
  */
 package frame;
 
-import control.Conexao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import utils.StringsUtils;
 
 /**
  *

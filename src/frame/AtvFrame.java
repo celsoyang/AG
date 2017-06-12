@@ -6,9 +6,16 @@
 package frame;
 
 import bean.Atividade;
+import bean.Funcionario;
+import enums.AreaEnum;
+import enums.CargoEnum;
+import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -23,13 +30,11 @@ import javax.persistence.Persistence;
  */
 public class AtvFrame extends BorderPane{
     
-    private Label lbCodigo;
     private Label lbDescricao;
     private Label lbArea;
     private Label lbNivel;
     private Label lbResp;
     
-    private TextField tfCodigo;
     private TextField tfDescricao;
     private ComboBox<String> comboArea;
     private ComboBox<String> comboNivel;
@@ -39,6 +44,8 @@ public class AtvFrame extends BorderPane{
     private Button btLimpar;
     
     private MenuOp menu;
+    private MenuItem op_add;
+    private MenuItem op_load;
     
     private GridPane pnTop;
     private GridPane pnCenter;
@@ -56,24 +63,93 @@ public class AtvFrame extends BorderPane{
     }
 
     private void carregarTela(Stage stage) {
-        lbCodigo = new Label("Código");
+        
+        configMenu(stage);
+        pnTop = new GridPane();
+        pnTop.add(menu, 0, 0);
+        
         lbDescricao = new Label("Descrição");
         lbArea = new Label("Área");
         lbNivel = new Label("Nível");
         lbResp = new Label("Responsável");
         
-        tfCodigo = new TextField();
-        tfCodigo.setEditable(Boolean.FALSE);
         tfDescricao = new TextField();
         comboArea = new ComboBox<>();
         comboNivel = new ComboBox<>();
         comboResp = new ComboBox<>();
         configCombos();
+        
+        pnCenter = new GridPane();
+        pnCenter.add(lbDescricao, 0, 0);
+        pnCenter.add(tfDescricao, 0, 1);
+        pnCenter.add(lbArea, 0, 2);
+        pnCenter.add(comboArea, 0, 3);
+        pnCenter.add(lbNivel, 0, 4);
+        pnCenter.add(comboNivel, 0, 5);
+        pnCenter.add(lbResp, 0, 6);
+        pnCenter.add(comboResp, 0, 7);
+        
+        configButton();
+        pnBotton = new GridPane();
+        pnBotton.addRow(0, btSalvar,btLimpar);
+        
     }
 
     private void configCombos() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
         EntityManager manager = factory.createEntityManager();
         
+        List<Funcionario> listaFunc = (List<Funcionario>)manager.createQuery("select f from Funcionario f").getResultList();
+        listaFunc.forEach((f) -> {
+            comboResp.getItems().add(f.getNome());
+        });
+        
+        for (AreaEnum en : AreaEnum.values()) {
+            comboArea.getItems().add(en.getDescricao());
+        }
+        
+        for (CargoEnum en : CargoEnum.values()) {
+            comboNivel.getItems().add(en.getDescricao());
+        }
+    }
+
+    @SuppressWarnings("Convert2Lambda")
+    private void configMenu(Stage stage) {
+        menu = new MenuOp(stage);
+        op_add = new MenuItem("Adicionar");
+        op_load = new MenuItem("Carregar");
+        menu.getMenus().get(2).getItems().addAll(op_add,op_load);
+        
+        op_add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadAtvFrame(stage);
+            }
+        });
+        
+        op_load.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            }
+        });
+    }
+
+    @SuppressWarnings("Convert2Lambda")
+    private void configButton() {
+        btSalvar = new Button("Salvar");
+        btLimpar = new Button("Limpar");
+        
+        btSalvar.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+            }
+            
+        });
+        
+        btLimpar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            }
+        });
     }
 }
