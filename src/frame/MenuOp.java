@@ -50,14 +50,6 @@ public class MenuOp extends MenuBar {
         menuInicio_func.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {                
-                
-                try {
-                    AG.loadFrameGif(stage);
-                    Thread.sleep(5000L);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(MenuOp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
                 AG.loadFuncListaFrame(stage);
             }
         });
