@@ -5,6 +5,8 @@
  */
 package frame;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
@@ -17,62 +19,69 @@ import javafx.stage.Stage;
  * @author Celso Souza
  */
 @SuppressWarnings("FieldMayBeFinal")
-public class MenuOp extends MenuBar {    
-    
+public class MenuOp extends MenuBar {
+
     private Menu menuInicio;
     private MenuItem menuInicio_func;
     private MenuItem menuInicio_atv;
     private Menu menuFunc;
     private Menu menuAtv;
-    
+
     private Menu menuOp;
     private MenuItem menuOp_opcao;
-    
-    
+
     @SuppressWarnings("Convert2Lambda")
-    public MenuOp(Stage stage){
+    public MenuOp(Stage stage) {
         menuInicio = new Menu("Início");
         menuInicio_func = new MenuItem("Funcionários");
         menuInicio_atv = new MenuItem("Atividades");
-        
-        menuInicio.getItems().addAll( menuInicio_func,menuInicio_atv);               
-        
-        menuFunc = new Menu("Funcionário");        
-        menuAtv = new Menu("Atividade");        
+
+        menuInicio.getItems().addAll(menuInicio_func, menuInicio_atv);
+
+        menuFunc = new Menu("Funcionário");
+        menuAtv = new Menu("Atividade");
         menuOp = new Menu("Opções");
-        
+
         menuOp_opcao = new MenuItem("Opção");
         menuOp.getItems().addAll(menuOp_opcao);
-        
+
         this.getMenus().addAll(menuInicio, menuFunc, menuAtv, menuOp);
-        
+
         menuInicio_func.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event) {                
+                
+                try {
+                    AG.loadFrameGif(stage);
+                    Thread.sleep(5000L);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MenuOp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 AG.loadFuncListaFrame(stage);
             }
         });
-        
+
         menuInicio_atv.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadAtvListFrame(stage);
             }
         });
-        
+
         menuOp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadOtherFrame(stage);
             }
         });
-        
+
         menuOp_opcao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
             }
         });
-        
+
     }
-    
+
 }

@@ -38,7 +38,8 @@ public class FuncListFrame extends BorderPane{
     private GridPane pnTop;
     private GridPane pnCenter;
     private MenuItem menuFunc_add;
-    private MenuItem menuFunc_load;
+    private MenuItem menuFunc_load;    
+    private GridPane pnGif = new GridPane();
     
     /**
      *
@@ -57,9 +58,8 @@ public class FuncListFrame extends BorderPane{
         pnCenter.add(lbFunc, 0, 0);
         pnCenter.add(listaFunc, 0, 1);
         
-        this.setTop(pnTop);
+        this.setTop(pnTop);        
         this.setCenter(pnCenter);
-        this.setPadding(new Insets(0, 10, 10, 10));
         
         carregarLista();
     }
@@ -96,7 +96,7 @@ public class FuncListFrame extends BorderPane{
         func = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         
         listaFunc.getItems().addAll(func);
-        
+        this.setCenter(pnCenter);
     }
 
     private void configMenu(Stage stage) {        

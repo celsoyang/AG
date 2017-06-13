@@ -8,7 +8,11 @@ package frame;
 import bean.Funcionario;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import utils.Numeros;
@@ -122,8 +126,29 @@ public class AG extends Application {
     }
 
     @SuppressWarnings("Convert2Lambda")
-    private void loadInitialFrame(Stage stage) {                
+    private void loadInitialFrame(Stage stage) {
         scene = new Scene(new MenuOp(stage), Numeros.LARGURA_FRAME,Numeros.ALTURA_FRAME);
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        stage.setTitle("AG");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
+    }
+    
+    public static void loadFrameGif(Stage stage){
+        GridPane pnGif = new GridPane();
+        Image im = new Image("/files/load2.gif");
+        ImageView iv = new ImageView(im);
+        pnGif.add(iv, 0, 0);
+        pnGif.setAlignment(Pos.CENTER);
+        scene = new Scene(pnGif, Numeros.LARGURA_FRAME,Numeros.ALTURA_FRAME);
         
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

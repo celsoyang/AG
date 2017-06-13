@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -139,5 +142,12 @@ public class Controle {
 
         entityManager.close();
         AG.loadFuncFrame(stage, f);
+    }
+    
+    public static ImageView returnLoadGif(){
+        Image im = new Image("/files/load2.gif");
+        ImageView iv = new ImageView(im);
+        
+        return iv;
     }
 }
