@@ -148,7 +148,7 @@ public class AtvListFrame  extends BorderPane{
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
         EntityManager manager = factory.createEntityManager();
         
-        //Como fazer castring do retorno para o tipo Atividades
+        //Como fazer casting do retorno para o tipo Atividades
         //Ou extrair os dados do object pra jogar na tabela
         List<Atividade> lista = (List<Atividade>) manager.createQuery
         ("select atv.codigo, atv.nome, ar.codigo, ca.codigo, atv.responsavel" +
