@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import utils.Numeros;
+import utils.StringsUtils;
 
 /**
  *
@@ -89,7 +90,7 @@ public class FuncListFrame extends BorderPane{
     }
 
     private void carregarLista() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
         
         List<Funcionario> func;

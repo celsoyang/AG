@@ -185,7 +185,7 @@ public class FuncFrame extends BorderPane{
                 func.setTempoProj(tfTimeProj.getText());
                 func.setArea(comboArea.getValue());                
 
-                EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
                 
                 EntityManager entityManager = factory.createEntityManager();
                 

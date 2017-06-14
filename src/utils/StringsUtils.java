@@ -32,4 +32,5 @@ public class StringsUtils {
     public static final String DRIVER_POSTGRE = "org.postgresql.Driver";
     public static final String POSTGRE = "PostgreSql";
     public static final String SQL_SERVER = "SqlServer";
+    public static final String ENTITY_MANAGER = "AG";
 }

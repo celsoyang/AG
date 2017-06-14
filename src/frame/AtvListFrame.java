@@ -6,20 +6,23 @@
 package frame;
 
 import bean.Atividade;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import utils.Numeros;
+import utils.StringsUtils;
 
 /**
  *
@@ -69,11 +72,12 @@ public class AtvListFrame  extends BorderPane{
         menu = new MenuOp(stage);
         menuAtv_add = new MenuItem("Adicionar");
         menuAtv_load = new MenuItem("Carregar");
-        menu.getMenus().get(2).getItems().addAll(menuAtv_load,menuAtv_add);
+        menu.getMenus().get(2).getItems().addAll(menuAtv_add, menuAtv_load);
         
         menuAtv_add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                AG.loadAtvFrame(stage);
             }
         });
         
@@ -99,6 +103,8 @@ public class AtvListFrame  extends BorderPane{
         this.setCenter(pnCenter);
         this.setBottom(pnButton); 
         this.setPadding(new Insets(0,10,10,10));
+        
+        carregarLista();
     }
 
     private void configTabela() {
@@ -126,6 +132,15 @@ public class AtvListFrame  extends BorderPane{
         listaAtividades.setMinHeight(Numeros.ALTURA_TABELA);
         
         listaAtividades.getColumns().addAll(columnCod, columnTitulo, columnArea, columnNivel, columnResp);
+    }
+
+    private void carregarLista() {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManager manager = factory.createEntityManager();
+        
+        List<Atividade> lista = (List<Atividade>) manager.createQuery("select a from Atividade a").getResultList();
+        
+        listaAtividades.getItems().addAll(lista);
     }
     
 }
