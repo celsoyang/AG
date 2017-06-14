@@ -10,6 +10,8 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -44,6 +46,9 @@ public class AtvListFrame  extends BorderPane{
     
     private MenuItem menuAtv_add;
     private MenuItem menuAtv_load;
+    
+    private Button btDelete;
+    private Button btEdit;
     
     private Atividade atividade;
     
@@ -99,6 +104,11 @@ public class AtvListFrame  extends BorderPane{
         pnCenter.add(lbAtividades, 0, 0);
         pnCenter.add(listaAtividades, 0, 1);
         
+        configButton();
+        pnButton = new GridPane();
+        pnButton.addRow(0, btEdit, btDelete);
+        pnButton.setAlignment(Pos.CENTER);
+        
         this.setTop(pnTop);
         this.setCenter(pnCenter);
         this.setBottom(pnButton); 
@@ -135,12 +145,43 @@ public class AtvListFrame  extends BorderPane{
     }
 
     private void carregarLista() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
         EntityManager manager = factory.createEntityManager();
         
-        List<Atividade> lista = (List<Atividade>) manager.createQuery("select a from Atividade a").getResultList();
+        //Como fazer castring do retorno para o tipo Atividades
+        //Ou extrair os dados do object pra jogar na tabela
+        List<Atividade> lista = (List<Atividade>) manager.createQuery
+        ("select atv.codigo, atv.nome, ar.codigo, ca.codigo, atv.responsavel" +
+        " from Atividade atv,Area ar,Cargo ca").getResultList();
         
         listaAtividades.getItems().addAll(lista);
+        
+        for (Atividade atv : lista) {
+            System.out.println(atv.getCodigo());
+            System.out.println(atv.getNome());
+            System.out.println(atv.getArea());
+            System.out.println(atv.getNivel());
+        }
+        
+    }
+
+    @SuppressWarnings("Convert2Lambda")
+    private void configButton() {
+        btEdit = new Button("Editar");
+        btDelete = new Button("Apagar");
+        
+        btEdit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadAtvFrame(stage);
+            }
+        });
+        
+        btDelete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            }
+        });
     }
     
 }

@@ -3,6 +3,8 @@
   <persistence-unit name="AG" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>bean.Funcionario</class>
+    <class>bean.Area</class>
+    <class>bean.Cargo</class>
     <class>bean.Atividade</class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

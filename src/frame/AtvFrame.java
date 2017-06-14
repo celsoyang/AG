@@ -41,7 +41,7 @@ public class AtvFrame extends BorderPane {
     private TextField tfDescricao;
     private ComboBox<String> comboArea;
     private ComboBox<String> comboNivel;
-    private ComboBox<String> comboResp;
+    private Label responsavel;
 
     private Button btSalvar;
     private Button btLimpar;
@@ -63,6 +63,7 @@ public class AtvFrame extends BorderPane {
     public AtvFrame(Stage stage, Atividade atv) {
         carregarTela(stage);
         atividade = atv;
+        carregarAtividade();
     }
 
     private void carregarTela(Stage stage) {
@@ -79,7 +80,7 @@ public class AtvFrame extends BorderPane {
         tfDescricao = new TextField();
         comboArea = new ComboBox<>();
         comboNivel = new ComboBox<>();
-        comboResp = new ComboBox<>();
+        responsavel = new Label();
         configCombos();
 
         pnCenter = new GridPane();
@@ -90,7 +91,7 @@ public class AtvFrame extends BorderPane {
         pnCenter.add(lbNivel, 0, 4);
         pnCenter.add(comboNivel, 0, 5);
         pnCenter.add(lbResp, 0, 6);
-        pnCenter.add(comboResp, 0, 7);
+        pnCenter.add(responsavel, 0, 7);
 
         configButton();
         pnBotton = new GridPane();
@@ -104,14 +105,6 @@ public class AtvFrame extends BorderPane {
     }
 
     private void configCombos() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
-        EntityManager manager = factory.createEntityManager();
-
-        List<Funcionario> listaFunc = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
-        listaFunc.forEach((f) -> {
-            comboResp.getItems().add(f.getNome());
-        });
-
         for (AreaEnum en : AreaEnum.values()) {
             comboArea.getItems().add(en.getDescricao());
         }
@@ -136,6 +129,9 @@ public class AtvFrame extends BorderPane {
             public void handle(ActionEvent event) {
                 try {
                     Atividade atv = new Atividade();
+                    atv.setNome(tfDescricao.getText());
+                    atv.setArea(AreaEnum.getByDescricao(comboArea.getValue()).getCodigo().toString());
+                    atv.setNivel(CargoEnum.getByDescricao(comboNivel.getValue()).getCodigo().toString());
                     EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
                     EntityManager manager = factory.createEntityManager();
 
@@ -162,6 +158,13 @@ public class AtvFrame extends BorderPane {
         tfDescricao.setText("");
         comboArea.setValue("");
         comboNivel.setValue("");
-        comboResp.setValue("");
+        responsavel.setText("");
+    }
+
+    private void carregarAtividade() {
+        tfDescricao.setText(atividade.getNome());
+        comboArea.setValue(AreaEnum.getByCodigo(Integer.parseInt(atividade.getArea())).getDescricao());
+        comboNivel.setValue(CargoEnum.getByCodigo(Integer.parseInt(atividade.getNivel())).getDescricao());
+        responsavel.setText(atividade.getResponsavel());
     }
 }

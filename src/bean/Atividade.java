@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrimaryKeyJoinColumn;
 import utils.StringsUtils;
 
 /**
@@ -27,9 +28,11 @@ public class Atividade implements Serializable {
     private String nome = StringsUtils.VAZIA;
     
     @Column
+    @PrimaryKeyJoinColumn(referencedColumnName = "Nivel.codigo")
     private String nivel = null;
     
-    @Column
+    @Column 
+    @PrimaryKeyJoinColumn(referencedColumnName = "Area.codigo")
     private String area = null;
     
     @Column
