@@ -154,15 +154,7 @@ public class AtvListFrame  extends BorderPane{
         ("select atv.codigo, atv.nome, ar.codigo, ca.codigo, atv.responsavel" +
         " from Atividade atv,Area ar,Cargo ca").getResultList();
         
-        listaAtividades.getItems().addAll(lista);
-        
-        for (Atividade atv : lista) {
-            System.out.println(atv.getCodigo());
-            System.out.println(atv.getNome());
-            System.out.println(atv.getArea());
-            System.out.println(atv.getNivel());
-        }
-        
+        listaAtividades.getItems().addAll(lista);        
     }
 
     @SuppressWarnings("Convert2Lambda")
