@@ -6,6 +6,7 @@
 package frame;
 
 import bean.Atividade;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import utils.Numeros;
 import utils.StringsUtils;
 
@@ -148,11 +150,12 @@ public class AtvListFrame  extends BorderPane{
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
         EntityManager manager = factory.createEntityManager();
         
+        StoredProcedureQuery spq = manager.createStoredProcedureQuery("");
+        
         //Como fazer casting do retorno para o tipo Atividades
         //Ou extrair os dados do object pra jogar na tabela
-        List<Atividade> lista = (List<Atividade>) manager.createQuery
-        ("select atv.codigo, atv.nome, ar.codigo, ca.codigo, atv.responsavel" +
-        " from Atividade atv,Area ar,Cargo ca").getResultList();
+        List<Atividade> lista = manager.createQuery
+        ("select atv from Atividade atv").getResultList();
         
         listaAtividades.getItems().addAll(lista);        
     }

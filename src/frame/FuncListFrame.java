@@ -10,7 +10,6 @@ import control.Controle;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -100,6 +99,7 @@ public class FuncListFrame extends BorderPane{
         this.setCenter(pnCenter);
     }
 
+    @SuppressWarnings("Convert2Lambda")
     private void configMenu(Stage stage) {        
         menu = new MenuOp(stage);
         menuFunc_add = new MenuItem("Adicionar");
@@ -119,6 +119,5 @@ public class FuncListFrame extends BorderPane{
                 AG.loadFuncFrame(stage);
             }
         });
-    }
-    
+    }    
 }
