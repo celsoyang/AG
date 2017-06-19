@@ -61,3 +61,27 @@ CREATE DATABASE AG
   select * from funcionario
   
   insert into funcionario values( 1, 'Celso Oliveira de Souza', 2, 2.5, 1.0,1)
+
+/*FUNCTIONS*/
+
+create or replace function FN_RETORNA_ATIVIDADES()
+returns table
+(
+    codigo integer,
+    nome varchar(255),
+    area varchar(255),
+    nivel varchar(255),
+    responsavel varchar(255)
+    )
+as
+$$
+begin
+
+return query
+select atv.codigo"codigo", atv.nome"nome", ar.descricao"area", car.descricao"nivel", atv.responsavel"responsavel"
+from atividade atv join area ar on cast(atv.area as integer) = ar.codigo
+join cargo car on cast(atv.nivel as integer) = car.codigo;
+
+end;
+$$
+language 'plpgsql';
