@@ -155,7 +155,7 @@ public class AtvListFrame  extends BorderPane{
         //Como fazer casting do retorno para o tipo Atividades
         //Ou extrair os dados do object pra jogar na tabela
         List<Atividade> lista = manager.createQuery
-        ("select atv from Atividade atv").getResultList();
+        ("select FN_RETORNA_ATIVIDADES()").getResultList();
         
         listaAtividades.getItems().addAll(lista);        
     }
