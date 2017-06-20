@@ -8,8 +8,7 @@ package frame;
 import bean.Area;
 import bean.Atividade;
 import bean.Cargo;
-import enums.AreaEnum;
-import enums.CargoEnum;
+import java.awt.HeadlessException;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,6 +25,7 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import utils.StringsUtils;
 
 /**
@@ -37,12 +37,12 @@ public class AtvFrame extends BorderPane {
     private Label lbDescricao;
     private Label lbArea;
     private Label lbNivel;
-    private Label lbResp;
+    private Label lbPrazo;
 
     private TextField tfDescricao;
     private ComboBox<String> comboArea;
     private ComboBox<String> comboNivel;
-    private Label responsavel;
+    private TextField tfPrazo;
 
     private Button btSalvar;
     private Button btLimpar;
@@ -76,12 +76,13 @@ public class AtvFrame extends BorderPane {
         lbDescricao = new Label("Descrição");
         lbArea = new Label("Área");
         lbNivel = new Label("Nível");
-        lbResp = new Label("Responsável");
+        lbPrazo = new Label("Prazo (horas)");
 
         tfDescricao = new TextField();
         comboArea = new ComboBox<>();
         comboNivel = new ComboBox<>();
-        responsavel = new Label();
+        tfPrazo = new TextField();
+        tfPrazo.setAlignment(Pos.BASELINE_RIGHT);        
         configCombos();
 
         pnCenter = new GridPane();
@@ -91,8 +92,8 @@ public class AtvFrame extends BorderPane {
         pnCenter.add(comboArea, 0, 3);
         pnCenter.add(lbNivel, 0, 4);
         pnCenter.add(comboNivel, 0, 5);
-        pnCenter.add(lbResp, 0, 6);
-        pnCenter.add(responsavel, 0, 7);
+        pnCenter.add(lbPrazo, 0, 6);
+        pnCenter.add(tfPrazo, 0, 7);
 
         configButton();
         pnBotton = new GridPane();
@@ -110,14 +111,15 @@ public class AtvFrame extends BorderPane {
         EntityManager manager = factory.createEntityManager();
         
         List<Area> listaArea = (List<Area>) manager.createQuery("select are from Area are").getResultList();
-        for (Area ar : listaArea) {
+        listaArea.forEach((ar) -> {
             comboArea.getItems().add(ar.getDescricao());
-        }
+        });
         
         List<Cargo> listaCargo = (List<Cargo>) manager.createQuery("select car from Cargo car").getResultList();
-        for (Cargo c : listaCargo) {
+        
+        listaCargo.forEach((c) -> {
             comboNivel.getItems().add(c.getDescricao());
-        }
+        });
     }
 
     @SuppressWarnings("Convert2Lambda")
@@ -134,19 +136,25 @@ public class AtvFrame extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    Atividade atv = new Atividade();
+                    Area area = new Area(comboArea.getSelectionModel().getSelectedIndex() + 1);
+                    Cargo cargo = new Cargo(comboNivel.getSelectionModel().getSelectedIndex() + 1);
+                    
+                    Atividade atv = new Atividade();                    
                     atv.setNome(tfDescricao.getText());
-//                    atv.setArea(AreaEnum.getByDescricao(comboArea.getValue()).getCodigo().toString());
-//                    atv.setNivel(CargoEnum.getByDescricao(comboNivel.getValue()).getCodigo().toString());
+                    atv.setArea(area);
+                    atv.setNivel(cargo);
+                    atv.setPrazo(Double.parseDouble(tfPrazo.getText()));
+                    
                     EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
                     EntityManager manager = factory.createEntityManager();
 
                     manager.getTransaction().begin();
                     manager.persist(atv);
                     manager.getTransaction().commit();
+                    JOptionPane.showMessageDialog(null, "Salvo com Sucesso");
                     manager.close();
-                } catch (Exception e) {
-
+                } catch (HeadlessException e) {
+                    e.printStackTrace();
                 }                
             }
 
@@ -164,13 +172,10 @@ public class AtvFrame extends BorderPane {
         tfDescricao.setText("");
         comboArea.setValue("");
         comboNivel.setValue("");
-        responsavel.setText("");
+        tfPrazo.setText("");
     }
 
     private void carregarAtividade() {
-        tfDescricao.setText(atividade.getNome());
-//        comboArea.setValue(AreaEnum.getByCodigo(Integer.parseInt(atividade.getArea())).getDescricao());
-//        comboNivel.setValue(CargoEnum.getByCodigo(Integer.parseInt(atividade.getNivel())).getDescricao());
-//        responsavel.setText(atividade.getResponsavel());
+        tfDescricao.setText(atividade.getNome());        
     }
 }

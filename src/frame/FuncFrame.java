@@ -181,12 +181,15 @@ public class FuncFrame extends BorderPane{
         btSalvar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Cargo cargo = new Cargo(comboCargo.getSelectionModel().getSelectedIndex() + 1);
+                Area area = new Area(comboArea.getSelectionModel().getSelectedIndex() + 1);
+                        
                 Funcionario func = new Funcionario();
                 func.setNome(tfNome.getText());
-                func.setCargo(new Cargo(2));
+                func.setCargo(cargo);
                 func.setTempoExp(Integer.parseInt(tfTimeExp.getText()));
                 func.setTempoProj(Integer.parseInt(tfTimeProj.getText()));
-                func.setArea(new Area(1));                
+                func.setArea(area);                
 
                 EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
                 
