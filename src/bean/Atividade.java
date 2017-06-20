@@ -6,12 +6,11 @@
 package bean;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.OneToOne;
 import utils.StringsUtils;
 
 /**
@@ -24,19 +23,18 @@ public class Atividade implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo = null;
     
-    @Column
     private String nome = StringsUtils.VAZIA;
     
-    @Column
-    @PrimaryKeyJoinColumn(referencedColumnName = "Nivel.codigo")
-    private String nivel = null;
+    @OneToOne
+    private Cargo nivel = null;
     
-    @Column 
-    @PrimaryKeyJoinColumn(referencedColumnName = "Area.codigo")
-    private String area = null;
+    @OneToOne
+    private Area area = null;
     
-    @Column
-    private String responsavel = null;
+    @OneToOne
+    private Funcionario responsavel = null;
+    
+    private Double prazo = null;
 
     public Integer getCodigo() {
         return codigo;
@@ -54,29 +52,36 @@ public class Atividade implements Serializable {
         this.nome = nome;
     }
 
-    public String getNivel() {
+    public Cargo getNivel() {
         return nivel;
     }
 
-    public void setNivel(String nivel) {
+    public void setNivel(Cargo nivel) {
         this.nivel = nivel;
     }
 
-    public String getArea() {
+    public Area getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(Area area) {
         this.area = area;
     }
 
-    public String getResponsavel() {
+    public Funcionario getResponsavel() {
         return responsavel;
     }
 
-    public void setResponsavel(String responsavel) {
+    public void setResponsavel(Funcionario responsavel) {
         this.responsavel = responsavel;
     }
-    
-    
+
+    public Double getPrazo() {
+        return prazo;
+    }
+
+    public void setPrazo(Double prazo) {
+        this.prazo = prazo;
+    }
+        
 }

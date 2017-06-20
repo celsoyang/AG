@@ -116,7 +116,7 @@ public class AtvListFrame  extends BorderPane{
         this.setBottom(pnButton); 
         this.setPadding(new Insets(0,10,10,10));
         
-        carregarLista();
+//        carregarLista();
     }
 
     private void configTabela() {
@@ -146,6 +146,7 @@ public class AtvListFrame  extends BorderPane{
         listaAtividades.getColumns().addAll(columnCod, columnTitulo, columnArea, columnNivel, columnResp);
     }
 
+    @SuppressWarnings("UnusedAssignment")
     private void carregarLista() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
         EntityManager manager = factory.createEntityManager();
@@ -154,10 +155,18 @@ public class AtvListFrame  extends BorderPane{
         
         //Como fazer casting do retorno para o tipo Atividades
         //Ou extrair os dados do object pra jogar na tabela
-        List<Atividade> lista = manager.createQuery
-        ("select FN_RETORNA_ATIVIDADES()").getResultList();
+        List<Object> lista = manager.createNativeQuery
+        ("select * from FN_RETORNA_ATIVIDADES()").getResultList();
         
-        listaAtividades.getItems().addAll(lista);        
+        List<Atividade> listaCast = new ArrayList<>();
+        Atividade atv;
+        for (Object obj : lista) {
+            atv = new Atividade();
+//            atv.setCodigo(obj);
+            listaCast.add(atv);
+        }
+        
+        listaAtividades.getItems().addAll(listaCast);
     }
 
     @SuppressWarnings("Convert2Lambda")

@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 /**
  *
@@ -25,6 +24,13 @@ public class Area implements Serializable{
     
     @Column
     private String descricao = null;
+
+    public Area() {
+    }
+    
+    public Area(Integer id){
+        codigo = id;
+    }
 
     public Integer getCodigo() {
         return codigo;

@@ -5,6 +5,8 @@
  */
 package frame;
 
+import bean.Area;
+import bean.Cargo;
 import bean.Funcionario;
 import control.Controle;
 import enums.AreaEnum;
@@ -28,6 +30,7 @@ import javafx.stage.WindowEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -115,10 +118,10 @@ public class FuncFrame extends BorderPane{
     
     private void carregarFunc(Funcionario func) {
         tfNome.setText(func.getNome());
-        tfTimeExp.setText(func.getTempoExp());
-        tfTimeProj.setText(func.getTempoProj());
-        comboArea.setValue(func.getArea());
-        comboCargo.setValue(func.getCargo());
+        tfTimeExp.setText(func.getTempoExp().toString());
+        tfTimeProj.setText(func.getTempoProj().toString());
+        comboArea.setValue(new Area(1).getDescricao());
+        comboCargo.setValue(new Cargo(2).getDescricao());
     }
 
     public static Stage getStage() {
@@ -180,10 +183,10 @@ public class FuncFrame extends BorderPane{
             public void handle(ActionEvent event) {
                 Funcionario func = new Funcionario();
                 func.setNome(tfNome.getText());
-                func.setCargo(comboCargo.getValue());
-                func.setTempoExp(tfTimeExp.getText());
-                func.setTempoProj(tfTimeProj.getText());
-                func.setArea(comboArea.getValue());                
+                func.setCargo(new Cargo(2));
+                func.setTempoExp(Integer.parseInt(tfTimeExp.getText()));
+                func.setTempoProj(Integer.parseInt(tfTimeProj.getText()));
+                func.setArea(new Area(1));                
 
                 EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
                 
@@ -193,7 +196,9 @@ public class FuncFrame extends BorderPane{
                 
                 entityManager.persist(func);
                 
-                entityManager.getTransaction().commit();                
+                entityManager.getTransaction().commit();
+                
+                JOptionPane.showMessageDialog(null, "Salvo Com sucesso");
                 
                 entityManager.close();
             }

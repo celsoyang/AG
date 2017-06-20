@@ -5,15 +5,14 @@
  */
 package bean;
 
-import enums.AreaEnum;
 import utils.StringsUtils;
-import enums.CargoEnum;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -31,17 +30,17 @@ public class Funcionario implements Serializable {
     @Column
     private String nome = StringsUtils.VAZIA;
 
-    @Column
-    private String cargo = null;
+    @OneToOne
+    private Cargo cargo = null;
 
     @Column
-    private String tempoExp = null;
+    private Integer tempoExp = null;
     
     @Column
-    private String tempoProj = null;
+    private Integer tempoProj = null;
     
-    @Column
-    private String area = null;
+    @OneToOne
+    private Area area = null;
 
     public Integer getCodigo() {
         return codigo;
@@ -59,35 +58,35 @@ public class Funcionario implements Serializable {
         this.nome = nome;
     }
 
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
-    }
-
-    public String getTempoExp() {
+    public Integer getTempoExp() {
         return tempoExp;
     }
 
-    public void setTempoExp(String tempoExp) {
+    public void setTempoExp(Integer tempoExp) {
         this.tempoExp = tempoExp;
     }
 
-    public String getTempoProj() {
+    public Integer getTempoProj() {
         return tempoProj;
     }
 
-    public void setTempoProj(String tempoProj) {
+    public void setTempoProj(Integer tempoProj) {
         this.tempoProj = tempoProj;
     }
 
-    public String getArea() {
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
+    }
+
+    public Area getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(Area area) {
         this.area = area;
     }
     

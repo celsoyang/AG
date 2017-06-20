@@ -25,6 +25,13 @@ public class Cargo implements Serializable {
     @Column
     String descricao = null;
 
+    public Cargo() {
+    }
+    
+    public Cargo(Integer id){
+        codigo = id;
+    }
+
     public Integer getCodigo() {
         return codigo;
     }

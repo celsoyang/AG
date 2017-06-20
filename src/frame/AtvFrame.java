@@ -5,8 +5,9 @@
  */
 package frame;
 
+import bean.Area;
 import bean.Atividade;
-import bean.Funcionario;
+import bean.Cargo;
 import enums.AreaEnum;
 import enums.CargoEnum;
 import java.util.List;
@@ -105,12 +106,17 @@ public class AtvFrame extends BorderPane {
     }
 
     private void configCombos() {
-        for (AreaEnum en : AreaEnum.values()) {
-            comboArea.getItems().add(en.getDescricao());
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManager manager = factory.createEntityManager();
+        
+        List<Area> listaArea = (List<Area>) manager.createQuery("select are from Area are").getResultList();
+        for (Area ar : listaArea) {
+            comboArea.getItems().add(ar.getDescricao());
         }
-
-        for (CargoEnum en : CargoEnum.values()) {
-            comboNivel.getItems().add(en.getDescricao());
+        
+        List<Cargo> listaCargo = (List<Cargo>) manager.createQuery("select car from Cargo car").getResultList();
+        for (Cargo c : listaCargo) {
+            comboNivel.getItems().add(c.getDescricao());
         }
     }
 
@@ -130,8 +136,8 @@ public class AtvFrame extends BorderPane {
                 try {
                     Atividade atv = new Atividade();
                     atv.setNome(tfDescricao.getText());
-                    atv.setArea(AreaEnum.getByDescricao(comboArea.getValue()).getCodigo().toString());
-                    atv.setNivel(CargoEnum.getByDescricao(comboNivel.getValue()).getCodigo().toString());
+//                    atv.setArea(AreaEnum.getByDescricao(comboArea.getValue()).getCodigo().toString());
+//                    atv.setNivel(CargoEnum.getByDescricao(comboNivel.getValue()).getCodigo().toString());
                     EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
                     EntityManager manager = factory.createEntityManager();
 
@@ -163,8 +169,8 @@ public class AtvFrame extends BorderPane {
 
     private void carregarAtividade() {
         tfDescricao.setText(atividade.getNome());
-        comboArea.setValue(AreaEnum.getByCodigo(Integer.parseInt(atividade.getArea())).getDescricao());
-        comboNivel.setValue(CargoEnum.getByCodigo(Integer.parseInt(atividade.getNivel())).getDescricao());
-        responsavel.setText(atividade.getResponsavel());
+//        comboArea.setValue(AreaEnum.getByCodigo(Integer.parseInt(atividade.getArea())).getDescricao());
+//        comboNivel.setValue(CargoEnum.getByCodigo(Integer.parseInt(atividade.getNivel())).getDescricao());
+//        responsavel.setText(atividade.getResponsavel());
     }
 }

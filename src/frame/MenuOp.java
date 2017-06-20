@@ -48,14 +48,14 @@ public class MenuOp extends MenuBar {
         menuInicio_func.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {                
-                AG.loadFuncListaFrame(stage);
+                AG.loadFuncFrame(stage);
             }
         });
 
         menuInicio_atv.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AG.loadAtvListFrame(stage);
+                AG.loadAtvFrame(stage);
             }
         });
 
