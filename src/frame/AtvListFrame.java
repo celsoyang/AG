@@ -26,7 +26,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
 import utils.Numeros;
-import utils.StringsUtils;
 
 /**
  *
@@ -46,9 +45,6 @@ public class AtvListFrame  extends BorderPane{
     private MenuOp menu;
     private static Stage stage;
     
-    private MenuItem menuAtv_add;
-    private MenuItem menuAtv_load;
-    
     private Button btDelete;
     private Button btEdit;
     
@@ -64,35 +60,6 @@ public class AtvListFrame  extends BorderPane{
         setStage(stage);
         atividade = atv;
         carregarTela();
-    }
-
-    public static Stage getStage() {
-        return stage;
-    }
-
-    public static void setStage(Stage stage) {
-        AtvListFrame.stage = stage;
-    }
-
-    @SuppressWarnings("Convert2Lambda")
-    private void configMenu() {
-        menu = new MenuOp(stage);
-        menuAtv_add = new MenuItem("Adicionar");
-        menuAtv_load = new MenuItem("Carregar");
-        menu.getMenus().get(2).getItems().addAll(menuAtv_add, menuAtv_load);
-        
-        menuAtv_add.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                AG.loadAtvFrame(stage);
-            }
-        });
-        
-        menuAtv_load.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            }
-        });
     }
 
     private void carregarTela() {
@@ -186,6 +153,19 @@ public class AtvListFrame  extends BorderPane{
             public void handle(ActionEvent event) {
             }
         });
+    }
+
+    public static Stage getStage() {
+        return stage;
+    }
+
+    public static void setStage(Stage stage) {
+        AtvListFrame.stage = stage;
+    }
+
+    @SuppressWarnings("Convert2Lambda")
+    private void configMenu() {
+        menu = new MenuOp(stage);
     }
     
 }

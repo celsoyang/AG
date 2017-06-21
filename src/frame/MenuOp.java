@@ -19,45 +19,33 @@ import javafx.stage.Stage;
 @SuppressWarnings("FieldMayBeFinal")
 public class MenuOp extends MenuBar {
 
-    private Menu menuInicio;
-    private MenuItem menuInicio_func;
-    private MenuItem menuInicio_atv;
     private Menu menuFunc;
+    private MenuItem opFuncList;
+    private MenuItem opFuncAdd;
     private Menu menuAtv;
-
+    private MenuItem opAtvList;
+    private MenuItem opAtvAdd;
     private Menu menuOp;
     private MenuItem menuOp_opcao;
 
     @SuppressWarnings("Convert2Lambda")
-    public MenuOp(Stage stage) {
-        menuInicio = new Menu("Início");
-        menuInicio_func = new MenuItem("Funcionários");
-        menuInicio_atv = new MenuItem("Atividades");
-
-        menuInicio.getItems().addAll(menuInicio_func, menuInicio_atv);
+    public MenuOp(Stage stage) {        
 
         menuFunc = new Menu("Funcionário");
+        opFuncList = new MenuItem("Listar");
+        opFuncAdd = new MenuItem("Adicionar");
         menuAtv = new Menu("Atividade");
+        opAtvList = new MenuItem("Listar");
+        opAtvAdd = new MenuItem("Adicionar");
         menuOp = new Menu("Opções");
 
         menuOp_opcao = new MenuItem("Opção");
         menuOp.getItems().addAll(menuOp_opcao);
+        menuFunc.getItems().addAll(opFuncList, opFuncAdd);
+        menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
-        this.getMenus().addAll(menuInicio, menuFunc, menuAtv, menuOp);
+        this.getMenus().addAll(menuFunc, menuAtv, menuOp);
 
-        menuInicio_func.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {                
-                AG.loadFuncFrame(stage);
-            }
-        });
-
-        menuInicio_atv.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                AG.loadAtvFrame(stage);
-            }
-        });
 
         menuOp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -69,6 +57,34 @@ public class MenuOp extends MenuBar {
         menuOp_opcao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            }
+        });
+        
+        opFuncList.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadFuncListaFrame(stage);
+            }
+        });
+        
+        opFuncAdd.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadFuncFrame(stage);
+            }
+        });
+        
+        opAtvList.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadAtvListFrame(stage);
+            }
+        });
+        
+        opAtvAdd.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AG.loadAtvFrame(stage);
             }
         });
 

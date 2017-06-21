@@ -5,20 +5,27 @@
  */
 package frame;
 
+import bean.Area;
+import bean.Cargo;
 import bean.Funcionario;
 import control.Controle;
 import java.util.List;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -38,8 +45,7 @@ public class FuncListFrame extends BorderPane{
     private GridPane pnTop;
     private GridPane pnCenter;
     private MenuItem menuFunc_add;
-    private MenuItem menuFunc_load;    
-    private GridPane pnGif = new GridPane();
+    private MenuItem menuFunc_load;
     
     /**
      *
@@ -64,8 +70,9 @@ public class FuncListFrame extends BorderPane{
         carregarLista();
     }
 
+    @SuppressWarnings({"Convert2Diamond", "Convert2Lambda"})
     private void configTable() {
-        listaFunc = new TableView<>();
+        listaFunc = new TableView<Funcionario>();
         
         TableColumn columnNome = new TableColumn("Nome");
         TableColumn columnCargo = new TableColumn("Cargo");
@@ -73,8 +80,65 @@ public class FuncListFrame extends BorderPane{
         TableColumn columnExp = new TableColumn("Tempo de Experiência");
         
         columnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        columnCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
-        columnArea.setCellValueFactory(new PropertyValueFactory<>("area"));
+        /** 
+         * Essa papagaiada toda é pra retornar o valor de 
+         * dentro de um objeto que esta no objeto principal da tabela         * 
+         */
+        columnCargo.setCellValueFactory(new Callback<CellDataFeatures<Funcionario, Cargo>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<Funcionario, Cargo> param) {
+                return new ObservableValue<String>() {
+                    @Override
+                    public void addListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public void removeListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public String getValue() {
+                        return param.getValue().getCargo().getDescricao();
+                    }
+
+                    @Override
+                    public void addListener(InvalidationListener listener) {
+                    }
+
+                    @Override
+                    public void removeListener(InvalidationListener listener) {
+                    }
+                };
+            }
+            
+        });
+        columnArea.setCellValueFactory(new Callback<CellDataFeatures<Funcionario, Area>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<Funcionario, Area> param) {
+                return new ObservableValue<String>() {
+                    @Override
+                    public void addListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public void removeListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public String getValue() {
+                        return param.getValue().getArea().getDescricao();
+                    }
+
+                    @Override
+                    public void addListener(InvalidationListener listener) {
+                    }
+
+                    @Override
+                    public void removeListener(InvalidationListener listener) {
+                    }
+                };
+            }
+        });
         columnExp.setCellValueFactory(new PropertyValueFactory<>("tempoExp"));
         
         columnNome.setMinWidth(Numeros.LARGURA_TABELA * 0.35);
