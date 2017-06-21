@@ -5,22 +5,29 @@
  */
 package frame;
 
+import bean.Area;
 import bean.Atividade;
+import bean.Cargo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -86,6 +93,7 @@ public class AtvListFrame  extends BorderPane{
 //        carregarLista();
     }
 
+    @SuppressWarnings("Convert2Lambda")
     private void configTabela() {
         listaAtividades = new TableView<>();
         
@@ -97,8 +105,60 @@ public class AtvListFrame  extends BorderPane{
         
         columnCod.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         columnTitulo.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        columnArea.setCellValueFactory(new PropertyValueFactory<>("area"));
-        columnNivel.setCellValueFactory(new PropertyValueFactory<>("nivel"));
+        columnArea.setCellValueFactory(new Callback<CellDataFeatures<Atividade, Area>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<Atividade, Area> param) {
+                return new ObservableValue<String>() {
+                    @Override
+                    public void addListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public void removeListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public String getValue() {
+                        return param.getValue().getArea().getDescricao();
+                    }
+
+                    @Override
+                    public void addListener(InvalidationListener listener) {
+                    }
+
+                    @Override
+                    public void removeListener(InvalidationListener listener) {
+                    }
+                };
+            }
+        });
+        columnNivel.setCellValueFactory(new Callback<CellDataFeatures<Atividade, Cargo>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<Atividade, Cargo> param) {
+                return new ObservableValue<String>() {
+                    @Override
+                    public void addListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public void removeListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public String getValue() {
+                        return param.getValue().getNivel().getDescricao();
+                    }
+
+                    @Override
+                    public void addListener(InvalidationListener listener) {
+                    }
+
+                    @Override
+                    public void removeListener(InvalidationListener listener) {
+                    }
+                };
+            }
+        });
         columnResp.setCellValueFactory(new PropertyValueFactory<>("responsavel"));
 
         columnCod.setMinWidth(Numeros.LARGURA_TABELA * 0.05);
