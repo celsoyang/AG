@@ -13,6 +13,7 @@ import enums.AreaEnum;
 import enums.CargoEnum;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -60,12 +61,10 @@ public class FuncFrame extends BorderPane{
     private GridPane pnButton = new GridPane();
     
     private MenuOp menu;
-    private MenuItem menuFunc_add;
-    private MenuItem menuFunc_load;
     
     private static Stage stage;
     
-    private Funcionario funcionario = new Funcionario();
+    private Funcionario funcionario;
         
     @SuppressWarnings("Convert2Lambda")
     public FuncFrame(Stage stage){
@@ -120,8 +119,8 @@ public class FuncFrame extends BorderPane{
         tfNome.setText(func.getNome());
         tfTimeExp.setText(func.getTempoExp().toString());
         tfTimeProj.setText(func.getTempoProj().toString());
-        comboArea.setValue(new Area(1).getDescricao());
-        comboCargo.setValue(new Cargo(2).getDescricao());
+        comboArea.setValue(func.getArea().getDescricao());
+        comboCargo.setValue(func.getCargo().getDescricao());
     }
 
     public static Stage getStage() {
@@ -149,16 +148,6 @@ public class FuncFrame extends BorderPane{
     @SuppressWarnings("Convert2Lambda")
     private void configMenu() {
         menu = new MenuOp(stage);
-        menuFunc_add = new MenuItem("Adicionar");
-        menuFunc_load = new MenuItem("Carregar");
-        menu.getMenus().get(1).getItems().addAll(menuFunc_add, menuFunc_load);
-        
-        menuFunc_load.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Controle.loadFuncionario(stage);
-            }
-        });
         
     }
 
@@ -182,29 +171,48 @@ public class FuncFrame extends BorderPane{
             @Override
             public void handle(ActionEvent event) {
                 Cargo cargo = new Cargo(comboCargo.getSelectionModel().getSelectedIndex() + 1);
-                Area area = new Area(comboArea.getSelectionModel().getSelectedIndex() + 1);
-                        
-                Funcionario func = new Funcionario();
+                Area area = new Area(comboArea.getSelectionModel().getSelectedIndex() + 1);                                        
+
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);                
+                EntityManager manager = factory.createEntityManager();                
+                manager.getTransaction().begin();
+                
+                Funcionario func;
+                if(Objects.isNull(funcionario)){
+                    func = new Funcionario();
+                } else {
+                    func = manager.find(Funcionario.class, funcionario.getCodigo());
+                }
+                
                 func.setNome(tfNome.getText());
                 func.setCargo(cargo);
                 func.setTempoExp(Integer.parseInt(tfTimeExp.getText()));
                 func.setTempoProj(Integer.parseInt(tfTimeProj.getText()));
-                func.setArea(area);                
-
-                EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+                func.setArea(area);
                 
-                EntityManager entityManager = factory.createEntityManager();
+                manager.persist(func);                
+                manager.getTransaction().commit();
                 
-                entityManager.getTransaction().begin();
-                
-                entityManager.persist(func);
-                
-                entityManager.getTransaction().commit();
-                
-                JOptionPane.showMessageDialog(null, "Salvo Com sucesso");
-                
-                entityManager.close();
+                JOptionPane.showMessageDialog(null, StringsUtils.MSG_SALVO_SUCESSO);                
+                manager.close();
+                factory.close();
+                limparCampos();
             }
         });
-    }    
+        
+        btLimpar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                limparCampos();
+            }
+        });
+    }
+    
+    private void limparCampos(){
+        tfNome.setText(StringsUtils.VAZIA);
+        tfTimeExp.setText(StringsUtils.VAZIA);
+        tfTimeProj.setText(StringsUtils.VAZIA);
+        comboArea.setValue(StringsUtils.VAZIA);
+        comboCargo.setValue(StringsUtils.VAZIA);
+    }
 }

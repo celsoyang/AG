@@ -10,6 +10,7 @@ import bean.Atividade;
 import bean.Cargo;
 import java.awt.HeadlessException;
 import java.util.List;
+import java.util.Objects;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -39,31 +40,30 @@ import utils.StringsUtils;
  * @author Celso Souza
  */
 @SuppressWarnings("FieldMayBeFinal")
-public class AtvListFrame  extends BorderPane{
+public class AtvListFrame extends BorderPane {
 
-    private Label lbAtividades;    
-    
+    private Label lbAtividades;
+
     private TableView<Atividade> listaAtividades;
-    
+
     private GridPane pnTop;
     private GridPane pnCenter;
     private GridPane pnButton;
-    
+
     private MenuOp menu;
     private static Stage stage;
-    
+
     private Button btDelete;
     private Button btEdit;
-    
+
     private Atividade atividade;
-    
-    
-    public AtvListFrame(Stage stage){        
+
+    public AtvListFrame(Stage stage) {
         setStage(stage);
         carregarTela();
     }
-    
-    public AtvListFrame(Stage stage, Atividade atv){
+
+    public AtvListFrame(Stage stage, Atividade atv) {
         setStage(stage);
         atividade = atv;
         carregarTela();
@@ -73,36 +73,36 @@ public class AtvListFrame  extends BorderPane{
         configMenu();
         pnTop = new GridPane();
         pnTop.add(menu, 0, 0);
-        
+
         configTabela();
         lbAtividades = new Label("Atividades");
         pnCenter = new GridPane();
         pnCenter.add(lbAtividades, 0, 0);
         pnCenter.add(listaAtividades, 0, 1);
-        
+
         configButton();
         pnButton = new GridPane();
         pnButton.addRow(0, btEdit, btDelete);
         pnButton.setAlignment(Pos.CENTER);
-        
+
         this.setTop(pnTop);
         this.setCenter(pnCenter);
-        this.setBottom(pnButton); 
-        this.setPadding(new Insets(0,10,10,10));
-        
+        this.setBottom(pnButton);
+        this.setPadding(new Insets(0, 10, 10, 10));
+
         carregarLista();
     }
 
     @SuppressWarnings("Convert2Lambda")
     private void configTabela() {
         listaAtividades = new TableView<>();
-        
+
         TableColumn columnCod = new TableColumn("Código");
         TableColumn columnTitulo = new TableColumn("Título");
         TableColumn columnArea = new TableColumn("Área");
         TableColumn columnNivel = new TableColumn("Nível");
         TableColumn columnResp = new TableColumn("Responsável");
-        
+
         columnCod.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         columnTitulo.setCellValueFactory(new PropertyValueFactory<>("nome"));
         columnArea.setCellValueFactory(new Callback<CellDataFeatures<Atividade, Area>, ObservableValue<String>>() {
@@ -166,10 +166,10 @@ public class AtvListFrame  extends BorderPane{
         columnArea.setMinWidth(Numeros.LARGURA_TABELA * 0.2);
         columnNivel.setMinWidth(Numeros.LARGURA_TABELA * 0.2);
         columnResp.setMinWidth(Numeros.LARGURA_TABELA * 0.25);
-        
+
         listaAtividades.setMinWidth(Numeros.LARGURA_TABELA);
         listaAtividades.setMinHeight(Numeros.ALTURA_TABELA);
-        
+
         listaAtividades.getColumns().addAll(columnCod, columnTitulo, columnArea, columnNivel, columnResp);
     }
 
@@ -177,17 +177,19 @@ public class AtvListFrame  extends BorderPane{
     private void carregarLista() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
-
+        manager.getTransaction().begin();
         List<Atividade> lista = (List<Atividade>) manager.createQuery("select atv from Atividade atv").getResultList();
 
-        listaAtividades.getItems().addAll(lista);
+        listaAtividades.getItems().setAll(lista);
+        manager.close();
+        factory.close();
     }
 
     @SuppressWarnings("Convert2Lambda")
     private void configButton() {
         btEdit = new Button("Editar");
         btDelete = new Button("Apagar");
-        
+
         btEdit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -196,22 +198,30 @@ public class AtvListFrame  extends BorderPane{
                 AG.loadAtvFrame(stage, atividade);
             }
         });
-        
+
         btDelete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Integer index = listaAtividades.getSelectionModel().getSelectedIndex();
-                atividade = listaAtividades.getItems().get(index);
-                try {
-                    EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
-                    EntityManager manager = factory.createEntityManager();
-
-                    manager.getTransaction().begin();
-                    manager.remove(atividade);
-                    manager.getTransaction().commit();
-                    JOptionPane.showMessageDialog(null, StringsUtils.MSG_DELETADO_SUCESSO);
-                } catch (HeadlessException e) {
-                    JOptionPane.showMessageDialog(null, StringsUtils.MSG_ERRO_PROCESSO);
+                Integer op = JOptionPane.showConfirmDialog(null, StringsUtils.MSG_CONFIRMA_EXCLUSAO);
+                if (Objects.equals(op, Numeros.ZERO)) {
+                    Integer index = listaAtividades.getSelectionModel().getSelectedIndex();
+                    atividade = listaAtividades.getItems().get(index);
+                    try {
+                        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+                        EntityManager manager = factory.createEntityManager();
+                        manager.getTransaction().begin();
+                        
+                        Atividade atv = manager.find(Atividade.class, atividade.getCodigo());
+                        manager.remove(atv);
+                        manager.getTransaction().commit();
+                        manager.close();
+                        factory.close();
+                        
+                        JOptionPane.showMessageDialog(null, StringsUtils.MSG_DELETADO_SUCESSO);
+                        carregarLista();
+                    } catch (HeadlessException e) {
+                        JOptionPane.showMessageDialog(null, StringsUtils.MSG_ERRO_PROCESSO);
+                    }
                 }
             }
         });
@@ -229,5 +239,5 @@ public class AtvListFrame  extends BorderPane{
     private void configMenu() {
         menu = new MenuOp(stage);
     }
-    
+
 }

@@ -18,4 +18,6 @@ public class Numeros {
     public static final Integer ALTURA_TABELA = 500;
     
     public static final Integer LARGURA_TABELA = 770;
+    
+    public static final Integer ZERO = 0;
 }

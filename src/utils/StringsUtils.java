@@ -36,4 +36,5 @@ public class StringsUtils {
     public static final String MSG_SALVO_SUCESSO = "Salvo com Sucesso";
     public static final String MSG_DELETADO_SUCESSO = "Deletado com Sucesso";
     public static final String MSG_ERRO_PROCESSO = "Problema ao Realizar Processo";
+    public static final String MSG_CONFIRMA_EXCLUSAO = "Confirma Exclusão?";
 }

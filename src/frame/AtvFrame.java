@@ -10,6 +10,7 @@ import bean.Atividade;
 import bean.Cargo;
 import java.awt.HeadlessException;
 import java.util.List;
+import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -139,25 +140,32 @@ public class AtvFrame extends BorderPane {
                     Area area = new Area(comboArea.getSelectionModel().getSelectedIndex() + 1);
                     Cargo cargo = new Cargo(comboNivel.getSelectionModel().getSelectedIndex() + 1);
                     
-                    Atividade atv = new Atividade();                    
+                    Atividade atv;
+                    
+                    EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+                    EntityManager manager = factory.createEntityManager();
+                    
+                    if(Objects.isNull(atividade)){
+                        atv = new Atividade();
+                    } else {
+                        atv = manager.find(Atividade.class, atividade.getCodigo());
+                    }
+                    
                     atv.setNome(tfDescricao.getText());
                     atv.setArea(area);
                     atv.setNivel(cargo);
                     atv.setPrazo(Double.parseDouble(tfPrazo.getText()));
                     
-                    EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
-                    EntityManager manager = factory.createEntityManager();
-
                     manager.getTransaction().begin();
                     manager.persist(atv);
                     manager.getTransaction().commit();
-                    JOptionPane.showMessageDialog(null, "Salvo com Sucesso");
+                    JOptionPane.showMessageDialog(null, StringsUtils.MSG_SALVO_SUCESSO);
                     manager.close();
                 } catch (HeadlessException e) {
-                    e.printStackTrace();
-                }                
+                    JOptionPane.showMessageDialog(null, StringsUtils.MSG_ERRO_PROCESSO);
+                }
+                limparCampos();
             }
-
         });
 
         btLimpar.setOnAction(new EventHandler<ActionEvent>() {
@@ -176,6 +184,9 @@ public class AtvFrame extends BorderPane {
     }
 
     private void carregarAtividade() {
-        tfDescricao.setText(atividade.getNome());        
+        tfDescricao.setText(atividade.getNome());
+        comboArea.setValue(atividade.getArea().getDescricao());
+        comboNivel.setValue(atividade.getNivel().getDescricao());
+        tfPrazo.setText(atividade.getPrazo().toString());
     }
 }
