@@ -5,6 +5,7 @@
  */
 package frame;
 
+import bean.Atividade;
 import bean.Funcionario;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -38,6 +39,24 @@ public class AG extends Application {
     @SuppressWarnings("Convert2Lambda")
     static void loadAtvFrame(Stage stage) {
         atvFrame = new AtvFrame(stage);
+        scene = new Scene(atvFrame, Numeros.LARGURA_FRAME, Numeros.ALTURA_FRAME);
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        stage.setTitle("AG");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
+    }
+    
+    @SuppressWarnings("Convert2Lambda")
+    static void loadAtvFrame(Stage stage, Atividade atv) {
+        atvFrame = new AtvFrame(stage, atv);
         scene = new Scene(atvFrame, Numeros.LARGURA_FRAME, Numeros.ALTURA_FRAME);
         
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

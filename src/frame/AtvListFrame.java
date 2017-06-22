@@ -8,9 +8,8 @@ package frame;
 import bean.Area;
 import bean.Atividade;
 import bean.Cargo;
-import java.util.ArrayList;
+import java.awt.HeadlessException;
 import java.util.List;
-import java.util.Observable;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,8 +30,9 @@ import javafx.util.Callback;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.StoredProcedureQuery;
+import javax.swing.JOptionPane;
 import utils.Numeros;
+import utils.StringsUtils;
 
 /**
  *
@@ -90,7 +90,7 @@ public class AtvListFrame  extends BorderPane{
         this.setBottom(pnButton); 
         this.setPadding(new Insets(0,10,10,10));
         
-//        carregarLista();
+        carregarLista();
     }
 
     @SuppressWarnings("Convert2Lambda")
@@ -175,25 +175,12 @@ public class AtvListFrame  extends BorderPane{
 
     @SuppressWarnings("UnusedAssignment")
     private void carregarLista() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
-        
-        StoredProcedureQuery spq = manager.createStoredProcedureQuery("");
-        
-        //Como fazer casting do retorno para o tipo Atividades
-        //Ou extrair os dados do object pra jogar na tabela
-        List<Object> lista = manager.createNativeQuery
-        ("select * from FN_RETORNA_ATIVIDADES()").getResultList();
-        
-        List<Atividade> listaCast = new ArrayList<>();
-        Atividade atv;
-        for (Object obj : lista) {
-            atv = new Atividade();
-//            atv.setCodigo(obj);
-            listaCast.add(atv);
-        }
-        
-        listaAtividades.getItems().addAll(listaCast);
+
+        List<Atividade> lista = (List<Atividade>) manager.createQuery("select atv from Atividade atv").getResultList();
+
+        listaAtividades.getItems().addAll(lista);
     }
 
     @SuppressWarnings("Convert2Lambda")
@@ -204,13 +191,28 @@ public class AtvListFrame  extends BorderPane{
         btEdit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AG.loadAtvFrame(stage);
+                Integer index = listaAtividades.getSelectionModel().getSelectedIndex();
+                atividade = listaAtividades.getItems().get(index);
+                AG.loadAtvFrame(stage, atividade);
             }
         });
         
         btDelete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Integer index = listaAtividades.getSelectionModel().getSelectedIndex();
+                atividade = listaAtividades.getItems().get(index);
+                try {
+                    EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+                    EntityManager manager = factory.createEntityManager();
+
+                    manager.getTransaction().begin();
+                    manager.remove(atividade);
+                    manager.getTransaction().commit();
+                    JOptionPane.showMessageDialog(null, StringsUtils.MSG_DELETADO_SUCESSO);
+                } catch (HeadlessException e) {
+                    JOptionPane.showMessageDialog(null, StringsUtils.MSG_ERRO_PROCESSO);
+                }
             }
         });
     }

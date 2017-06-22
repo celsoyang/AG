@@ -33,4 +33,7 @@ public class StringsUtils {
     public static final String POSTGRE = "PostgreSql";
     public static final String SQL_SERVER = "SqlServer";
     public static final String ENTITY_MANAGER = "AG";
+    public static final String MSG_SALVO_SUCESSO = "Salvo com Sucesso";
+    public static final String MSG_DELETADO_SUCESSO = "Deletado com Sucesso";
+    public static final String MSG_ERRO_PROCESSO = "Problema ao Realizar Processo";
 }
