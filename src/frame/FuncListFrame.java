@@ -6,10 +6,8 @@
 package frame;
 
 import bean.Area;
-import bean.Atividade;
 import bean.Cargo;
 import bean.Funcionario;
-import control.Controle;
 import java.awt.HeadlessException;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +20,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -46,7 +44,7 @@ import utils.StringsUtils;
 public class FuncListFrame extends BorderPane {
 
     private Label lbFunc;
-    private TableView<Funcionario> listaFunc;
+    private TableView<Funcionario> tabelaFunc;
     private MenuOp menu;
     private GridPane pnTop;
     private GridPane pnCenter;
@@ -69,7 +67,7 @@ public class FuncListFrame extends BorderPane {
         pnCenter = new GridPane();
         pnCenter.setAlignment(Pos.CENTER);
         pnCenter.add(lbFunc, 0, 0);
-        pnCenter.add(listaFunc, 0, 1);
+        pnCenter.add(tabelaFunc, 0, 1);
 
         configButton(stage);
         pnBottom = new GridPane();
@@ -86,7 +84,8 @@ public class FuncListFrame extends BorderPane {
 
     @SuppressWarnings({"Convert2Diamond", "Convert2Lambda"})
     private void configTable() {
-        listaFunc = new TableView<Funcionario>();
+        tabelaFunc = new TableView<Funcionario>();
+        tabelaFunc.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         TableColumn columnNome = new TableColumn("Nome");
         TableColumn columnCargo = new TableColumn("Cargo");
@@ -156,10 +155,7 @@ public class FuncListFrame extends BorderPane {
         columnArea.setMinWidth(Numeros.LARGURA_TABELA * 0.25);
         columnExp.setMinWidth(Numeros.LARGURA_TABELA * 0.20);
 
-        listaFunc.setMinHeight(Numeros.ALTURA_TABELA);
-        listaFunc.setMinWidth(Numeros.LARGURA_TABELA);
-
-        listaFunc.getColumns().addAll(columnNome, columnCargo, columnArea, columnExp);
+        tabelaFunc.getColumns().addAll(columnNome, columnCargo, columnArea, columnExp);
     }
 
     private void carregarLista() {
@@ -169,7 +165,7 @@ public class FuncListFrame extends BorderPane {
         List<Funcionario> funcionarios;
         funcionarios = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
 
-        listaFunc.getItems().setAll(funcionarios);
+        tabelaFunc.getItems().setAll(funcionarios);
 
         manager.close();
         factory.close();
@@ -188,8 +184,8 @@ public class FuncListFrame extends BorderPane {
         btEdit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Integer index = listaFunc.getSelectionModel().getSelectedIndex();
-                Funcionario f = listaFunc.getItems().get(index);
+                Integer index = tabelaFunc.getSelectionModel().getSelectedIndex();
+                Funcionario f = tabelaFunc.getItems().get(index);
                 AG.loadFuncFrame(stage, f);
             }
         });
@@ -197,8 +193,8 @@ public class FuncListFrame extends BorderPane {
         btDelete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Integer index = listaFunc.getSelectionModel().getSelectedIndex();
-                Funcionario f = listaFunc.getItems().get(index);
+                Integer index = tabelaFunc.getSelectionModel().getSelectedIndex();
+                Funcionario f = tabelaFunc.getItems().get(index);
                 Integer op = JOptionPane.showConfirmDialog(null, StringsUtils.MSG_CONFIRMA_EXCLUSAO);
                 if (Objects.equals(op, Numeros.ZERO)) {
                     try {

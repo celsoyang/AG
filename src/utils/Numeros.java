@@ -9,7 +9,7 @@ package utils;
  *
  * @author Celso Souza
  */
-public class Numeros {    
+public class Numeros {
     
     public static final Integer ALTURA_FRAME = 500;
     
