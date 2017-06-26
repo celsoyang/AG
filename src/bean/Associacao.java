@@ -54,7 +54,7 @@ public class Associacao {
     public void apresentarAssociacao() {
         for (int i = 0; i < linhas; i++) {
             for (int j = 0; j < colunas; j++) {
-                System.out.print(" - " + associacao[i][j]);
+                System.out.print(" . " + associacao[i][j]);
             }
             System.out.println("");
         }

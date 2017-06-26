@@ -9,6 +9,7 @@ import bean.Area;
 import bean.Associacao;
 import bean.Atividade;
 import bean.Cargo;
+import bean.Funcionario;
 import java.awt.HeadlessException;
 import java.util.List;
 import java.util.Objects;
@@ -164,7 +165,37 @@ public class AtvListFrame extends BorderPane {
                 };
             }
         });
-        columnResp.setCellValueFactory(new PropertyValueFactory<>("responsavel"));
+        columnResp.setCellValueFactory(new Callback<CellDataFeatures<Atividade,Funcionario>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<Atividade, Funcionario> param) {
+                return new ObservableValue<String>() {
+                    @Override
+                    public void addListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public void removeListener(ChangeListener<? super String> listener) {
+                    }
+
+                    @Override
+                    public String getValue() {
+                        if(param.getValue().getResponsavel() == null){
+                            return "";
+                        }else{
+                            return param.getValue().getResponsavel().getNome();
+                        }
+                    }
+
+                    @Override
+                    public void addListener(InvalidationListener listener) {
+                    }
+
+                    @Override
+                    public void removeListener(InvalidationListener listener) {
+                    }
+                };
+            }
+        });
 
         columnCod.setMinWidth(Numeros.LARGURA_TABELA * 0.05);
         columnTitulo.setMinWidth(Numeros.LARGURA_TABELA * 0.3);
