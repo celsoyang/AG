@@ -6,6 +6,7 @@
 package frame;
 
 import bean.Area;
+import bean.Atividade;
 import bean.Cargo;
 import bean.Funcionario;
 import java.awt.HeadlessException;
@@ -51,6 +52,7 @@ public class FuncListFrame extends BorderPane {
     private GridPane pnBottom;
     private Button btEdit;
     private Button btDelete;
+    private Button btTesteAssoc;
 
     /**
      *
@@ -72,7 +74,7 @@ public class FuncListFrame extends BorderPane {
         configButton(stage);
         pnBottom = new GridPane();
         pnBottom.setAlignment(Pos.CENTER);
-        pnBottom.addRow(0, btEdit, btDelete);
+        pnBottom.addRow(0, btEdit, btDelete, btTesteAssoc);
         pnBottom.setPadding(new Insets(0, 10, 10, 10));
 
         this.setTop(pnTop);
@@ -180,6 +182,7 @@ public class FuncListFrame extends BorderPane {
     private void configButton(Stage stage) {
         btEdit = new Button("Editar");
         btDelete = new Button("Apagar");
+        btTesteAssoc = new Button("Teste Associação");
 
         btEdit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -216,5 +219,33 @@ public class FuncListFrame extends BorderPane {
                 }
             }
         });
+        
+        btTesteAssoc.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+                EntityManager manager = factory.createEntityManager();
+                /*
+                manager.getTransaction().begin();
+                Funcionario f = manager.find(Funcionario.class, 50);
+                List<Atividade> listAt = (List<Atividade>) manager.createQuery("select atv from Atividade atv").getResultList();
+                
+                f.setAtividades(listAt);
+                manager.persist(f);
+                manager.getTransaction().commit();
+                */
+                Funcionario f = manager.find(Funcionario.class, 50);                
+                System.out.println(f.getNome());
+                for (int i = 0; i < f.getAtividades().size(); i++) {
+                    System.out.println("Atividade: " + f.getAtividades().get(i).getNome());
+                }
+                
+                manager.close();
+                factory.close();
+                
+                
+            }
+        });
+                
     }
 }

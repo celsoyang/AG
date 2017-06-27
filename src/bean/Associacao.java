@@ -37,6 +37,8 @@ public class Associacao {
         associacao = new Boolean[linhas][colunas];
         
         iniciarAssociacao(atividades, funcionarios);
+        manager.close();
+        factory.close();
     }
 
     private void iniciarAssociacao(List<Atividade> atv, List<Funcionario> func) {

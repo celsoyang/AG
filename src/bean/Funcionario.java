@@ -7,11 +7,13 @@ package bean;
 
 import utils.StringsUtils;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -41,6 +43,9 @@ public class Funcionario implements Serializable {
     
     @OneToOne
     private Area area = null;
+        
+    @OneToMany
+    private List<Atividade> atividades = null;
 
     public Integer getCodigo() {
         return codigo;
@@ -89,5 +94,12 @@ public class Funcionario implements Serializable {
     public void setArea(Area area) {
         this.area = area;
     }
-    
+
+    public List<Atividade> getAtividades() {
+        return atividades;
+    }
+
+    public void setAtividades(List<Atividade> atividades) {
+        this.atividades = atividades;
+    }
 }
