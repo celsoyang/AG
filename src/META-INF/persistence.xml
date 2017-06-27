@@ -6,6 +6,7 @@
     <class>bean.Area</class>
     <class>bean.Cargo</class>
     <class>bean.Atividade</class>
+    <class>bean.Associacao</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/AG"/>

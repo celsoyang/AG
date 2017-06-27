@@ -6,7 +6,7 @@
 package frame;
 
 import bean.Area;
-import bean.Associacao;
+import control.ControleAssociacao;
 import bean.Atividade;
 import bean.Cargo;
 import bean.Funcionario;
@@ -243,8 +243,8 @@ public class AtvListFrame extends BorderPane {
         btTeste.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Associacao ass = new Associacao();
-                ass.apresentarAssociacao();
+                ControleAssociacao ass = new ControleAssociacao();
+                ass.associar();
             }
         });
     }

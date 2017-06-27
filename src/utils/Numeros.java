@@ -20,4 +20,6 @@ public class Numeros {
     public static final Integer LARGURA_TABELA = 620;
     
     public static final Integer ZERO = 0;
+    
+    public static final Integer UM = 1;
 }
