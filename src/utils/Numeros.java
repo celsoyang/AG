@@ -22,4 +22,12 @@ public class Numeros {
     public static final Integer ZERO = 0;
     
     public static final Integer UM = 1;
+    
+    public static final Integer DOIS = 2;
+    
+    public static final Integer TRES = 3;
+    
+    public static final Integer QUATRO = 4;
+    
+    public static final Integer CINCO = 5;
 }

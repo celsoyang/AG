@@ -38,5 +38,4 @@ public class Associacao implements Serializable {
     public void setAssociacao(Integer[][] associacao) {
         this.associacao = associacao;
     }
-    
 }
