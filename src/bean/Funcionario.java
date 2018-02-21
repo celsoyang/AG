@@ -22,12 +22,11 @@ import javax.persistence.Table;
  * @author Celso Souza
  */
 @Entity
-@Table(name="funcionario")
+@Table(name="Funcionario")
 public class Funcionario implements Serializable {
     
-    @Id 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer codigo = null;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int codigo;
 
     @Column
     private String nome = StringsUtils.VAZIA;
@@ -36,10 +35,10 @@ public class Funcionario implements Serializable {
     private Cargo cargo = null;
 
     @Column
-    private Integer tempoExp = null;
+    private Integer tempo_exp = null;
     
     @Column
-    private Integer tempoProj = null;
+    private Integer tempo_proj = null;
     
     @OneToOne
     private Area area = null;
@@ -63,20 +62,20 @@ public class Funcionario implements Serializable {
         this.nome = nome;
     }
 
-    public Integer getTempoExp() {
-        return tempoExp;
+    public Integer getTempo_exp() {
+        return tempo_exp;
     }
 
-    public void setTempoExp(Integer tempoExp) {
-        this.tempoExp = tempoExp;
+    public void setTempo_exp(Integer tempo_exp) {
+        this.tempo_exp = tempo_exp;
     }
 
-    public Integer getTempoProj() {
-        return tempoProj;
+    public Integer getTempo_proj() {
+        return tempo_proj;
     }
 
-    public void setTempoProj(Integer tempoProj) {
-        this.tempoProj = tempoProj;
+    public void setTempo_proj(Integer tempo_proj) {
+        this.tempo_proj = tempo_proj;
     }
 
     public Cargo getCargo() {

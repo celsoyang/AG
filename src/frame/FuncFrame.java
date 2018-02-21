@@ -8,7 +8,6 @@ package frame;
 import bean.Area;
 import bean.Cargo;
 import bean.Funcionario;
-import control.Controle;
 import enums.AreaEnum;
 import enums.CargoEnum;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import utils.StringsUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -117,8 +115,8 @@ public class FuncFrame extends BorderPane{
     
     private void carregarFunc(Funcionario func) {
         tfNome.setText(func.getNome());
-        tfTimeExp.setText(func.getTempoExp().toString());
-        tfTimeProj.setText(func.getTempoProj().toString());
+        tfTimeExp.setText(func.getTempo_exp().toString());
+        tfTimeProj.setText(func.getTempo_proj().toString());
         comboArea.setValue(func.getArea().getDescricao());
         comboCargo.setValue(func.getCargo().getDescricao());
     }
@@ -174,8 +172,7 @@ public class FuncFrame extends BorderPane{
                 Area area = new Area(comboArea.getSelectionModel().getSelectedIndex() + 1);                                        
 
                 EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);                
-                EntityManager manager = factory.createEntityManager();                
-                manager.getTransaction().begin();
+                EntityManager manager = factory.createEntityManager();
                 
                 Funcionario func;
                 if(Objects.isNull(funcionario)){
@@ -186,10 +183,11 @@ public class FuncFrame extends BorderPane{
                 
                 func.setNome(tfNome.getText());
                 func.setCargo(cargo);
-                func.setTempoExp(Integer.parseInt(tfTimeExp.getText()));
-                func.setTempoProj(Integer.parseInt(tfTimeProj.getText()));
+                func.setTempo_exp(Integer.parseInt(tfTimeExp.getText()));
+                func.setTempo_proj(Integer.parseInt(tfTimeProj.getText()));
                 func.setArea(area);
                 
+                manager.getTransaction().begin();
                 manager.persist(func);                
                 manager.getTransaction().commit();
                 

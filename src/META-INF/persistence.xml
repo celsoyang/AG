@@ -8,17 +8,16 @@
     <class>bean.Atividade</class>
     <class>bean.Associacao</class>
     <properties>
-      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/AG"/>
-      <property name="javax.persistence.jdbc.user" value="postgres"/>
-      <property name="javax.persistence.jdbc.password" value="celsoyang"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="false"/>
       <property name="hibernate.use_sql_comments" value="false"/>
       <property name="hibernate.jdbc.wrap_result_sets" value="false"/>
       <property name="hibernate.hibernate.cache.use_query_cache" value="true"/>
-      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/AG"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="Celso200823094"/>
     </properties>
   </persistence-unit>
 </persistence>
