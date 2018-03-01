@@ -6,7 +6,6 @@
 package frame;
 
 import bean.Area;
-import bean.Atividade;
 import bean.Cargo;
 import bean.Funcionario;
 import java.awt.HeadlessException;
@@ -88,6 +87,7 @@ public class FuncListFrame extends BorderPane {
     private void configTable() {
         tabelaFunc = new TableView<Funcionario>();
         tabelaFunc.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tabelaFunc.setMinSize(Numeros.LARGURA_TABELA, Numeros.ALTURA_TABELA);
 
         TableColumn columnNome = new TableColumn("Nome");
         TableColumn columnCargo = new TableColumn("Cargo");

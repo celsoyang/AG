@@ -33,6 +33,8 @@ import utils.StringsUtils;
  * @version 1.0
  */
 public class Controle {
+    
+        public static List<String> sequencias = new ArrayList<String>();
 
     /**
      * 
@@ -156,41 +158,14 @@ public class Controle {
     }
     
     
-    public static void gerarFucionarios(){
-        int nome = 0;
-        int sobreNome01 = 0;
-        int sobreNome02 = 0;        
-        StringBuilder nomeFunc = new StringBuilder();
-        int lenth = StringsUtils.NOME.length();
+    public static void gerarFucionarios(){        
         
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);                
         EntityManager manager = factory.createEntityManager();
 
         manager.getTransaction().begin();
         for (int i = 0; i < Numeros.QTD_FUNC; i++) {
-                       
-            nome = (int) (Math.random() * lenth);
-            sobreNome01 = (int) (Math.random() * lenth);
-            sobreNome02 = (int) (Math.random() * lenth);
-            
-            
-            
-                nomeFunc = new StringBuilder();
-                nomeFunc.append(StringsUtils.NOMES_FUNC[nome]);
-                nomeFunc.append(" ");
-                nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome01]);                
-                nomeFunc.append(" ");
-                nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome02]);
-
-                Funcionario func = new Funcionario();
-                func.setArea(new Area((int) (Math.random() * 5) + 1));
-                func.setCargo(new Cargo((int) (Math.random() * 5) + 1));
-                func.setNome(nomeFunc.toString());
-                func.setTempo_exp((int) (Math.random() * 36));
-                func.setTempo_proj((int) (Math.random() * 12));
-
-                manager.persist(func);
-            
+            manager.persist(gerarFuncionario());            
         }
         
         manager.getTransaction().commit();       
@@ -198,5 +173,47 @@ public class Controle {
         factory.close();
         
         JOptionPane.showMessageDialog(null, "Gerados");
+    }
+
+    private static Funcionario gerarFuncionario() {        
+        int nome = 0;
+        int sobreNome01 = 0;
+        int sobreNome02 = 0;        
+        StringBuilder nomeFunc;
+        nomeFunc = new StringBuilder();
+        
+        do {
+            nome = (int) (Math.random() * StringsUtils.NOME.length());
+            sobreNome01 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
+            sobreNome02 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
+        } while (veificarSequencia(sequencias, String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02)));
+        
+        sequencias.add(String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02));
+
+        nomeFunc = new StringBuilder();
+        nomeFunc.append(StringsUtils.NOMES_FUNC[nome]);
+        nomeFunc.append(" ");
+        nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome01]);                
+        nomeFunc.append(" ");
+        nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome02]);
+
+        Funcionario func = new Funcionario();
+        func.setArea(new Area((int) (Math.random() * 5) + 1));
+        func.setCargo(new Cargo((int) (Math.random() * 5) + 1));
+        func.setNome(nomeFunc.toString());
+        func.setTempo_exp((int) (Math.random() * 36));
+        func.setTempo_proj((int) (Math.random() * 12));
+        
+        return func;
+    }
+    
+    private static Boolean veificarSequencia(List<String> listaSequencias, String sequencia){
+        Boolean retorno = Boolean.FALSE;
+        for (String seq : listaSequencias) {
+            if(seq.equals(sequencia)){
+                retorno = Boolean.TRUE;
+            }
+        }
+        return retorno;
     }
 }

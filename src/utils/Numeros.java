@@ -11,13 +11,13 @@ package utils;
  */
 public class Numeros {
     
-    public static final Integer ALTURA_FRAME = 500;
+    public static final Integer ALTURA_FRAME = 800;
     
-    public static final Integer LARGURA_FRAME = 650;
+    public static final Integer LARGURA_FRAME = 1000;
     
-    public static final Integer ALTURA_TABELA = 400;
+    public static final Integer ALTURA_TABELA = 650;
     
-    public static final Integer LARGURA_TABELA = 620;
+    public static final Integer LARGURA_TABELA = 900;
     
     public static final Integer ZERO = 0;
     
