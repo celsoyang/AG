@@ -44,16 +44,27 @@ CREATE DATABASE AG
   insert into cargo values(2,'Programador Pleno')
   insert into cargo values(3,'Analista Jr.')
   insert into cargo values(4,'Analista Pleno')
-  insert into cargo values(5,'Analista S�nior')
+  insert into cargo values(5,'Analista S�nior')
   insert into area values(1,'Desenvolvimento')
   
   select * from area
   insert into area values(1,'Desenvolvimento')
-  insert into area values(2,'An�lise de Software')
-  insert into area values(3,'An�lise de Requis�tos')
+  insert into area values(2,'An�lise de Software')
+  insert into area values(3,'An�lise de Requis�tos')
   insert into area values(4,'Banco de Dados')
   insert into area values(5,'Teste')
   
   select * from funcionario
   
   insert into funcionario values( 1, 'Celso Oliveira de Souza', 2, 2.5, 1.0,1)
+
+
+/* OBJETIVOS
+
+01 - Criar o método de cruzamento
+02 - Criar o gene do indivíduo
+03 - Criar o problema em si, que é onde se faz o cálculo para pontuar os indivíduos bons e ruins
+04 - Criar a forma de mutação
+05 - Criar o método de criação da população inicial.
+
+*/

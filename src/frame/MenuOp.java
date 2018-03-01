@@ -5,6 +5,7 @@
  */
 package frame;
 
+import control.Controle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
@@ -50,7 +51,8 @@ public class MenuOp extends MenuBar {
         menuOp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AG.loadOtherFrame(stage);
+                Controle.gerarFucionarios();
+                //AG.loadOtherFrame(stage);
             }
         });
 

@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
  */
 public class StringsUtils {
 
-    public static final String FUNCIONARIOS = "Funcionários";    
+    public static final String FUNCIONARIOS = "Funcionários";
     public static final String ATIVIDADES = "Atividades";
     public static final String INICIAR = "Iniciar";
     public static final String CANCELAR = "Cancelar";
@@ -22,7 +22,7 @@ public class StringsUtils {
     public static final String CARGO = "Cargo";
     public static final String TEMPO_EXPERIENCIA = "Tempo de Experência";
     public static final String TEMPO_PROJETO = "Tempo de Projeto";
-    public static final String AREA = "Área";    
+    public static final String AREA = "Área";
     public static final String DOIS_PONTOS = ":";
     public static final String SALVAR = "Salvar";
     public static final Font FONTE_SISTEMA = Font.font("Georgia", 13);
@@ -37,4 +37,7 @@ public class StringsUtils {
     public static final String MSG_DELETADO_SUCESSO = "Deletado com Sucesso";
     public static final String MSG_ERRO_PROCESSO = "Problema ao Realizar Processo";
     public static final String MSG_CONFIRMA_EXCLUSAO = "Confirma Exclusão?";
+
+    public static final String[] NOMES_FUNC = {"João", "Pedro", "Bernardo", "Cristiano", "Gustavo", "Rafael", "Mário", "Antônio", "Everton", "José", "Julino", "Renato", "Agnaldo"};
+    public static final String[] SOBRENOMES_FUNC = {"Vasconcelos", "Souza", "Silva", "Oliveira", "Menezes", "Santos", "Costa", "Albuquerque", "Alves", "Dias", "Mendes", "Filho", "Bernardes"};
 }
