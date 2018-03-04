@@ -164,8 +164,9 @@ public class Controle {
         EntityManager manager = factory.createEntityManager();
 
         manager.getTransaction().begin();
+        manager.createQuery("delete from Funcionario").executeUpdate();
         for (int i = 0; i < Numeros.QTD_FUNC; i++) {
-            manager.persist(gerarFuncionario());            
+            manager.persist(criarFuncionario());            
         }
         
         manager.getTransaction().commit();       
@@ -174,16 +175,17 @@ public class Controle {
         
         JOptionPane.showMessageDialog(null, "Gerados");
     }
+    
+    public static void gerarAtividade(){}
 
-    private static Funcionario gerarFuncionario() {        
+    private static Funcionario criarFuncionario() {
         int nome = 0;
         int sobreNome01 = 0;
         int sobreNome02 = 0;        
-        StringBuilder nomeFunc;
-        nomeFunc = new StringBuilder();
+        StringBuilder nomeFunc = new StringBuilder();
         
         do {
-            nome = (int) (Math.random() * StringsUtils.NOME.length());
+            nome = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
             sobreNome01 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
             sobreNome02 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
         } while (veificarSequencia(sequencias, String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02)));
@@ -201,8 +203,8 @@ public class Controle {
         func.setArea(new Area((int) (Math.random() * 5) + 1));
         func.setCargo(new Cargo((int) (Math.random() * 5) + 1));
         func.setNome(nomeFunc.toString());
-        func.setTempo_exp((int) (Math.random() * 36));
-        func.setTempo_proj((int) (Math.random() * 12));
+        func.setTempo_exp((int) (Math.random() * 36) + 6);
+        func.setTempo_proj((int) (Math.random() * 12) + 6);
         
         return func;
     }

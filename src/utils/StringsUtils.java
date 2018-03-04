@@ -40,4 +40,5 @@ public class StringsUtils {
 
     public static final String[] NOMES_FUNC = {"João", "Pedro", "Bernardo", "Cristiano", "Gustavo", "Rafael", "Mário", "Antônio", "Everton", "José", "Julino", "Renato", "Agnaldo"};
     public static final String[] SOBRENOMES_FUNC = {"Vasconcelos", "Souza", "Silva", "Oliveira", "Menezes", "Santos", "Costa", "Albuquerque", "Alves", "Dias", "Mendes", "Filho", "Bernardes"};
+    public static final String[] TIPO_ATVIVIDADE = {"Criar","Alterar","Especificar","Analizar","Definir"};
 }

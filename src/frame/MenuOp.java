@@ -40,7 +40,7 @@ public class MenuOp extends MenuBar {
         opAtvAdd = new MenuItem("Adicionar");
         menuOp = new Menu("Opções");
 
-        menuOp_opcao = new MenuItem("Opção");
+        menuOp_opcao = new MenuItem("Gerar População");
         menuOp.getItems().addAll(menuOp_opcao);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
