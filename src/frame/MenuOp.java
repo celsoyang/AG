@@ -27,7 +27,8 @@ public class MenuOp extends MenuBar {
     private MenuItem opAtvList;
     private MenuItem opAtvAdd;
     private Menu menuOp;
-    private MenuItem menuOp_opcao;
+    private MenuItem menuOpGerarPopulacao;
+    private MenuItem menuOpAssociar;
 
     @SuppressWarnings("Convert2Lambda")
     public MenuOp(Stage stage) {        
@@ -40,8 +41,9 @@ public class MenuOp extends MenuBar {
         opAtvAdd = new MenuItem("Adicionar");
         menuOp = new Menu("Opções");
 
-        menuOp_opcao = new MenuItem("Gerar População");
-        menuOp.getItems().addAll(menuOp_opcao);
+        menuOpGerarPopulacao = new MenuItem("Gerar População");
+        menuOpAssociar = new MenuItem("Associar Atividades");
+        menuOp.getItems().addAll(menuOpGerarPopulacao, menuOpAssociar);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
@@ -51,14 +53,21 @@ public class MenuOp extends MenuBar {
         menuOp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Controle.gerarFucionarios();
                 //AG.loadOtherFrame(stage);
             }
         });
 
-        menuOp_opcao.setOnAction(new EventHandler<ActionEvent>() {
+        menuOpGerarPopulacao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Controle.gerarFucionarios();
+            }
+        });
+        
+        menuOpAssociar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) { 
+                Controle.associarAtividades();
             }
         });
         

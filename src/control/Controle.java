@@ -14,7 +14,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.Image;
@@ -33,13 +32,13 @@ import utils.StringsUtils;
  * @version 1.0
  */
 public class Controle {
-    
-        public static List<String> sequencias = new ArrayList<String>();
+
+    public static List<String> sequencias = new ArrayList<String>();
 
     /**
-     * 
+     *
      * Salvar Funcionario na lista
-     * 
+     *
      * @param func
      */
     @SuppressWarnings("InfiniteRecursion")
@@ -61,11 +60,11 @@ public class Controle {
         } catch (IOException ex) {
             Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        
+
     }
-    
+
     @SuppressWarnings("InfiniteRecursion")
-    public static void salvarAtividade(Atividade atv){
+    public static void salvarAtividade(Atividade atv) {
         FileOutputStream fos;
         ObjectOutputStream ous;
         List<Atividade> lista;
@@ -83,7 +82,7 @@ public class Controle {
         } catch (IOException ex) {
             Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     /**
@@ -99,7 +98,7 @@ public class Controle {
         try {
             fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
-            
+
             retorno = new ArrayList<Funcionario>();
 
             retorno = (List<Funcionario>) ois.readObject();
@@ -126,7 +125,7 @@ public class Controle {
         try {
             fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
-            
+
             retorno = new ArrayList<Atividade>();
 
             retorno = (List<Atividade>) ois.readObject();
@@ -138,7 +137,7 @@ public class Controle {
         }
         return retorno;
     }
-    
+
     public static void loadFuncionario(Stage stage) {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
 
@@ -149,53 +148,53 @@ public class Controle {
         entityManager.close();
         AG.loadFuncFrame(stage, f);
     }
-    
-    public static ImageView returnLoadGif(){
+
+    public static ImageView returnLoadGif() {
         Image im = new Image("/files/load2.gif");
         ImageView iv = new ImageView(im);
-        
+
         return iv;
     }
-    
-    
-    public static void gerarFucionarios(){        
-        
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);                
+
+    public static void gerarFucionarios() {
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
 
         manager.getTransaction().begin();
         manager.createQuery("delete from Funcionario").executeUpdate();
         for (int i = 0; i < Numeros.QTD_FUNC; i++) {
-            manager.persist(criarFuncionario());            
+            manager.persist(criarFuncionario());
         }
-        
-        manager.getTransaction().commit();       
+
+        manager.getTransaction().commit();
         manager.close();
         factory.close();
-        
+
         JOptionPane.showMessageDialog(null, "Gerados");
     }
-    
-    public static void gerarAtividade(){}
+
+    public static void gerarAtividade() {
+    }
 
     private static Funcionario criarFuncionario() {
         int nome = 0;
         int sobreNome01 = 0;
-        int sobreNome02 = 0;        
+        int sobreNome02 = 0;
         StringBuilder nomeFunc = new StringBuilder();
-        
+
         do {
             nome = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
             sobreNome01 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
             sobreNome02 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
         } while (veificarSequencia(sequencias, String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02)));
-        
+
         sequencias.add(String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02));
 
         nomeFunc = new StringBuilder();
         nomeFunc.append(StringsUtils.NOMES_FUNC[nome]);
         nomeFunc.append(" ");
-        nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome01]);                
+        nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome01]);
         nomeFunc.append(" ");
         nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome02]);
 
@@ -205,17 +204,55 @@ public class Controle {
         func.setNome(nomeFunc.toString());
         func.setTempo_exp((int) (Math.random() * 36) + 6);
         func.setTempo_proj((int) (Math.random() * 12) + 6);
-        
+
         return func;
     }
-    
-    private static Boolean veificarSequencia(List<String> listaSequencias, String sequencia){
+
+    private static Boolean veificarSequencia(List<String> listaSequencias, String sequencia) {
         Boolean retorno = Boolean.FALSE;
         for (String seq : listaSequencias) {
-            if(seq.equals(sequencia)){
+            if (seq.equals(sequencia)) {
                 retorno = Boolean.TRUE;
             }
         }
         return retorno;
+    }
+
+    public static void associarAtividades() {
+        List<Funcionario> listaFunc = new ArrayList<>();
+        List<Atividade> listaAtv = new ArrayList<>();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManager manager = factory.createEntityManager();
+
+        manager.getTransaction().begin();
+
+        listaFunc = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
+        listaAtv = (List<Atividade>) manager.createQuery("select at from Atividade at").getResultList();
+
+        for (Atividade atv : listaAtv) {
+            Boolean dontStop = Boolean.TRUE;
+            do {
+                int index = (int) (Math.random() * listaFunc.size());
+                if (atv.getArea().equals(listaFunc.get(index).getArea())
+                        && atv.getNivel().getCodigo() <= listaFunc.get(index).getCargo().getCodigo()) {
+                    if (listaFunc.get(index).getAtividades().size() < Numeros.DOIS) {
+
+                        atv.setResponsavel(listaFunc.get(index));
+                        listaFunc.get(index).getAtividades().add(atv);
+                        Funcionario f = manager.find(Funcionario.class, listaFunc.get(index).getCodigo());
+                        Atividade a = manager.find(Atividade.class, atv.getCodigo());
+                        f = listaFunc.get(index);
+                        a = atv;
+                        manager.persist(f);
+                        manager.persist(a);
+                        System.out.println("Funcionario: " + listaFunc.get(index).getNome() + " Atividade: " + atv.getNome());
+                        dontStop = Boolean.FALSE;
+                    }
+                }
+            } while (dontStop);
+        }
+        manager.getTransaction().commit();
+        manager.close();
+        JOptionPane.showMessageDialog(null, "Associado");
     }
 }
