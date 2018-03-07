@@ -4,6 +4,7 @@ import bean.Area;
 import bean.Atividade;
 import bean.Cargo;
 import bean.Funcionario;
+import bean.MaxArea;
 import frame.AG;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.JOptionPane;
 import utils.Numeros;
 import utils.StringsUtils;
@@ -157,14 +159,13 @@ public class Controle {
     }
 
     public static void gerarFucionarios() {
-
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
 
         manager.getTransaction().begin();
-        manager.createQuery("delete from Funcionario").executeUpdate();
         for (int i = 0; i < Numeros.QTD_FUNC; i++) {
-            manager.persist(criarFuncionario());
+            Funcionario f = criarFuncionario();
+            manager.persist(f);
         }
 
         manager.getTransaction().commit();
@@ -221,38 +222,127 @@ public class Controle {
     public static void associarAtividades() {
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
+        MaxArea maxAreaAtv = new MaxArea();
+        MaxArea maxAreaFunc = new MaxArea();
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
 
         manager.getTransaction().begin();
-
         listaFunc = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         listaAtv = (List<Atividade>) manager.createQuery("select at from Atividade at").getResultList();
 
-        for (Atividade atv : listaAtv) {
-            Boolean dontStop = Boolean.TRUE;
-            do {
-                int index = (int) (Math.random() * listaFunc.size());
-                if (atv.getArea().equals(listaFunc.get(index).getArea())
-                        && atv.getNivel().getCodigo() <= listaFunc.get(index).getCargo().getCodigo()) {
-                    if (listaFunc.get(index).getAtividades().size() < Numeros.DOIS) {
+        for (Atividade atividade : listaAtv) {
+            switch (atividade.getArea().getCodigo()) {
+                case 1:
+                    maxAreaAtv.setQtdDev(maxAreaAtv.getQtdDev() + Numeros.UM);
+                    break;
+                case 2:
+                    maxAreaAtv.setQtdTest(maxAreaAtv.getQtdTest() + Numeros.UM);
+                    break;
+                case 3:
+                    maxAreaAtv.setQtdBanco(maxAreaAtv.getQtdBanco() + Numeros.UM);
+                    break;
+                case 4:
+                    maxAreaAtv.setQtdAnaliseReq(maxAreaAtv.getQtdAnaliseReq() + Numeros.UM);
+                    break;
+                case 5:
+                    maxAreaAtv.setQtdAnaliseSoft(maxAreaAtv.getQtdAnaliseSoft() + Numeros.UM);
+                    break;
+                default:
+                    break;
+            }
+        }
 
-                        atv.setResponsavel(listaFunc.get(index));
-                        listaFunc.get(index).getAtividades().add(atv);
-                        Funcionario f = manager.find(Funcionario.class, listaFunc.get(index).getCodigo());
-                        Atividade a = manager.find(Atividade.class, atv.getCodigo());
-                        f = listaFunc.get(index);
-                        a = atv;
-                        manager.persist(f);
-                        manager.persist(a);
-                        System.out.println("Funcionario: " + listaFunc.get(index).getNome() + " Atividade: " + atv.getNome());
-                        dontStop = Boolean.FALSE;
+        for (Funcionario funcionario : listaFunc) {
+            switch (funcionario.getArea().getCodigo()) {
+                case 1:
+                    maxAreaFunc.setQtdDev(maxAreaFunc.getQtdDev() + Numeros.UM);
+                    break;
+                case 2:
+                    maxAreaFunc.setQtdTest(maxAreaFunc.getQtdTest() + Numeros.UM);
+                    break;
+                case 3:
+                    maxAreaFunc.setQtdBanco(maxAreaFunc.getQtdBanco() + Numeros.UM);
+                    break;
+                case 4:
+                    maxAreaFunc.setQtdAnaliseReq(maxAreaFunc.getQtdAnaliseReq() + Numeros.UM);
+                    break;
+                case 5:
+                    maxAreaFunc.setQtdAnaliseSoft(maxAreaFunc.getQtdAnaliseSoft() + Numeros.UM);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        for (Atividade atv : listaAtv) {
+            for (Funcionario func : listaFunc) {
+                if (atv.getArea().equals(func.getArea())) {
+                    if (atv.getNivel().getCodigo() <= func.getCargo().getCodigo()) {
+                        switch (atv.getArea().getCodigo()) {
+                            case 1:
+                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdDev() / maxAreaFunc.getQtdDev()))) {
+                                    func.getAtividades().add(atv);
+                                    atv.setResponsavel(func);
+                                }
+                                break;
+                            case 2:
+                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdTest()/ maxAreaFunc.getQtdTest()))) {
+                                    func.getAtividades().add(atv);
+                                    atv.setResponsavel(func);
+                                }
+                                break;
+                            case 3:
+                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdBanco()/ maxAreaFunc.getQtdBanco()))) {
+                                    func.getAtividades().add(atv);
+                                    atv.setResponsavel(func);
+                                }
+                                break;
+                            case 4:
+                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdAnaliseReq()/ maxAreaFunc.getQtdAnaliseReq()))) {
+                                    func.getAtividades().add(atv);
+                                    atv.setResponsavel(func);
+                                }
+                                break;
+                            case 5:
+                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdAnaliseSoft()/ maxAreaFunc.getQtdAnaliseSoft()))) {
+                                    func.getAtividades().add(atv);
+                                    atv.setResponsavel(func);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
-            } while (dontStop);
+            }
         }
+
+        /*Duplicação de chave primaria na tabela atividade_funcionario*/
+        for (Funcionario funcionario : listaFunc) {
+            Funcionario f = manager.find(Funcionario.class, funcionario.getCodigo());
+            f = funcionario;
+            manager.persist(f);
+            System.out.println(funcionario.getNome() + ": " + funcionario.getAtividades().size());
+        }
+        
+        for (Atividade atividade : listaAtv) {
+            Atividade a = manager.find(Atividade.class, atividade.getCodigo());
+            a =  atividade;
+            manager.persist(a);
+        }
+
         manager.getTransaction().commit();
         manager.close();
         JOptionPane.showMessageDialog(null, "Associado");
+    }
+
+    public static Integer seZeroUm(Integer valor) {
+        if (valor.equals(Numeros.ZERO)) {
+            return Numeros.UM;
+        } else {
+            return valor;
+        }
     }
 }

@@ -22,11 +22,12 @@ import javax.persistence.Table;
  * @author Celso Souza
  */
 @Entity
-@Table(name="Funcionario")
+@Table(name = "Funcionario")
 public class Funcionario implements Serializable {
-    
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int codigo;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
+    private Integer codigo;
 
     @Column
     private String nome = StringsUtils.VAZIA;
@@ -36,13 +37,13 @@ public class Funcionario implements Serializable {
 
     @Column
     private Integer tempo_exp = null;
-    
+
     @Column
     private Integer tempo_proj = null;
-    
+
     @OneToOne
     private Area area = null;
-        
+
     @OneToMany
     private List<Atividade> atividades = null;
 

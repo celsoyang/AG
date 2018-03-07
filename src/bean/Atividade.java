@@ -20,7 +20,8 @@ import utils.StringsUtils;
 @Entity
 public class Atividade implements Serializable {
     
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo = null;
     
     private String nome = StringsUtils.VAZIA;
