@@ -17,7 +17,7 @@ public class Numeros {
     
     public static final Integer ALTURA_TABELA = 650;
     
-    public static final Integer LARGURA_TABELA = 900;
+    public static final Integer LARGURA_TABELA = 950;
     
     public static final Integer ZERO = 0;
     

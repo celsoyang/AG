@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.JOptionPane;
 import utils.Numeros;
 import utils.StringsUtils;
@@ -282,31 +281,31 @@ public class Controle {
                     if (atv.getNivel().getCodigo() <= func.getCargo().getCodigo()) {
                         switch (atv.getArea().getCodigo()) {
                             case 1:
-                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdDev() / maxAreaFunc.getQtdDev()))) {
+                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdDev() / maxAreaFunc.getQtdDev()))) {
                                     func.getAtividades().add(atv);
                                     atv.setResponsavel(func);
                                 }
                                 break;
                             case 2:
-                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdTest()/ maxAreaFunc.getQtdTest()))) {
+                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdTest()/ maxAreaFunc.getQtdTest()))) {
                                     func.getAtividades().add(atv);
                                     atv.setResponsavel(func);
                                 }
                                 break;
                             case 3:
-                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdBanco()/ maxAreaFunc.getQtdBanco()))) {
+                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdBanco()/ maxAreaFunc.getQtdBanco()))) {
                                     func.getAtividades().add(atv);
                                     atv.setResponsavel(func);
                                 }
                                 break;
                             case 4:
-                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdAnaliseReq()/ maxAreaFunc.getQtdAnaliseReq()))) {
+                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdAnaliseReq()/ maxAreaFunc.getQtdAnaliseReq()))) {
                                     func.getAtividades().add(atv);
                                     atv.setResponsavel(func);
                                 }
                                 break;
                             case 5:
-                                if (func.getAtividades().size() < seZeroUm((maxAreaAtv.getQtdAnaliseSoft()/ maxAreaFunc.getQtdAnaliseSoft()))) {
+                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdAnaliseSoft()/ maxAreaFunc.getQtdAnaliseSoft()))) {
                                     func.getAtividades().add(atv);
                                     atv.setResponsavel(func);
                                 }
@@ -325,12 +324,19 @@ public class Controle {
             f = funcionario;
             manager.persist(f);
             System.out.println(funcionario.getNome() + ": " + funcionario.getAtividades().size());
+            
         }
         
         for (Atividade atividade : listaAtv) {
             Atividade a = manager.find(Atividade.class, atividade.getCodigo());
             a =  atividade;
             manager.persist(a);
+            if(atividade.getResponsavel() != null){
+                System.out.println(atividade.getNome() + ": " + atividade.getResponsavel().getNome() + ": " + 
+                        atividade.getResponsavel().getCargo().getDescricao() + ": " + atividade.getResponsavel().getArea().getDescricao());
+            } else {
+                System.out.println(atividade.getNome() + ": Sem responsável");
+            }
         }
 
         manager.getTransaction().commit();
@@ -338,7 +344,7 @@ public class Controle {
         JOptionPane.showMessageDialog(null, "Associado");
     }
 
-    public static Integer seZeroUm(Integer valor) {
+    public static Integer seZeroRetorneUm(Integer valor) {
         if (valor.equals(Numeros.ZERO)) {
             return Numeros.UM;
         } else {

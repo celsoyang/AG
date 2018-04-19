@@ -44,7 +44,7 @@ public class Funcionario implements Serializable {
     @OneToOne
     private Area area = null;
 
-    @OneToMany
+    @OneToMany(mappedBy = "responsavel")
     private List<Atividade> atividades = null;
 
     public Integer getCodigo() {

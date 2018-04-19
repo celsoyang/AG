@@ -102,6 +102,7 @@ public class AtvListFrame extends BorderPane {
     private void configTabela() {
         tabelaAtividades = new TableView<>();
         tabelaAtividades.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tabelaAtividades.setMinSize(Numeros.LARGURA_TABELA, Numeros.ALTURA_TABELA);
 
         TableColumn columnCod = new TableColumn("Código");
         TableColumn columnTitulo = new TableColumn("Título");

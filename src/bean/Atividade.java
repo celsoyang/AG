@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import utils.StringsUtils;
 
@@ -32,7 +33,7 @@ public class Atividade implements Serializable {
     @OneToOne
     private Area area = null;
     
-    @OneToOne
+    @ManyToOne
     private Funcionario responsavel = null;
     
     private Double prazo = null;
@@ -83,6 +84,5 @@ public class Atividade implements Serializable {
 
     public void setPrazo(Double prazo) {
         this.prazo = prazo;
-    }
-        
+    }        
 }
