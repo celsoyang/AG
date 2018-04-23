@@ -12,6 +12,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import utils.StringsUtils;
 
 /**
  *
@@ -29,21 +30,23 @@ public class MenuOp extends MenuBar {
     private Menu menuOp;
     private MenuItem menuOpGerarPopulacao;
     private MenuItem menuOpAssociar;
+    private MenuItem menuOpAvaliar;
 
     @SuppressWarnings("Convert2Lambda")
     public MenuOp(Stage stage) {        
 
-        menuFunc = new Menu("Funcionário");
-        opFuncList = new MenuItem("Listar");
-        opFuncAdd = new MenuItem("Adicionar");
-        menuAtv = new Menu("Atividade");
-        opAtvList = new MenuItem("Listar");
-        opAtvAdd = new MenuItem("Adicionar");
-        menuOp = new Menu("Opções");
+        menuFunc = new Menu(StringsUtils.FUNCIONARIOS);
+        opFuncList = new MenuItem(StringsUtils.LISTAR);
+        opFuncAdd = new MenuItem(StringsUtils.ADICIONAR);
+        menuAtv = new Menu(StringsUtils.ATIVIDADES);
+        opAtvList = new MenuItem(StringsUtils.LISTAR);
+        opAtvAdd = new MenuItem(StringsUtils.ADICIONAR);
+        menuOp = new Menu(StringsUtils.OPCOES);
 
-        menuOpGerarPopulacao = new MenuItem("Gerar População");
-        menuOpAssociar = new MenuItem("Associar Atividades");
-        menuOp.getItems().addAll(menuOpGerarPopulacao, menuOpAssociar);
+        menuOpGerarPopulacao = new MenuItem(StringsUtils.GERAR_POPULACAO);
+        menuOpAssociar = new MenuItem(StringsUtils.ASSOCIAR_ATIVIDADES);
+        menuOpAvaliar = new MenuItem(StringsUtils.AVALIAR);
+        menuOp.getItems().addAll(menuOpGerarPopulacao, menuOpAssociar, menuOpAvaliar);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
@@ -67,7 +70,7 @@ public class MenuOp extends MenuBar {
         menuOpAssociar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) { 
-                Controle.associarAtividades();
+                
             }
         });
         
@@ -96,6 +99,13 @@ public class MenuOp extends MenuBar {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadAtvFrame(stage);
+            }
+        });
+        
+        menuOpAvaliar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Controle.avaliarPopulacao();
             }
         });
 

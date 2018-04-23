@@ -32,4 +32,8 @@ public class Numeros {
     public static final Integer CINCO = 5;
     
     public static int QTD_FUNC = 30;
+    
+    public static double ZERO_DOUBLE = 0;
+    
+    public static float ZERO_FLOAT = 0;
 }
