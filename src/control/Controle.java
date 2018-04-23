@@ -4,21 +4,9 @@ import bean.Area;
 import bean.Atividade;
 import bean.Cargo;
 import bean.Funcionario;
-import bean.MaxArea;
 import frame.AG;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,109 +24,6 @@ public class Controle {
 
     public static List<String> sequencias = new ArrayList<String>();
 
-    /**
-     *
-     * Salvar Funcionario na lista
-     *
-     * @param func
-     */
-    @SuppressWarnings("InfiniteRecursion")
-    public static void salvarFuncionario(Funcionario func) {
-        /*FileOutputStream fos;
-        ObjectOutputStream ous;
-        List<Funcionario> lista;
-        File file = new File(StringsUtils.PATH_FUNCIONARIOS);
-        try {
-            lista = carregarFuncionarios();
-            lista.add(func);
-            fos = new FileOutputStream(file);
-            ous = new ObjectOutputStream(fos);
-
-            ous.writeObject(lista);
-        } catch (FileNotFoundException ex) {
-            file.mkdir();
-            salvarFuncionario(func);
-        } catch (IOException ex) {
-            Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-
-    }
-
-    @SuppressWarnings("InfiniteRecursion")
-    public static void salvarAtividade(Atividade atv) {
-        FileOutputStream fos;
-        ObjectOutputStream ous;
-        List<Atividade> lista;
-        File file = new File(StringsUtils.PATH_ATIVIDADES);
-        try {
-            lista = carregarAtividades();
-            lista.add(atv);
-            fos = new FileOutputStream(file);
-            ous = new ObjectOutputStream(fos);
-
-            ous.writeObject(lista);
-        } catch (FileNotFoundException ex) {
-            file.mkdir();
-            salvarAtividade(atv);
-        } catch (IOException ex) {
-            Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    /**
-     * @return Lista de objetos Funcionario
-     * @throws java.io.IOException
-     */
-    @SuppressWarnings({"Convert2Diamond", "InfiniteRecursion"})
-    public static List<Funcionario> carregarFuncionarios() throws IOException {
-        List<Funcionario> retorno = null;
-        FileInputStream fis;
-        ObjectInputStream ois;
-        File file = new File(StringsUtils.PATH_FUNCIONARIOS);
-        try {
-            fis = new FileInputStream(file);
-            ois = new ObjectInputStream(fis);
-
-            retorno = new ArrayList<Funcionario>();
-
-            retorno = (List<Funcionario>) ois.readObject();
-        } catch (FileNotFoundException ex) {
-            file.mkdir();
-            file.createNewFile();
-            return carregarFuncionarios();
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return retorno;
-    }
-
-    /**
-     *
-     * @return Lista de objetos Atividade
-     */
-    @SuppressWarnings({"Convert2Diamond", "InfiniteRecursion"})
-    public static List<Atividade> carregarAtividades() {
-        List<Atividade> retorno = null;
-        FileInputStream fis;
-        ObjectInputStream ois;
-        File file = new File(StringsUtils.PATH_ATIVIDADES);
-        try {
-            fis = new FileInputStream(file);
-            ois = new ObjectInputStream(fis);
-
-            retorno = new ArrayList<Atividade>();
-
-            retorno = (List<Atividade>) ois.readObject();
-        } catch (FileNotFoundException ex) {
-            file.mkdir();
-            return carregarAtividades();
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Controle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return retorno;
-    }
-
     public static void loadFuncionario(Stage stage) {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("AG");
 
@@ -148,13 +33,6 @@ public class Controle {
 
         entityManager.close();
         AG.loadFuncFrame(stage, f);
-    }
-
-    public static ImageView returnLoadGif() {
-        Image im = new Image("/files/load2.gif");
-        ImageView iv = new ImageView(im);
-
-        return iv;
     }
 
     public static void gerarFucionarios() {
@@ -172,9 +50,6 @@ public class Controle {
         factory.close();
 
         JOptionPane.showMessageDialog(null, "Gerados");
-    }
-
-    public static void gerarAtividade() {
     }
 
     private static Funcionario criarFuncionario() {
@@ -222,6 +97,7 @@ public class Controle {
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
         Integer maxAtv = Numeros.ZERO;
+        Integer index = null;
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
@@ -230,23 +106,27 @@ public class Controle {
         listaFunc = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         listaAtv = (List<Atividade>) manager.createQuery("select at from Atividade at").getResultList();
 
-        
         maxAtv = listaAtv.size() / listaFunc.size();
-        if(listaAtv.size() % listaFunc.size() > Numeros.ZERO){
+        if (listaAtv.size() % listaFunc.size() > Numeros.ZERO) {
             maxAtv++;
         }
-        
-        for (Atividade atividade : listaAtv) {
-            for (Funcionario funcionario : listaFunc) {
-                if(funcionario.getAtividades().size() < maxAtv){
-                    funcionario.getAtividades().add(atividade);
-                    atividade.setResponsavel(funcionario);
-                    break;
+
+        do {
+            for (Atividade atividade : listaAtv) {
+                if (atividade.getResponsavel() == null) {
+                    Boolean ficar = Boolean.TRUE;
+                    do {
+                        index = (int) (Math.random() * listaFunc.size());
+                        if (listaFunc.get(index).getAtividades().size() < maxAtv) {
+                            listaFunc.get(index).getAtividades().add(atividade);
+                            atividade.setResponsavel(listaFunc.get(index));
+                            ficar = Boolean.FALSE;
+                        }
+                    } while (ficar);
                 }
             }
-        }
+        } while (verificarAssociacaoAtv(listaAtv));
 
-        /*Duplicação de chave primaria na tabela atividade_funcionario*/
         for (Funcionario funcionario : listaFunc) {
             Funcionario f = manager.find(Funcionario.class, funcionario.getCodigo());
             f = funcionario;
@@ -259,25 +139,11 @@ public class Controle {
             Atividade a = manager.find(Atividade.class, atividade.getCodigo());
             a = atividade;
             manager.persist(a);
-            if (atividade.getResponsavel() != null) {
-                System.out.println(atividade.getNome() + ": " + atividade.getResponsavel().getNome() + ": "
-                        + atividade.getResponsavel().getCargo().getDescricao() + ": " + atividade.getResponsavel().getArea().getDescricao());
-            } else {
-                System.out.println(atividade.getNome() + ": Sem responsável");
-            }
         }
 
         manager.getTransaction().commit();
         manager.close();
         JOptionPane.showMessageDialog(null, "Associado");
-    }
-
-    public static Integer seZeroRetorneUm(Integer valor) {
-        if (valor.equals(Numeros.ZERO)) {
-            return Numeros.UM;
-        } else {
-            return valor;
-        }
     }
 
     private static boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {
