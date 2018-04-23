@@ -1,8 +1,6 @@
 package control;
 
-import bean.Area;
 import bean.Atividade;
-import bean.Cargo;
 import bean.Funcionario;
 import frame.AG;
 import java.util.ArrayList;
@@ -35,76 +33,46 @@ public class Controle {
         AG.loadFuncFrame(stage, f);
     }
 
-    public static void gerarFucionarios() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
-        EntityManager manager = factory.createEntityManager();
-
-        manager.getTransaction().begin();
-        for (int i = 0; i < Numeros.QTD_FUNC; i++) {
-            Funcionario f = criarFuncionario();
-            manager.persist(f);
-        }
-
-        manager.getTransaction().commit();
-        manager.close();
-        factory.close();
+    public static void gerarPopulacao() {
 
         JOptionPane.showMessageDialog(null, "Gerados");
-    }
-
-    private static Funcionario criarFuncionario() {
-        int nome = 0;
-        int sobreNome01 = 0;
-        int sobreNome02 = 0;
-        StringBuilder nomeFunc = new StringBuilder();
-
-        do {
-            nome = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
-            sobreNome01 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
-            sobreNome02 = (int) (Math.random() * StringsUtils.NOMES_FUNC.length);
-        } while (veificarSequencia(sequencias, String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02)));
-
-        sequencias.add(String.valueOf(nome) + String.valueOf(sobreNome01) + String.valueOf(sobreNome02));
-
-        nomeFunc = new StringBuilder();
-        nomeFunc.append(StringsUtils.NOMES_FUNC[nome]);
-        nomeFunc.append(" ");
-        nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome01]);
-        nomeFunc.append(" ");
-        nomeFunc.append(StringsUtils.SOBRENOMES_FUNC[sobreNome02]);
-
-        Funcionario func = new Funcionario();
-        func.setArea(new Area((int) (Math.random() * 5) + 1));
-        func.setCargo(new Cargo((int) (Math.random() * 5) + 1));
-        func.setNome(nomeFunc.toString());
-        func.setTempo_exp((int) (Math.random() * 36) + 6);
-        func.setTempo_proj((int) (Math.random() * 12) + 6);
-
-        return func;
-    }
-
-    private static Boolean veificarSequencia(List<String> listaSequencias, String sequencia) {
-        Boolean retorno = Boolean.FALSE;
-        for (String seq : listaSequencias) {
-            if (seq.equals(sequencia)) {
-                retorno = Boolean.TRUE;
-            }
-        }
-        return retorno;
     }
 
     public static void associarAtividades() {
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
-        Integer maxAtv = Numeros.ZERO;
-        Integer index = null;
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
 
-        manager.getTransaction().begin();
         listaFunc = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         listaAtv = (List<Atividade>) manager.createQuery("select at from Atividade at").getResultList();
+
+        manager.getTransaction().begin();
+        
+        listaAtv = assosciar(listaFunc,listaAtv);
+
+        for (Atividade atv : listaAtv) {
+            Funcionario f = manager.find(Funcionario.class, atv.getResponsavel().getCodigo());
+            f = atv.getResponsavel();
+            manager.persist(f);
+
+        }
+
+        for (Atividade atividade : listaAtv) {
+            Atividade a = manager.find(Atividade.class, atividade.getCodigo());
+            a = atividade;
+            manager.persist(a);
+        }
+
+        manager.getTransaction().commit();
+        manager.close();
+        JOptionPane.showMessageDialog(null, "Associado");
+    }
+
+    private static List<Atividade> assosciar(List<Funcionario> listaFunc, List<Atividade> listaAtv) {
+        Integer maxAtv = Numeros.ZERO;
+        Integer index = null;
 
         maxAtv = listaAtv.size() / listaFunc.size();
         if (listaAtv.size() % listaFunc.size() > Numeros.ZERO) {
@@ -127,23 +95,7 @@ public class Controle {
             }
         } while (verificarAssociacaoAtv(listaAtv));
 
-        for (Funcionario funcionario : listaFunc) {
-            Funcionario f = manager.find(Funcionario.class, funcionario.getCodigo());
-            f = funcionario;
-            manager.persist(f);
-            System.out.println(funcionario.getNome() + ": " + funcionario.getAtividades().size());
-
-        }
-
-        for (Atividade atividade : listaAtv) {
-            Atividade a = manager.find(Atividade.class, atividade.getCodigo());
-            a = atividade;
-            manager.persist(a);
-        }
-
-        manager.getTransaction().commit();
-        manager.close();
-        JOptionPane.showMessageDialog(null, "Associado");
+        return listaAtv;
     }
 
     private static boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {

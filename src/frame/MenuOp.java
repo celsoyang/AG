@@ -60,7 +60,7 @@ public class MenuOp extends MenuBar {
         menuOpGerarPopulacao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Controle.gerarFucionarios();
+                Controle.gerarPopulacao();
             }
         });
         
