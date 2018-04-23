@@ -221,8 +221,7 @@ public class Controle {
     public static void associarAtividades() {
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
-        MaxArea maxAreaAtv = new MaxArea();
-        MaxArea maxAreaFunc = new MaxArea();
+        Integer maxAtv = Numeros.ZERO;
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
@@ -231,89 +230,18 @@ public class Controle {
         listaFunc = (List<Funcionario>) manager.createQuery("select f from Funcionario f").getResultList();
         listaAtv = (List<Atividade>) manager.createQuery("select at from Atividade at").getResultList();
 
+        
+        maxAtv = listaAtv.size() / listaFunc.size();
+        if(listaAtv.size() % listaFunc.size() > Numeros.ZERO){
+            maxAtv++;
+        }
+        
         for (Atividade atividade : listaAtv) {
-            switch (atividade.getArea().getCodigo()) {
-                case 1:
-                    maxAreaAtv.setQtdDev(maxAreaAtv.getQtdDev() + Numeros.UM);
+            for (Funcionario funcionario : listaFunc) {
+                if(funcionario.getAtividades().size() < maxAtv){
+                    funcionario.getAtividades().add(atividade);
+                    atividade.setResponsavel(funcionario);
                     break;
-                case 2:
-                    maxAreaAtv.setQtdTest(maxAreaAtv.getQtdTest() + Numeros.UM);
-                    break;
-                case 3:
-                    maxAreaAtv.setQtdBanco(maxAreaAtv.getQtdBanco() + Numeros.UM);
-                    break;
-                case 4:
-                    maxAreaAtv.setQtdAnaliseReq(maxAreaAtv.getQtdAnaliseReq() + Numeros.UM);
-                    break;
-                case 5:
-                    maxAreaAtv.setQtdAnaliseSoft(maxAreaAtv.getQtdAnaliseSoft() + Numeros.UM);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        for (Funcionario funcionario : listaFunc) {
-            switch (funcionario.getArea().getCodigo()) {
-                case 1:
-                    maxAreaFunc.setQtdDev(maxAreaFunc.getQtdDev() + Numeros.UM);
-                    break;
-                case 2:
-                    maxAreaFunc.setQtdTest(maxAreaFunc.getQtdTest() + Numeros.UM);
-                    break;
-                case 3:
-                    maxAreaFunc.setQtdBanco(maxAreaFunc.getQtdBanco() + Numeros.UM);
-                    break;
-                case 4:
-                    maxAreaFunc.setQtdAnaliseReq(maxAreaFunc.getQtdAnaliseReq() + Numeros.UM);
-                    break;
-                case 5:
-                    maxAreaFunc.setQtdAnaliseSoft(maxAreaFunc.getQtdAnaliseSoft() + Numeros.UM);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        for (Atividade atv : listaAtv) {
-            for (Funcionario func : listaFunc) {
-                if (atv.getArea().equals(func.getArea())) {
-                    if (atv.getNivel().getCodigo() <= func.getCargo().getCodigo()) {
-                        switch (atv.getArea().getCodigo()) {
-                            case 1:
-                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdDev() / maxAreaFunc.getQtdDev()))) {
-                                    func.getAtividades().add(atv);
-                                    atv.setResponsavel(func);
-                                }
-                                break;
-                            case 2:
-                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdTest()/ maxAreaFunc.getQtdTest()))) {
-                                    func.getAtividades().add(atv);
-                                    atv.setResponsavel(func);
-                                }
-                                break;
-                            case 3:
-                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdBanco()/ maxAreaFunc.getQtdBanco()))) {
-                                    func.getAtividades().add(atv);
-                                    atv.setResponsavel(func);
-                                }
-                                break;
-                            case 4:
-                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdAnaliseReq()/ maxAreaFunc.getQtdAnaliseReq()))) {
-                                    func.getAtividades().add(atv);
-                                    atv.setResponsavel(func);
-                                }
-                                break;
-                            case 5:
-                                if (func.getAtividades().size() < seZeroRetorneUm((maxAreaAtv.getQtdAnaliseSoft()/ maxAreaFunc.getQtdAnaliseSoft()))) {
-                                    func.getAtividades().add(atv);
-                                    atv.setResponsavel(func);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }
                 }
             }
         }
@@ -324,16 +252,16 @@ public class Controle {
             f = funcionario;
             manager.persist(f);
             System.out.println(funcionario.getNome() + ": " + funcionario.getAtividades().size());
-            
+
         }
-        
+
         for (Atividade atividade : listaAtv) {
             Atividade a = manager.find(Atividade.class, atividade.getCodigo());
-            a =  atividade;
+            a = atividade;
             manager.persist(a);
-            if(atividade.getResponsavel() != null){
-                System.out.println(atividade.getNome() + ": " + atividade.getResponsavel().getNome() + ": " + 
-                        atividade.getResponsavel().getCargo().getDescricao() + ": " + atividade.getResponsavel().getArea().getDescricao());
+            if (atividade.getResponsavel() != null) {
+                System.out.println(atividade.getNome() + ": " + atividade.getResponsavel().getNome() + ": "
+                        + atividade.getResponsavel().getCargo().getDescricao() + ": " + atividade.getResponsavel().getArea().getDescricao());
             } else {
                 System.out.println(atividade.getNome() + ": Sem responsável");
             }
@@ -350,5 +278,14 @@ public class Controle {
         } else {
             return valor;
         }
+    }
+
+    private static boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {
+        for (Atividade atividade : listaAtv) {
+            if (atividade.getResponsavel() == null) {
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
     }
 }
