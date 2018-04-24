@@ -120,9 +120,9 @@ public class Controle {
                 /*VERIFICAR SE NIVEL É IGUAL*/
                 if (atv.getNivel().equals(atv.getResponsavel().getCargo())) {
                     nota += 1;
-                } else if (atv.getNivel().getCodigo() > atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.5;
                 } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
+                    nota += 0.5;
+                } else if (atv.getNivel().getCodigo() > atv.getResponsavel().getCargo().getCodigo()) {
                     nota += 0.1;
                 }
 
