@@ -31,7 +31,6 @@ public class MenuOp extends MenuBar {
     private MenuItem opAtvList;
     private MenuItem opAtvAdd;
     private Menu menuOp;
-    private MenuItem menuOpGerarPopulacao;
     private MenuItem menuOpAssociar;
     private MenuItem menuOpStart;
 
@@ -45,11 +44,10 @@ public class MenuOp extends MenuBar {
         opAtvList = new MenuItem(StringsUtils.LISTAR);
         opAtvAdd = new MenuItem(StringsUtils.ADICIONAR);
         menuOp = new Menu(StringsUtils.OPCOES);
-        menuOpGerarPopulacao = new MenuItem(StringsUtils.GERAR_POPULACAO);
         menuOpAssociar = new MenuItem(StringsUtils.ASSOCIAR_ATIVIDADES);
         menuOpStart = new MenuItem(StringsUtils.START);
 
-        menuOp.getItems().addAll(menuOpGerarPopulacao, menuOpAssociar, menuOpStart);
+        menuOp.getItems().addAll(menuOpAssociar, menuOpStart);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
@@ -59,13 +57,6 @@ public class MenuOp extends MenuBar {
             @Override
             public void handle(ActionEvent event) {
                 //AG.loadOtherFrame(stage);
-            }
-        });
-
-        menuOpGerarPopulacao.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Controle.gerarPopulacao();
             }
         });
 

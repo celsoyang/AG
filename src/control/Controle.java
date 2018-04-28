@@ -30,21 +30,20 @@ public class Controle {
     private static final EntityManager manager = factory.createEntityManager();
 
     public static List<Individuo> start() {
-        List<Individuo> distribuicao = new ArrayList<>();
-        List<Individuo> novaPopulacao = new ArrayList<>();
+        List<Individuo> populacao = new ArrayList<>();
+        List<Individuo> populacaoAlterada = new ArrayList<>();
 
-        distribuicao = retornarPopulacao();
-        distribuicao = avaliarPopulacao(distribuicao);
+        populacao = gerarrPopulacao();
+        populacao = avaliarPopulacao(populacao);
 
         for (int i = 0; i < 300; i++) {
             for (int j = 0; j < 49; j++) {
-                distribuicao.add(j, mutarIndividuo(distribuicao.get(j)));
-                novaPopulacao.add(cruzarGenesIntercalados(distribuicao.get(j), distribuicao.get(j + 50)));
+                populacaoAlterada = cruzarPaisAoMeio(populacao);
             }
-            distribuicao = avaliarPopulacao(novaPopulacao);
+            populacao = avaliarPopulacao(populacaoAlterada);
             System.out.println("Geração: " + i);
         }
-        return distribuicao;
+        return populacao;
     }
 
     public static void loadFuncionario(Stage stage) {
@@ -55,22 +54,7 @@ public class Controle {
         AG.loadFuncFrame(stage, f);
     }
 
-    public static void gerarPopulacao() {
-        List<Individuo> listaIndividuos;
-        listaIndividuos = new ArrayList<>();
-        Individuo ind;
-        Integer qtd = Integer.parseInt(JOptionPane.showInputDialog(null, StringsUtils.MSG_INFORME_IDIVIDUOS));
-
-        for (int i = 0; i < qtd; i++) {
-            ind = new Individuo();
-            ind.setAtividades(retornaAtvAssociadas());
-            listaIndividuos.add(ind);
-        }
-
-        JOptionPane.showMessageDialog(null, StringsUtils.MSG_GERADOS);
-    }
-
-    public static List<Individuo> retornarPopulacao() {
+    public static List<Individuo> gerarrPopulacao() {
         List<Individuo> listaIndividuos;
         listaIndividuos = new ArrayList<>();
         Individuo ind;
@@ -165,7 +149,7 @@ public class Controle {
             System.out.println("Indivídou: " + ind + " Nota: " + ind.getNota());
         }
          */
-        return populacao.subList(0, 99);
+        return populacao;
     }
 
     /**
@@ -196,19 +180,33 @@ public class Controle {
      *
      * Gera um novo individuo juntado metade de cada pai
      */
-    public static Individuo cruzarPaisAoMeio(Individuo pai01, Individuo pai02) {
-        Individuo descendente = new Individuo();
-
-        /*Valor temporário para teste*/
-        for (int i = 0; i < 41; i++) {
-            descendente.getAtividades().add(pai01.getAtividades().get(i));
-        }
-
-        /*Valor temporário para teste*/
-        for (int i = 41; i < 83; i++) {
-            descendente.getAtividades().add(pai02.getAtividades().get(i));
-        }
-        return descendente;
+    public static List<Individuo> cruzarPaisAoMeio(List<Individuo> populacao) {        
+        List<Individuo> descendentes = new ArrayList<>();
+        
+        List<Atividade> genesPai01 = new ArrayList<>();
+        List<Atividade> genesPai02 = new ArrayList<>();
+        List<Atividade> geneDescendente;
+        
+        for (int i = 0; i < 49; i++) {
+            genesPai01 = populacao.get(i).getAtividades().subList(0, 30);
+            genesPai02 = populacao.get(99 - i).getAtividades().subList(30, 60);
+            
+            geneDescendente = new ArrayList<>();
+            geneDescendente.addAll(genesPai01);
+            geneDescendente.addAll(genesPai02);            
+            
+            descendentes.add(new Individuo(geneDescendente));
+            
+            /**************************************************************************/
+            
+            geneDescendente = new ArrayList<>();
+            
+            geneDescendente.addAll(genesPai02);
+            geneDescendente.addAll(genesPai01);            
+            
+            descendentes.add(new Individuo(geneDescendente));
+        }                        
+        return descendentes;
     }
 
     public static Individuo mutarIndividuo(Individuo ind) {

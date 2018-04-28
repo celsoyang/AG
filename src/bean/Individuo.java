@@ -16,8 +16,15 @@ import utils.Numeros;
 public class Individuo {
 
     private List<Atividade> atividades = new ArrayList<>();
-    
+
     private float nota = Numeros.ZERO_FLOAT;
+
+    public Individuo() {
+    }
+
+    public Individuo(List<Atividade> listaAtv) {
+        setAtividades(listaAtv);
+    }
 
     public List<Atividade> getAtividades() {
         return atividades;
