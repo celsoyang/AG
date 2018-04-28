@@ -26,6 +26,7 @@ public class StringsUtils {
     public static final String DOIS_PONTOS = ":";
     public static final String SALVAR = "Salvar";
     public static final String AVALIAR = "Avaliar";
+    public static final String START = "Start";
     public static final String ADICIONAR = "Adicionar";
     public static final String LISTAR = "Listar";
     public static final String OPCOES = "Opções";

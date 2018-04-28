@@ -5,7 +5,8 @@ import bean.Funcionario;
 import bean.Individuo;
 import frame.AG;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
@@ -22,16 +23,35 @@ import utils.StringsUtils;
  */
 public class Controle {
 
-    public static List<String> sequencias = new ArrayList<String>();
+    private static List<Funcionario> listaFunc = new ArrayList<>();
+    private static List<Atividade> listaAtv = new ArrayList<>();
+
+    private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+    private static final EntityManager manager = factory.createEntityManager();
+
+    public static List<Individuo> start() {
+        List<Individuo> distribuicao = new ArrayList<>();
+        List<Individuo> novaPopulacao = new ArrayList<>();
+
+        distribuicao = retornarPopulacao();
+        distribuicao = avaliarPopulacao(distribuicao);
+
+        for (int i = 0; i < 300; i++) {
+            for (int j = 0; j < 49; j++) {
+                distribuicao.add(j, mutarIndividuo(distribuicao.get(j)));
+                novaPopulacao.add(cruzarGenesIntercalados(distribuicao.get(j), distribuicao.get(j + 50)));
+            }
+            distribuicao = avaliarPopulacao(novaPopulacao);
+            System.out.println("Geração: " + i);
+        }
+        return distribuicao;
+    }
 
     public static void loadFuncionario(Stage stage) {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
-
-        EntityManager entityManager = factory.createEntityManager();
+        
         Integer codigo = Integer.parseInt(JOptionPane.showInputDialog(StringsUtils.MSG_INFORME_CODIGO));
-        Funcionario f = entityManager.find(Funcionario.class, codigo);
-
-        entityManager.close();
+        Funcionario f = manager.find(Funcionario.class, codigo);
+        
         AG.loadFuncFrame(stage, f);
     }
 
@@ -50,11 +70,11 @@ public class Controle {
         JOptionPane.showMessageDialog(null, StringsUtils.MSG_GERADOS);
     }
 
-    private static List<Individuo> retornarPopulacao() {
+    public static List<Individuo> retornarPopulacao() {
         List<Individuo> listaIndividuos;
         listaIndividuos = new ArrayList<>();
         Individuo ind;
-        Integer qtd = Integer.parseInt(JOptionPane.showInputDialog(null, StringsUtils.MSG_INFORME_IDIVIDUOS));
+        Integer qtd = 100;//Integer.parseInt(JOptionPane.showInputDialog(null, StringsUtils.MSG_INFORME_IDIVIDUOS));
 
         for (int i = 0; i < qtd; i++) {
             ind = new Individuo();
@@ -68,11 +88,6 @@ public class Controle {
     private static List<Atividade> retornaAtvAssociadas() {
         Integer maxAtv = Numeros.ZERO;
         Integer index = null;
-        List<Funcionario> listaFunc = new ArrayList<>();
-        List<Atividade> listaAtv = new ArrayList<>();
-
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
-        EntityManager manager = factory.createEntityManager();
 
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
@@ -101,8 +116,7 @@ public class Controle {
         return listaAtv;
     }
 
-    public static void avaliarPopulacao() {
-        List<Individuo> populacao = retornarPopulacao();
+    public static List<Individuo> avaliarPopulacao(List<Individuo> populacao) {
         float nota = Numeros.ZERO_FLOAT;
 
         for (Individuo ind : populacao) {
@@ -129,16 +143,96 @@ public class Controle {
             }
             ind.setNota(nota);
         }
-        float notas[] = new float[populacao.size()];
-        for (int i = 0; i < populacao.size(); i++) {
-            notas[i] = populacao.get(i).getNota();
+
+        Collections.sort(populacao, new Comparator<Individuo>() {
+            @Override
+            public int compare(Individuo o1, Individuo o2) {
+                Individuo ind01 = o1;
+                Individuo ind02 = o2;
+
+                if (ind01.getNota() > ind02.getNota()) {
+                    return -1;
+                } else if (ind01.getNota() < ind02.getNota()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        /*
+        for (Individuo ind : populacao) {
+            System.out.println("Indivídou: " + ind + " Nota: " + ind.getNota());
         }
-        Arrays.sort(notas);
-        for (int i = 0; i < notas.length; i++) {
-            System.out.println("Indivídou: " + i + " Nota: " + notas[i]);
-        }
+         */
+        return populacao.subList(0, 99);
     }
 
+    /**
+     * @param pai01
+     * @param pai02
+     *
+     * @return descendente gerado a partir dos pais selecionados
+     *
+     * Gera novo individuo cruzando
+     */
+    public static Individuo cruzarGenesIntercalados(Individuo pai01, Individuo pai02) {
+        Individuo descendente = new Individuo();
+        
+        /*Valor temporário para teste*/
+        for (int i = 0; i < 41; i++) {
+            descendente.getAtividades().add(pai01.getAtividades().get(i));
+            descendente.getAtividades().add(pai02.getAtividades().get(i + 1));
+        }
+        return descendente;
+    }
+
+    /**
+     * *
+     * @param pai01
+     * @param pai02
+     *
+     * @return descendente gerado a partir dos pais selecionados
+     *
+     * Gera um novo individuo juntado metade de cada pai
+     */
+    public static Individuo cruzarPaisAoMeio(Individuo pai01, Individuo pai02) {
+        Individuo descendente = new Individuo();
+
+        /*Valor temporário para teste*/
+        for (int i = 0; i < 41; i++) {
+            descendente.getAtividades().add(pai01.getAtividades().get(i));
+        }
+
+        /*Valor temporário para teste*/
+        for (int i = 41; i < 83; i++) {
+            descendente.getAtividades().add(pai02.getAtividades().get(i));
+        }
+        return descendente;
+    }
+
+    public static Individuo mutarIndividuo(Individuo ind) {
+        Funcionario func = new Funcionario();
+        Funcionario funcAux = new Funcionario();
+        int index;
+        int indexAux;
+        for (int i = 0; i < 2; i++) {
+
+            index = (int) (ind.getAtividades().size() * Math.random());
+            indexAux = (int) (ind.getAtividades().size() * Math.random());
+
+            func = ind.getAtividades().get(index).getResponsavel();
+            funcAux = ind.getAtividades().get(indexAux).getResponsavel();
+
+            ind.getAtividades().get(index).setResponsavel(funcAux);
+            ind.getAtividades().get(indexAux).setResponsavel(func);
+        }
+        return ind;
+    }
+
+    /**
+     *
+     */
     private static boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {
         for (Atividade atividade : listaAtv) {
             if (atividade.getResponsavel() == null) {

@@ -5,7 +5,10 @@
  */
 package frame;
 
+import bean.Atividade;
+import bean.Individuo;
 import control.Controle;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
@@ -30,10 +33,10 @@ public class MenuOp extends MenuBar {
     private Menu menuOp;
     private MenuItem menuOpGerarPopulacao;
     private MenuItem menuOpAssociar;
-    private MenuItem menuOpAvaliar;
+    private MenuItem menuOpStart;
 
     @SuppressWarnings("Convert2Lambda")
-    public MenuOp(Stage stage) {        
+    public MenuOp(Stage stage) {
 
         menuFunc = new Menu(StringsUtils.FUNCIONARIOS);
         opFuncList = new MenuItem(StringsUtils.LISTAR);
@@ -42,16 +45,15 @@ public class MenuOp extends MenuBar {
         opAtvList = new MenuItem(StringsUtils.LISTAR);
         opAtvAdd = new MenuItem(StringsUtils.ADICIONAR);
         menuOp = new Menu(StringsUtils.OPCOES);
-
         menuOpGerarPopulacao = new MenuItem(StringsUtils.GERAR_POPULACAO);
         menuOpAssociar = new MenuItem(StringsUtils.ASSOCIAR_ATIVIDADES);
-        menuOpAvaliar = new MenuItem(StringsUtils.AVALIAR);
-        menuOp.getItems().addAll(menuOpGerarPopulacao, menuOpAssociar, menuOpAvaliar);
+        menuOpStart = new MenuItem(StringsUtils.START);
+
+        menuOp.getItems().addAll(menuOpGerarPopulacao, menuOpAssociar, menuOpStart);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
         this.getMenus().addAll(menuFunc, menuAtv, menuOp);
-
 
         menuOp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -66,46 +68,59 @@ public class MenuOp extends MenuBar {
                 Controle.gerarPopulacao();
             }
         });
-        
+
         menuOpAssociar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) { 
-                
+            public void handle(ActionEvent event) {
+
             }
         });
-        
+
         opFuncList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadFuncListaFrame(stage);
             }
         });
-        
+
         opFuncAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadFuncFrame(stage);
             }
         });
-        
+
         opAtvList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadAtvListFrame(stage);
             }
         });
-        
+
         opAtvAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AG.loadAtvFrame(stage);
             }
         });
-        
-        menuOpAvaliar.setOnAction(new EventHandler<ActionEvent>() {
+
+        menuOpStart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Controle.avaliarPopulacao();
+
+                List<Individuo> listInd = Controle.start();
+                
+                Individuo ind  = listInd.get(0);
+                
+                System.out.println("Maior Nota: "+ind.getNota());
+
+                for (Atividade atv : ind.getAtividades()) {
+                    System.out.println("**************ATIVIDADE: " + atv.getNome() + "****************");
+                    System.out.println("ÁREA: " + atv.getArea().getDescricao());
+                    System.out.println("Responsável: " + atv.getResponsavel().getNome());;
+                    System.out.println("Área Resp.: " + atv.getResponsavel().getArea().getDescricao());
+                    System.out.println("*********************************************** \n");
+                }
             }
         });
 

@@ -5,6 +5,7 @@
  */
 package bean;
 
+import java.util.ArrayList;
 import java.util.List;
 import utils.Numeros;
 
@@ -14,7 +15,7 @@ import utils.Numeros;
  */
 public class Individuo {
 
-    private List<Atividade> atividades = null;
+    private List<Atividade> atividades = new ArrayList<>();
     
     private float nota = Numeros.ZERO_FLOAT;
 
