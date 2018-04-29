@@ -23,9 +23,6 @@ import utils.StringsUtils;
  */
 public class Controle {
 
-    private static List<Funcionario> listaFunc = new ArrayList<>();
-    private static List<Atividade> listaAtv = new ArrayList<>();
-
     private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
     private static final EntityManager manager = factory.createEntityManager();
 
@@ -58,27 +55,27 @@ public class Controle {
         List<Individuo> listaIndividuos;
         listaIndividuos = new ArrayList<>();
         Individuo ind;
-        Integer qtd = 100;//Integer.parseInt(JOptionPane.showInputDialog(null, StringsUtils.MSG_INFORME_IDIVIDUOS));
+        Integer qtd = 100;
 
         for (int i = 0; i < qtd; i++) {
             ind = new Individuo();
             ind.setAtividades(retornaAtvAssociadas());
             listaIndividuos.add(ind);
         }
-
         return listaIndividuos;
     }
 
     private static List<Atividade> retornaAtvAssociadas() {
-        Integer maxAtv = Numeros.ZERO;
         Integer index = null;
+        
+        List<Funcionario> listaFunc = new ArrayList<>();
+        List<Atividade> listaAtv = new ArrayList<>();
 
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
-
-        maxAtv = listaAtv.size() / listaFunc.size();
-        if (listaAtv.size() % listaFunc.size() > Numeros.ZERO) {
-            maxAtv++;
+        
+        for (Atividade atividade : listaAtv) {
+            atividade.setResponsavel(null);
         }
 
         do {
@@ -87,7 +84,7 @@ public class Controle {
                     Boolean ficar = Boolean.TRUE;
                     do {
                         index = (int) (Math.random() * listaFunc.size());
-                        if (listaFunc.get(index).getAtividades().size() < maxAtv) {
+                        if (listaFunc.get(index).getAtividades().size() < 2) {
                             listaFunc.get(index).getAtividades().add(atividade);
                             atividade.setResponsavel(listaFunc.get(index));
                             ficar = Boolean.FALSE;
@@ -96,7 +93,7 @@ public class Controle {
                 }
             }
         } while (verificarAssociacaoAtv(listaAtv));
-
+        
         return listaAtv;
     }
 
