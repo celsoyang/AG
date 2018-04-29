@@ -98,12 +98,14 @@ public class MenuOp extends MenuBar {
         menuOpStart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                
+                Controle ctr = new Controle();
 
-                List<Individuo> listInd = Controle.start();
-                
-                Individuo ind  = listInd.get(0);
-                
-                System.out.println("Maior Nota: "+ind.getNota());
+                List<Individuo> listInd = ctr.start();
+
+                Individuo ind = listInd.get(0);
+
+                System.out.println("Maior Nota: " + ind.getNota());
 
                 for (Atividade atv : ind.getAtividades()) {
                     System.out.println("**************ATIVIDADE: " + atv.getNome() + "****************");

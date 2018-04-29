@@ -3,7 +3,6 @@ package control;
 import bean.Atividade;
 import bean.Funcionario;
 import bean.Individuo;
-import frame.AG;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +11,6 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JOptionPane;
 import utils.Numeros;
 import utils.StringsUtils;
 
@@ -23,14 +21,11 @@ import utils.StringsUtils;
  */
 public class Controle {
 
-    private static final EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
-    private static final EntityManager manager = factory.createEntityManager();
-
-    public static List<Individuo> start() {
+    public List<Individuo> start() {
         List<Individuo> populacao = new ArrayList<>();
         List<Individuo> populacaoAlterada = new ArrayList<>();
 
-        populacao = gerarrPopulacao();
+        populacao = gerarPopulacao();
         populacao = avaliarPopulacao(populacao);
 
         for (int i = 0; i < 300; i++) {
@@ -43,39 +38,47 @@ public class Controle {
         return populacao;
     }
 
-    public static void loadFuncionario(Stage stage) {
-        
-        Integer codigo = Integer.parseInt(JOptionPane.showInputDialog(StringsUtils.MSG_INFORME_CODIGO));
-        Funcionario f = manager.find(Funcionario.class, codigo);
-        
-        AG.loadFuncFrame(stage, f);
+    public void loadFuncionario(Stage stage) {
+//        Integer codigo = Integer.parseInt(JOptionPane.showInputDialog(StringsUtils.MSG_INFORME_CODIGO));
+//        Funcionario f = manager.find(Funcionario.class, codigo);
+//
+//        AG.loadFuncFrame(stage, f);
     }
 
-    public static List<Individuo> gerarrPopulacao() {
-        List<Individuo> listaIndividuos;
-        listaIndividuos = new ArrayList<>();
-        Individuo ind;
+    public List<Individuo> gerarPopulacao() {
+        List<Individuo> listaIndividuos = new ArrayList<>();
         Integer qtd = 100;
+        Individuo indiv;
 
         for (int i = 0; i < qtd; i++) {
-            ind = new Individuo();
-            ind.setAtividades(retornaAtvAssociadas());
-            listaIndividuos.add(ind);
+            indiv = new Individuo();
+
+            indiv.setAtividades(retornarAtvAssociadas());
+
+            listaIndividuos.add(indiv);
         }
         return listaIndividuos;
     }
 
-    private static List<Atividade> retornaAtvAssociadas() {
+    private List<Atividade> retornarAtvAssociadas() {
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManager manager = factory.createEntityManager();
+
         Integer index = null;
-        
+
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
 
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
-        
+
         for (Atividade atividade : listaAtv) {
             atividade.setResponsavel(null);
+        }
+
+        for (Funcionario funcionario : listaFunc) {
+            funcionario.setAtividades(new ArrayList<>());
         }
 
         do {
@@ -93,11 +96,13 @@ public class Controle {
                 }
             }
         } while (verificarAssociacaoAtv(listaAtv));
-        
+
+        manager.close();
+
         return listaAtv;
     }
 
-    public static List<Individuo> avaliarPopulacao(List<Individuo> populacao) {
+    public List<Individuo> avaliarPopulacao(List<Individuo> populacao) {
         float nota = Numeros.ZERO_FLOAT;
 
         for (Individuo ind : populacao) {
@@ -157,9 +162,9 @@ public class Controle {
      *
      * Gera novo individuo cruzando
      */
-    public static Individuo cruzarGenesIntercalados(Individuo pai01, Individuo pai02) {
+    public Individuo cruzarGenesIntercalados(Individuo pai01, Individuo pai02) {
         Individuo descendente = new Individuo();
-        
+
         /*Valor temporário para teste*/
         for (int i = 0; i < 41; i++) {
             descendente.getAtividades().add(pai01.getAtividades().get(i));
@@ -177,36 +182,37 @@ public class Controle {
      *
      * Gera um novo individuo juntado metade de cada pai
      */
-    public static List<Individuo> cruzarPaisAoMeio(List<Individuo> populacao) {        
+    public List<Individuo> cruzarPaisAoMeio(List<Individuo> populacao) {
         List<Individuo> descendentes = new ArrayList<>();
-        
+
         List<Atividade> genesPai01 = new ArrayList<>();
         List<Atividade> genesPai02 = new ArrayList<>();
         List<Atividade> geneDescendente;
-        
+
         for (int i = 0; i < 49; i++) {
             genesPai01 = populacao.get(i).getAtividades().subList(0, 30);
             genesPai02 = populacao.get(99 - i).getAtividades().subList(30, 60);
-            
+
             geneDescendente = new ArrayList<>();
             geneDescendente.addAll(genesPai01);
-            geneDescendente.addAll(genesPai02);            
-            
-            descendentes.add(new Individuo(geneDescendente));
-            
-            /**************************************************************************/
-            
-            geneDescendente = new ArrayList<>();
-            
             geneDescendente.addAll(genesPai02);
-            geneDescendente.addAll(genesPai01);            
-            
+
             descendentes.add(new Individuo(geneDescendente));
-        }                        
+
+            /**
+             * ***********************************************************************
+             */
+            geneDescendente = new ArrayList<>();
+
+            geneDescendente.addAll(genesPai02);
+            geneDescendente.addAll(genesPai01);
+
+            descendentes.add(new Individuo(geneDescendente));
+        }
         return descendentes;
     }
 
-    public static Individuo mutarIndividuo(Individuo ind) {
+    public Individuo mutarIndividuo(Individuo ind) {
         Funcionario func = new Funcionario();
         Funcionario funcAux = new Funcionario();
         int index;
@@ -228,7 +234,7 @@ public class Controle {
     /**
      *
      */
-    private static boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {
+    private boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {
         for (Atividade atividade : listaAtv) {
             if (atividade.getResponsavel() == null) {
                 return Boolean.TRUE;
