@@ -25,6 +25,11 @@ public class Individuo {
     public Individuo(List<Atividade> listaAtv) {
         setAtividades(listaAtv);
     }
+    
+    public Individuo(Individuo ind) {
+        this.atividades = ind.getAtividades();
+        this.nota = ind.nota;
+    }
 
     public List<Atividade> getAtividades() {
         return atividades;

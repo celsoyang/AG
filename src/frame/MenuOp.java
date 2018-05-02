@@ -98,10 +98,8 @@ public class MenuOp extends MenuBar {
         menuOpStart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
-                Controle ctr = new Controle();
 
-                List<Individuo> listInd = ctr.start();
+                List<Individuo> listInd = Controle.start();
 
                 Individuo ind = listInd.get(0);
 
