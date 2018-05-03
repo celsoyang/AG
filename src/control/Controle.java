@@ -29,20 +29,16 @@ public class Controle {
         populacao = gerarPopulacao();
         populacao = avaliarPopulacao(populacao);
 
-        for (int i = 0; i < 1000; i++) {
-            for (int j = 0; j < 50; j++) {
+        for (int i = 0; i < 200; i++) {
+            for (int j = 0; j < 1000; j++) {
                 populacaoAlterada = cruzarIndividuos(populacao);
             }
             populacao = avaliarPopulacao(populacaoAlterada);
 
-            int idx = (int) (Math.random() * populacao.size());
-
-            populacao.get(idx).setAtividades(mutarIndividuo(populacao.get(idx)).getAtividades());
-
             System.out.println("Geração: " + i + " Melhor nota: " + populacao.get(0).getNota());
         }
         return populacao;
-    }
+    }    
 
     public void loadFuncionario(Stage stage) {
 //        Integer codigo = Integer.parseInt(JOptionPane.showInputDialog(StringsUtils.MSG_INFORME_CODIGO));
@@ -53,25 +49,11 @@ public class Controle {
 
     public static List<Individuo> gerarPopulacao() {
         List<Individuo> listaIndividuos = new ArrayList<>();
-        Integer qtd = 100;
+        Integer qtd = 2000;
         Individuo indiv;
-
-        for (int i = 0; i < qtd; i++) {
-            indiv = new Individuo();
-
-            indiv.setAtividades(retornarAtvAssociadas());
-
-            listaIndividuos.add(indiv);
-        }
-        return listaIndividuos;
-    }
-
-    private static List<Atividade> retornarAtvAssociadas() {
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
         EntityManager manager = factory.createEntityManager();
-
-        Integer index = null;
 
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
@@ -79,33 +61,59 @@ public class Controle {
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
 
+        for (int i = 0; i < qtd; i++) {
+            indiv = new Individuo();
+
+            indiv.setAtividades(retornarAtvAssociadas(listaFunc, listaAtv));
+
+            listaIndividuos.add(indiv);
+            System.out.println("Indivíduo: " + i + " Gerado");
+        }
+        System.out.println("Indivíduos Gerados");
+        manager.close();
+        return listaIndividuos;
+    }
+
+    private static List<Atividade> retornarAtvAssociadas(List<Funcionario> listaFunc, List<Atividade> listaAtv) {
+
+        List<Funcionario> listaF = new ArrayList<>();
+        List<Atividade> listaA = new ArrayList<>();
+        
         for (Atividade atividade : listaAtv) {
+            listaA.add(new Atividade(atividade));
+        }
+        
+        for (Funcionario funcionario : listaFunc) {
+            listaF.add(new Funcionario(funcionario));
+        }
+        
+        Integer index = null;
+
+        for (Atividade atividade : listaA) {
             atividade.setResponsavel(null);
         }
 
-        for (Funcionario funcionario : listaFunc) {
+        for (Funcionario funcionario : listaF) {
             funcionario.setAtividades(new ArrayList<>());
         }
 
         do {
-            for (Atividade atividade : listaAtv) {
+            for (Atividade atividade : listaA) {
                 if (atividade.getResponsavel() == null) {
                     Boolean ficar = Boolean.TRUE;
                     do {
-                        index = (int) (Math.random() * listaFunc.size());
-                        if (listaFunc.get(index).getAtividades().size() < 2) {
-                            listaFunc.get(index).getAtividades().add(atividade);
-                            atividade.setResponsavel(listaFunc.get(index));
+                        index = (int) (Math.random() * listaF.size());
+                        if (listaF.get(index).getAtividades().size() < 2) {
+                            listaF.get(index).getAtividades().add(atividade);
+                            atividade.setResponsavel(listaF.get(index));
                             ficar = Boolean.FALSE;
                         }
                     } while (ficar);
                 }
             }
-        } while (verificarAssociacaoAtv(listaAtv));
+        } while (verificarAssociacaoAtv(listaA));
 
-        manager.close();
-
-        return listaAtv;
+        return listaA;
     }
 
     public static List<Individuo> avaliarPopulacao(List<Individuo> populacao) {
@@ -117,20 +125,22 @@ public class Controle {
                 /**
                  * VERIFICAR SE ÁREA É IGUAL
                  */
-                if (atv.getArea().equals(atv.getResponsavel().getArea())) {
-                    nota += 1;
+                if (Objects.equals(atv.getArea().getCodigo(), atv.getResponsavel().getArea().getCodigo())) {
+                    nota += 2;
                 } else {
                     nota += 0.1;
                 }
 
                 /*VERIFICAR SE NIVEL É IGUAL*/
-                if (atv.getNivel().equals(atv.getResponsavel().getCargo())) {
-                    nota += 1;
+                if (Objects.equals(atv.getNivel().getCodigo(), atv.getResponsavel().getCargo().getCodigo())) {
+                    nota += 2;
                 } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.5;
+                    nota += 1;
                 } else if (atv.getNivel().getCodigo() > atv.getResponsavel().getCargo().getCodigo()) {
                     nota += 0.1;
-                }
+                }                
+                nota += atv.getResponsavel().getTempo_exp();
+                nota += atv.getResponsavel().getTempo_proj();
 
             }
             ind.setNota(nota);
@@ -157,7 +167,7 @@ public class Controle {
             System.out.println("Indivídou: " + ind + " Nota: " + ind.getNota());
         }
          */
-        return populacao.subList(0, 100);
+        return populacao.subList(0, 2000);
     }
 
     /**
@@ -185,9 +195,9 @@ public class Controle {
 
         Individuo geneDescendente;
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 1000; i++) {
             indv01 = populacao.get(i).getAtividades();
-            indv02 = populacao.get(99 - i).getAtividades();
+            indv02 = populacao.get(999 - i).getAtividades();
 
             for (Atividade atv : indv01) {
                 pai01.add(atv.getResponsavel());
@@ -217,6 +227,8 @@ public class Controle {
             for (int b = 0; b < 30; b++) {
                 geneDescendente.getAtividades().get(b + 30).setResponsavel(cromossomoXPai02.get(b));
             }
+            geneDescendente = mutarIndividuo(geneDescendente);
+            geneDescendente = mutarIndividuo(geneDescendente);
 
             descendentes.add(geneDescendente);
 
@@ -234,6 +246,8 @@ public class Controle {
             for (int k = 0; k < 30; k++) {
                 geneDescendente.getAtividades().get(k + 30).setResponsavel(cromossomoYPai02.get(k));
             }
+            geneDescendente = mutarIndividuo(geneDescendente);
+            geneDescendente = mutarIndividuo(geneDescendente);
 
             descendentes.add(new Individuo(geneDescendente));
 
@@ -251,6 +265,8 @@ public class Controle {
             for (int k = 0; k < 30; k++) {
                 geneDescendente.getAtividades().get(k + 30).setResponsavel(cromossomoXPai02.get(k));
             }
+            geneDescendente = mutarIndividuo(geneDescendente);
+            geneDescendente = mutarIndividuo(geneDescendente);
 
             descendentes.add(new Individuo(geneDescendente));
 
@@ -268,6 +284,9 @@ public class Controle {
             for (int k = 0; k < 30; k++) {
                 geneDescendente.getAtividades().get(k + 30).setResponsavel(cromossomoYPai02.get(k));
             }
+
+            geneDescendente = mutarIndividuo(geneDescendente);
+            geneDescendente = mutarIndividuo(geneDescendente);
 
             descendentes.add(new Individuo(geneDescendente));
 
@@ -298,6 +317,7 @@ public class Controle {
                 atv.setResponsavel(func);
 
                 ind.getAtividades().get(index).setResponsavel(funcAux);
+                break;
             }
         }
 

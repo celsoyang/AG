@@ -47,6 +47,19 @@ public class Funcionario implements Serializable {
     @OneToMany(mappedBy = "responsavel")
     private List<Atividade> atividades = null;
 
+    public Funcionario() {
+    }
+
+    public Funcionario(Funcionario func) {
+        this.area = func.getArea();
+        this.atividades = func.getAtividades();
+        this.cargo = func.getCargo();
+        this.codigo = func.getCodigo();
+        this.nome = func.getNome();
+        this.tempo_exp = func.getTempo_exp();
+        this.tempo_proj = func.getTempo_proj();
+    }
+
     public Integer getCodigo() {
         return codigo;
     }

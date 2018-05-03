@@ -38,6 +38,18 @@ public class Atividade implements Serializable {
     
     private Double prazo = null;
 
+    public Atividade() {
+    }
+
+    public Atividade(Atividade atv) {
+        this.area = atv.getArea();
+        this.codigo = atv.getCodigo();
+        this.nivel = atv.getNivel();
+        this.nome = atv.getNome();
+        this.prazo = atv.getPrazo();
+        this.responsavel = atv.getResponsavel();
+    }
+
     public Integer getCodigo() {
         return codigo;
     }

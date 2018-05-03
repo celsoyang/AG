@@ -35,5 +35,5 @@ public class Numeros {
     
     public static double ZERO_DOUBLE = 0;
     
-    public static float ZERO_FLOAT = 0;
+    public static float ZERO_FLOAT = 0.000000f;
 }
