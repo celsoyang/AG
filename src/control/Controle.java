@@ -22,23 +22,34 @@ import utils.StringsUtils;
  */
 public class Controle {
 
-    public static List<Individuo> start() {
+    private static Integer qtdFunc = Numeros.ZERO;
+    private static Integer qtdAtv = Numeros.ZERO;
+
+    public static Individuo start() {
         List<Individuo> populacao = new ArrayList<>();
         List<Individuo> populacaoAlterada = new ArrayList<>();
 
         populacao = gerarPopulacao();
         populacao = avaliarPopulacao(populacao);
 
-        for (int i = 0; i < 200; i++) {
-            for (int j = 0; j < 1000; j++) {
+        Individuo melhorInd = new Individuo();
+
+        for (int i = 0; i < Numeros.NUMERO_GERACOES; i++) {
+            for (int j = 0; j < Numeros.NUMERO_INDIVIDUOS / 2; j++) {
                 populacaoAlterada = cruzarIndividuos(populacao);
             }
             populacao = avaliarPopulacao(populacaoAlterada);
 
-            System.out.println("Geração: " + i + " Melhor nota: " + populacao.get(0).getNota());
+            for (Individuo individuo : populacao) {
+                if (individuo.getNota() > melhorInd.getNota()) {
+                    melhorInd = new Individuo(individuo);
+                }
+            }
+
+            System.out.println("Geração: " + i + " Melhor nota: " + melhorInd.getNota());
         }
-        return populacao;
-    }    
+        return melhorInd;
+    }
 
     public void loadFuncionario(Stage stage) {
 //        Integer codigo = Integer.parseInt(JOptionPane.showInputDialog(StringsUtils.MSG_INFORME_CODIGO));
@@ -49,7 +60,6 @@ public class Controle {
 
     public static List<Individuo> gerarPopulacao() {
         List<Individuo> listaIndividuos = new ArrayList<>();
-        Integer qtd = 2000;
         Individuo indiv;
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
@@ -61,7 +71,10 @@ public class Controle {
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
 
-        for (int i = 0; i < qtd; i++) {
+        qtdFunc = listaFunc.size();
+        qtdAtv = listaAtv.size();
+
+        for (int i = 0; i < Numeros.NUMERO_INDIVIDUOS; i++) {
             indiv = new Individuo();
 
             indiv.setAtividades(retornarAtvAssociadas(listaFunc, listaAtv));
@@ -78,15 +91,15 @@ public class Controle {
 
         List<Funcionario> listaF = new ArrayList<>();
         List<Atividade> listaA = new ArrayList<>();
-        
+
         for (Atividade atividade : listaAtv) {
             listaA.add(new Atividade(atividade));
         }
-        
+
         for (Funcionario funcionario : listaFunc) {
             listaF.add(new Funcionario(funcionario));
         }
-        
+
         Integer index = null;
 
         for (Atividade atividade : listaA) {
@@ -103,7 +116,7 @@ public class Controle {
                     Boolean ficar = Boolean.TRUE;
                     do {
                         index = (int) (Math.random() * listaF.size());
-                        if (listaF.get(index).getAtividades().size() < 2) {
+                        if (listaF.get(index).getAtividades().size() < 3) {
                             listaF.get(index).getAtividades().add(atividade);
                             atividade.setResponsavel(listaF.get(index));
                             ficar = Boolean.FALSE;
@@ -116,6 +129,7 @@ public class Controle {
         return listaA;
     }
 
+    @SuppressWarnings("Convert2Lambda")
     public static List<Individuo> avaliarPopulacao(List<Individuo> populacao) {
         float nota = Numeros.ZERO_FLOAT;
 
@@ -138,7 +152,7 @@ public class Controle {
                     nota += 1;
                 } else if (atv.getNivel().getCodigo() > atv.getResponsavel().getCargo().getCodigo()) {
                     nota += 0.1;
-                }                
+                }
                 nota += atv.getResponsavel().getTempo_exp();
                 nota += atv.getResponsavel().getTempo_proj();
 
@@ -162,12 +176,7 @@ public class Controle {
             }
         });
 
-        /*
-        for (Individuo ind : populacao) {
-            System.out.println("Indivídou: " + ind + " Nota: " + ind.getNota());
-        }
-         */
-        return populacao.subList(0, 2000);
+        return populacao;
     }
 
     /**
@@ -195,9 +204,9 @@ public class Controle {
 
         Individuo geneDescendente;
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < Numeros.NUMERO_CRUZAMENTOS; i++) {
             indv01 = populacao.get(i).getAtividades();
-            indv02 = populacao.get(999 - i).getAtividades();
+            indv02 = populacao.get((Numeros.NUMERO_CRUZAMENTOS - 1) - i).getAtividades();
 
             for (Atividade atv : indv01) {
                 pai01.add(atv.getResponsavel());
@@ -207,11 +216,11 @@ public class Controle {
                 pai02.add(atv.getResponsavel());
             }
 
-            cromossomoXPai01 = pai01.subList(0, 30);
-            cromossomoYPai01 = pai01.subList(30, 60);
+            cromossomoXPai01 = pai01.subList(0, qtdAtv / 2);
+            cromossomoYPai01 = pai01.subList(qtdAtv / 2, qtdAtv);
 
-            cromossomoXPai02 = pai02.subList(0, 30);
-            cromossomoYPai02 = pai02.subList(30, 60);
+            cromossomoXPai02 = pai02.subList(0, qtdAtv / 2);
+            cromossomoYPai02 = pai02.subList(qtdAtv / 2, qtdAtv);
 
             /**
              * *****************************************************************************************
@@ -220,15 +229,18 @@ public class Controle {
              */
             geneDescendente = new Individuo(populacao.get(i));
 
-            for (int a = 0; a < 30; a++) {
+            for (int a = 0; a < qtdFunc; a++) {
                 geneDescendente.getAtividades().get(a).setResponsavel(cromossomoXPai01.get(a));
             }
 
-            for (int b = 0; b < 30; b++) {
-                geneDescendente.getAtividades().get(b + 30).setResponsavel(cromossomoXPai02.get(b));
+            for (int b = 0; b < qtdFunc; b++) {
+                geneDescendente.getAtividades().get(b + qtdFunc).setResponsavel(cromossomoXPai02.get(b));
             }
-            geneDescendente = mutarIndividuo(geneDescendente);
-            geneDescendente = mutarIndividuo(geneDescendente);
+
+            float mutar = (float) (Math.random() * 1);
+            if (mutar < 0.3) {
+                geneDescendente = mutarIndividuo(geneDescendente);
+            }
 
             descendentes.add(geneDescendente);
 
@@ -239,15 +251,18 @@ public class Controle {
              */
             geneDescendente = new Individuo(populacao.get(i));
 
-            for (int j = 0; j < 30; j++) {
+            for (int j = 0; j < qtdFunc; j++) {
                 geneDescendente.getAtividades().get(j).setResponsavel(cromossomoXPai01.get(j));
             }
 
-            for (int k = 0; k < 30; k++) {
-                geneDescendente.getAtividades().get(k + 30).setResponsavel(cromossomoYPai02.get(k));
+            for (int k = 0; k < qtdFunc; k++) {
+                geneDescendente.getAtividades().get(k + qtdFunc).setResponsavel(cromossomoYPai02.get(k));
             }
-            geneDescendente = mutarIndividuo(geneDescendente);
-            geneDescendente = mutarIndividuo(geneDescendente);
+
+            mutar = (float) (Math.random() * 1);
+            if (mutar < 0.3) {
+                geneDescendente = mutarIndividuo(geneDescendente);
+            }
 
             descendentes.add(new Individuo(geneDescendente));
 
@@ -258,15 +273,18 @@ public class Controle {
              */
             geneDescendente = new Individuo(populacao.get(i));
 
-            for (int j = 0; j < 30; j++) {
+            for (int j = 0; j < qtdFunc; j++) {
                 geneDescendente.getAtividades().get(j).setResponsavel(cromossomoYPai01.get(j));
             }
 
-            for (int k = 0; k < 30; k++) {
-                geneDescendente.getAtividades().get(k + 30).setResponsavel(cromossomoXPai02.get(k));
+            for (int k = 0; k < qtdFunc; k++) {
+                geneDescendente.getAtividades().get(k + qtdFunc).setResponsavel(cromossomoXPai02.get(k));
             }
-            geneDescendente = mutarIndividuo(geneDescendente);
-            geneDescendente = mutarIndividuo(geneDescendente);
+
+            mutar = (float) (Math.random() * 1);
+            if (mutar < 0.3) {
+                geneDescendente = mutarIndividuo(geneDescendente);
+            }
 
             descendentes.add(new Individuo(geneDescendente));
 
@@ -277,21 +295,24 @@ public class Controle {
              */
             geneDescendente = new Individuo(populacao.get(i));
 
-            for (int j = 0; j < 30; j++) {
+            for (int j = 0; j < qtdFunc; j++) {
                 geneDescendente.getAtividades().get(j).setResponsavel(cromossomoYPai01.get(j));
             }
 
-            for (int k = 0; k < 30; k++) {
-                geneDescendente.getAtividades().get(k + 30).setResponsavel(cromossomoYPai02.get(k));
+            for (int k = 0; k < qtdFunc; k++) {
+                geneDescendente.getAtividades().get(k + qtdFunc).setResponsavel(cromossomoYPai02.get(k));
             }
 
-            geneDescendente = mutarIndividuo(geneDescendente);
-            geneDescendente = mutarIndividuo(geneDescendente);
+            mutar = (float) (Math.random() * 1);
+            if (mutar < 0.3) {
+                geneDescendente = mutarIndividuo(geneDescendente);
+            }
 
             descendentes.add(new Individuo(geneDescendente));
 
         }
-        return descendentes;
+        descendentes = avaliarPopulacao(descendentes);
+        return descendentes.subList(0, Numeros.NUMERO_INDIVIDUOS);
     }
 
     public static Individuo mutarIndividuo(Individuo ind) {
@@ -325,7 +346,7 @@ public class Controle {
     }
 
     /**
-     *
+     * Verifica se Existem atividades sem um responsável
      */
     private static boolean verificarAssociacaoAtv(List<Atividade> listaAtv) {
         for (Atividade atividade : listaAtv) {

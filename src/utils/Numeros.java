@@ -31,9 +31,27 @@ public class Numeros {
     
     public static final Integer CINCO = 5;
     
-    public static int QTD_FUNC = 30;
+    public static final int QTD_FUNC = 30;
     
-    public static double ZERO_DOUBLE = 0;
+    public static final double ZERO_DOUBLE = 0;
     
-    public static float ZERO_FLOAT = 0.000000f;
+    public static final float ZERO_FLOAT = 0.000000f;
+    
+    /**
+     * Quantidade de Indivíduos
+     */
+    public static final int NUMERO_INDIVIDUOS = 1000;
+    
+    /**
+     * Metade do número de individuos
+     */
+    public static final int NUMERO_CRUZAMENTOS = NUMERO_INDIVIDUOS / DOIS;
+    
+    public static final int NUMERO_GERACOES = 100;
+    
+    public static final int NUMERO_ATIVIDADES = 60;
+    
+    public static final int NUMERO_FUNCIONARIOS = 30;
+    
+    
 }

@@ -99,13 +99,11 @@ public class MenuOp extends MenuBar {
             @Override
             public void handle(ActionEvent event) {
 
-                List<Individuo> listInd = Controle.start();
+                Individuo bestInd = Controle.start();                
 
-                Individuo ind = listInd.get(0);
+                System.out.println("Maior Nota: " + bestInd.getNota());
 
-                System.out.println("Maior Nota: " + ind.getNota());
-
-                for (Atividade atv : ind.getAtividades()) {
+                for (Atividade atv : bestInd.getAtividades()) {
                     System.out.println("**************ATIVIDADE: " + atv.getNome() + "****************");
                     System.out.println("ÁREA: " + atv.getArea().getDescricao());
                     System.out.println("Responsável: " + atv.getResponsavel().getNome());;
