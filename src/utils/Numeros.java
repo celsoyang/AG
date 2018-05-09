@@ -47,7 +47,7 @@ public class Numeros {
      */
     public static final int NUMERO_CRUZAMENTOS = NUMERO_INDIVIDUOS / DOIS;
     
-    public static final int NUMERO_GERACOES = 5000;
+    public static int NUMERO_GERACOES = 20000;
     
     public static final int NUMERO_ATIVIDADES = 60;
     
