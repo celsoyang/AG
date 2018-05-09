@@ -47,11 +47,15 @@ public class Numeros {
      */
     public static final int NUMERO_CRUZAMENTOS = NUMERO_INDIVIDUOS / DOIS;
     
-    public static final int NUMERO_GERACOES = 100;
+    public static final int NUMERO_GERACOES = 5000;
     
     public static final int NUMERO_ATIVIDADES = 60;
     
     public static final int NUMERO_FUNCIONARIOS = 30;
+    
+    public static double NUMERO_GENES_TROCADOS = 3;
+    
+    public static double PROBABILIDADE_MUTACAO = 0.2;
     
     
 }

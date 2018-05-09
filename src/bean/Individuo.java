@@ -27,8 +27,8 @@ public class Individuo {
     }
     
     public Individuo(Individuo ind) {
-        this.atividades = ind.getAtividades();
-        this.nota = ind.nota;
+        setAtividades(ind.getAtividades());
+        setNota(ind.nota);
     }
 
     public List<Atividade> getAtividades() {

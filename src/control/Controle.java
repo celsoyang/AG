@@ -35,9 +35,9 @@ public class Controle {
         Individuo melhorInd = new Individuo();
 
         for (int i = 0; i < Numeros.NUMERO_GERACOES; i++) {
-            for (int j = 0; j < Numeros.NUMERO_INDIVIDUOS / 2; j++) {
-                populacaoAlterada = cruzarIndividuos(populacao);
-            }
+
+            populacaoAlterada = cruzarIndividuos(populacao);
+
             populacao = avaliarPopulacao(populacaoAlterada);
 
             for (Individuo individuo : populacao) {
@@ -140,26 +140,29 @@ public class Controle {
                  * VERIFICAR SE ÁREA É IGUAL
                  */
                 if (Objects.equals(atv.getArea().getCodigo(), atv.getResponsavel().getArea().getCodigo())) {
-                    nota += 2;
+                    nota += 1;
                 } else {
                     nota += 0.1;
                 }
 
                 /*VERIFICAR SE NIVEL É IGUAL*/
                 if (Objects.equals(atv.getNivel().getCodigo(), atv.getResponsavel().getCargo().getCodigo())) {
-                    nota += 2;
-                } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
                     nota += 1;
+                } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
+                    nota += 0.5;
                 } else if (atv.getNivel().getCodigo() > atv.getResponsavel().getCargo().getCodigo()) {
                     nota += 0.1;
                 }
-                nota += atv.getResponsavel().getTempo_exp();
-                nota += atv.getResponsavel().getTempo_proj();
+                nota += (float) atv.getResponsavel().getTempo_exp();
+                nota += (float) atv.getResponsavel().getTempo_proj();
 
             }
             ind.setNota(nota);
         }
 
+        /**
+         * ORGANIZA O ARRAY LEVANDO EM CONSIDERAÇÃO A NOTA DO INDIVÍDUO
+         */
         Collections.sort(populacao, new Comparator<Individuo>() {
             @Override
             public int compare(Individuo o1, Individuo o2) {
@@ -188,131 +191,69 @@ public class Controle {
      * Gera um novo individuo juntado metade de cada pai
      */
     public static List<Individuo> cruzarIndividuos(List<Individuo> populacao) {
-        List<Individuo> descendentes = new ArrayList<>();
+        List<Individuo> melhoresPosCruzamento = new ArrayList<>();
+        int indexPai01;
+        int indexPai02;
 
-        List<Atividade> indv01 = new ArrayList<>();
-        List<Atividade> indv02 = new ArrayList<>();
+        Individuo pai1 = new Individuo();
+        Individuo pai2 = new Individuo();
 
-        List<Funcionario> pai01 = new ArrayList<>();
-        List<Funcionario> pai02 = new ArrayList<>();
+        int qtdCruzamentos = (int) (Math.random() * 10);
 
-        List<Funcionario> cromossomoXPai01 = new ArrayList<>();
-        List<Funcionario> cromossomoYPai01 = new ArrayList<>();
+        for (int i = 0; i < qtdCruzamentos; i++) {
+            indexPai01 = (int) (Math.random() * populacao.size());
 
-        List<Funcionario> cromossomoXPai02 = new ArrayList<>();
-        List<Funcionario> cromossomoYPai02 = new ArrayList<>();
+            do {
+                indexPai02 = (int) (Math.random() * populacao.size());
+            } while (indexPai01 == indexPai02);
 
-        Individuo geneDescendente;
+            pai1 = new Individuo(populacao.get(indexPai01));
+            pai2 = new Individuo(populacao.get(indexPai02));
 
-        for (int i = 0; i < Numeros.NUMERO_CRUZAMENTOS; i++) {
-            indv01 = populacao.get(i).getAtividades();
-            indv02 = populacao.get((Numeros.NUMERO_CRUZAMENTOS - 1) - i).getAtividades();
+            Individuo filho1 = new Individuo(pai1);
+            Individuo filho2 = new Individuo(pai1);
 
-            for (Atividade atv : indv01) {
-                pai01.add(atv.getResponsavel());
-            }
-
-            for (Atividade atv : indv02) {
-                pai02.add(atv.getResponsavel());
-            }
-
-            cromossomoXPai01 = pai01.subList(0, qtdAtv / 2);
-            cromossomoYPai01 = pai01.subList(qtdAtv / 2, qtdAtv);
-
-            cromossomoXPai02 = pai02.subList(0, qtdAtv / 2);
-            cromossomoYPai02 = pai02.subList(qtdAtv / 2, qtdAtv);
+            int pontoCruzamento = (int) (Math.random() * pai1.getAtividades().size());
 
             /**
-             * *****************************************************************************************
-             * CRUZAMENTO DE CROMOSSOMOS X01 - X02
-             * *****************************************************************************************
+             * PRIMEIRA METADE DO PAI1 COM SEGUNDA METADE DO PAI2
              */
-            geneDescendente = new Individuo(populacao.get(i));
-
-            for (int a = 0; a < qtdFunc; a++) {
-                geneDescendente.getAtividades().get(a).setResponsavel(cromossomoXPai01.get(a));
+            for (int j = 0; j < pontoCruzamento; j++) {
+                filho1.getAtividades().get(j).setResponsavel(pai1.getAtividades().get(j).getResponsavel());
             }
 
-            for (int b = 0; b < qtdFunc; b++) {
-                geneDescendente.getAtividades().get(b + qtdFunc).setResponsavel(cromossomoXPai02.get(b));
+            for (int k = pontoCruzamento; k < pai2.getAtividades().size(); k++) {
+                filho1.getAtividades().get(k).setResponsavel(pai2.getAtividades().get(k).getResponsavel());
             }
 
-            float mutar = (float) (Math.random() * 1);
-            if (mutar < 0.3) {
-                geneDescendente = mutarIndividuo(geneDescendente);
-            }
-
-            descendentes.add(geneDescendente);
+            filho1 = mutarIndividuo(filho1);
 
             /**
-             * *****************************************************************************************
-             * CRUZAMENTO DE CROMOSSOMOS X01 - Y02
-             * *****************************************************************************************
+             * PRIMEIRA METADE DO PAI2 COM SEGUNDA METADE DO PAI1
              */
-            geneDescendente = new Individuo(populacao.get(i));
-
-            for (int j = 0; j < qtdFunc; j++) {
-                geneDescendente.getAtividades().get(j).setResponsavel(cromossomoXPai01.get(j));
+            for (int l = 0; l < pontoCruzamento; l++) {
+                filho2.getAtividades().get(l).setResponsavel(pai2.getAtividades().get(l).getResponsavel());
             }
 
-            for (int k = 0; k < qtdFunc; k++) {
-                geneDescendente.getAtividades().get(k + qtdFunc).setResponsavel(cromossomoYPai02.get(k));
+            for (int m = pontoCruzamento; m < pai1.getAtividades().size(); m++) {
+                filho2.getAtividades().get(m).setResponsavel(pai1.getAtividades().get(m).getResponsavel());
             }
 
-            mutar = (float) (Math.random() * 1);
-            if (mutar < 0.3) {
-                geneDescendente = mutarIndividuo(geneDescendente);
-            }
+            filho2 = mutarIndividuo(filho2);
 
-            descendentes.add(new Individuo(geneDescendente));
+            List<Individuo> lista = new ArrayList<>();
 
-            /**
-             * *****************************************************************************************
-             * CRUZAMENTO DE CROMOSSOMOS Y01 - X02
-             * *****************************************************************************************
-             */
-            geneDescendente = new Individuo(populacao.get(i));
+            lista.add(pai1);
+            lista.add(pai2);
+            lista.add(filho1);
+            lista.add(filho2);
 
-            for (int j = 0; j < qtdFunc; j++) {
-                geneDescendente.getAtividades().get(j).setResponsavel(cromossomoYPai01.get(j));
-            }
+            melhoresPosCruzamento = avaliarPopulacao(lista);
 
-            for (int k = 0; k < qtdFunc; k++) {
-                geneDescendente.getAtividades().get(k + qtdFunc).setResponsavel(cromossomoXPai02.get(k));
-            }
-
-            mutar = (float) (Math.random() * 1);
-            if (mutar < 0.3) {
-                geneDescendente = mutarIndividuo(geneDescendente);
-            }
-
-            descendentes.add(new Individuo(geneDescendente));
-
-            /**
-             * *****************************************************************************************
-             * CRUZAMENTO DE CROMOSSOMOS Y01 - Y02
-             * *****************************************************************************************
-             */
-            geneDescendente = new Individuo(populacao.get(i));
-
-            for (int j = 0; j < qtdFunc; j++) {
-                geneDescendente.getAtividades().get(j).setResponsavel(cromossomoYPai01.get(j));
-            }
-
-            for (int k = 0; k < qtdFunc; k++) {
-                geneDescendente.getAtividades().get(k + qtdFunc).setResponsavel(cromossomoYPai02.get(k));
-            }
-
-            mutar = (float) (Math.random() * 1);
-            if (mutar < 0.3) {
-                geneDescendente = mutarIndividuo(geneDescendente);
-            }
-
-            descendentes.add(new Individuo(geneDescendente));
-
+            populacao.set(indexPai01, melhoresPosCruzamento.get(0));
+            populacao.set(indexPai02, melhoresPosCruzamento.get(1));
         }
-        descendentes = avaliarPopulacao(descendentes);
-        return descendentes.subList(0, Numeros.NUMERO_INDIVIDUOS);
+        return populacao;
     }
 
     public static Individuo mutarIndividuo(Individuo ind) {
@@ -320,28 +261,35 @@ public class Controle {
         Funcionario funcAux = new Funcionario();
         int index;
 
-        index = (int) (Math.random() * ind.getAtividades().size());
+        double mutar = (double) (Math.random() * 1);
 
-        for (int i = 0; i < ind.getAtividades().size(); i++) {
-            if (!Objects.equals(ind.getAtividades().get(i).getResponsavel().getArea().getCodigo(), ind.getAtividades().get(i).getArea().getCodigo())) {
-                func = ind.getAtividades().get(index).getResponsavel();
-                index = i;
-                break;
+        if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
+
+            index = (int) (Math.random() * ind.getAtividades().size());
+
+            for (int i = 0; i < ind.getAtividades().size(); i++) {
+                if (!Objects.equals(ind.getAtividades().get(i).getResponsavel().getArea().getCodigo(), ind.getAtividades().get(i).getArea().getCodigo())) {
+                    func = new Funcionario(ind.getAtividades().get(index).getResponsavel());
+                    index = i;
+                    break;
+                }
+            }
+
+            for (Atividade atv : ind.getAtividades()) {
+                try {
+                    if (Objects.equals(atv.getArea().getCodigo(), func.getArea().getCodigo())
+                            && Objects.equals(atv.getNivel().getCodigo(), func.getCargo().getCodigo())) {
+                        funcAux = new Funcionario(atv.getResponsavel());
+
+                        atv.setResponsavel(func);
+
+                        ind.getAtividades().get(index).setResponsavel(funcAux);
+                        break;
+                    }
+                } catch (NullPointerException npe) {
+                }
             }
         }
-
-        for (Atividade atv : ind.getAtividades()) {
-            if (Objects.equals(atv.getArea().getCodigo(), func.getArea().getCodigo())
-                    && Objects.equals(atv.getNivel().getCodigo(), func.getCargo().getCodigo())) {
-                funcAux = atv.getResponsavel();
-
-                atv.setResponsavel(func);
-
-                ind.getAtividades().get(index).setResponsavel(funcAux);
-                break;
-            }
-        }
-
         return ind;
     }
 
