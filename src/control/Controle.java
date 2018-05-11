@@ -22,8 +22,11 @@ import utils.StringsUtils;
  */
 public class Controle {
 
-    private static Integer qtdFunc = Numeros.ZERO;
-    private static Integer qtdAtv = Numeros.ZERO;
+    private static int maxAtividadePorFuncionario;
+    private static int mediaHorasDEV;
+    private static int mediaHorasBANCO;
+    private static int mediaHorasANALISE;
+    private static int mediaHorasTESTE;
 
     public static Individuo start() {
         List<Individuo> populacao = new ArrayList<>();
@@ -71,8 +74,8 @@ public class Controle {
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
 
-        qtdFunc = listaFunc.size();
-        qtdAtv = listaAtv.size();
+        maxAtividadePorFuncionario = listaAtv.size() / listaFunc.size();
+        maxAtividadePorFuncionario += Numeros.UM;
 
         for (int i = 0; i < Numeros.NUMERO_INDIVIDUOS; i++) {
             indiv = new Individuo();
@@ -80,7 +83,6 @@ public class Controle {
             indiv.setAtividades(retornarAtvAssociadas(listaFunc, listaAtv));
 
             listaIndividuos.add(indiv);
-            System.out.println("Indivíduo: " + i + " Gerado");
         }
         System.out.println("Indivíduos Gerados");
         manager.close();
@@ -116,7 +118,7 @@ public class Controle {
                     Boolean ficar = Boolean.TRUE;
                     do {
                         index = (int) (Math.random() * listaF.size());
-                        if (listaF.get(index).getAtividades().size() < 3) {
+                        if (listaF.get(index).getAtividades().size() < maxAtividadePorFuncionario) {
                             listaF.get(index).getAtividades().add(atividade);
                             atividade.setResponsavel(listaF.get(index));
                             ficar = Boolean.FALSE;
@@ -149,13 +151,14 @@ public class Controle {
                 if (Objects.equals(atv.getNivel().getCodigo(), atv.getResponsavel().getCargo().getCodigo())) {
                     nota += 1;
                 } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.5;
-                } else if (atv.getNivel().getCodigo() > atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.1;
+                    nota += 0.3;
                 }
-                nota += (float) atv.getResponsavel().getTempo_exp();
-                nota += (float) atv.getResponsavel().getTempo_proj();
 
+                /*VERIFICA BALANCEAMENTO DE HORAS*/
+                int horas = Numeros.ZERO;                
+                for (Atividade at : atv.getResponsavel().getAtividades()) {
+                    horas += at.getPrazo();
+                }
             }
             ind.setNota(nota);
         }
@@ -303,5 +306,5 @@ public class Controle {
             }
         }
         return Boolean.FALSE;
-    }
+    }    
 }

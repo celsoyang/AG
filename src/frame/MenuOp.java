@@ -8,7 +8,6 @@ package frame;
 import bean.Atividade;
 import bean.Individuo;
 import control.Controle;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
@@ -99,16 +98,22 @@ public class MenuOp extends MenuBar {
             @Override
             public void handle(ActionEvent event) {
 
-                Individuo bestInd = Controle.start();                
+                Individuo bestInd = Controle.start();
 
                 System.out.println("Maior Nota: " + bestInd.getNota());
 
                 for (Atividade atv : bestInd.getAtividades()) {
-                    System.out.println("**************ATIVIDADE: " + atv.getNome() + "****************");
-                    System.out.println("ÁREA: " + atv.getArea().getDescricao());
-                    System.out.println("Responsável: " + atv.getResponsavel().getNome());;
-                    System.out.println("Área Resp.: " + atv.getResponsavel().getArea().getDescricao());
-                    System.out.println("*********************************************** \n");
+                    System.out.println();
+                    System.out.println("***********************************************");
+                    System.out.println(atv.getNome().toUpperCase());
+                    System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());;
+                    System.out.println("-----------------------------------------------");
+                    System.out.println("ÁREA ATIVIDADE  : " + atv.getArea().getDescricao());
+                    System.out.println("ÁREA FUNCIONÁRIO: " + atv.getResponsavel().getArea().getDescricao());
+                    System.out.println("-----------------------------------------------");
+                    System.out.println("NÍVEL ATIVIDADE  : " + atv.getNivel().getDescricao());
+                    System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
+                    System.out.println("***********************************************\n");
                 }
             }
         });
