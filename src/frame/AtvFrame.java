@@ -154,7 +154,7 @@ public class AtvFrame extends BorderPane {
                     atv.setNome(tfDescricao.getText());
                     atv.setArea(area);
                     atv.setNivel(cargo);
-                    atv.setPrazo(Double.parseDouble(tfPrazo.getText()));
+                    atv.setPrazo(Integer.parseInt(tfPrazo.getText()));
                     
                     manager.getTransaction().begin();
                     manager.persist(atv);
@@ -187,6 +187,6 @@ public class AtvFrame extends BorderPane {
         tfDescricao.setText(atividade.getNome());
         comboArea.setValue(atividade.getArea().getDescricao());
         comboNivel.setValue(atividade.getNivel().getDescricao());
-        tfPrazo.setText(atividade.getPrazo().toString());
+        tfPrazo.setText(String.valueOf(atividade.getPrazo()));
     }
 }

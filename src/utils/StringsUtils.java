@@ -55,12 +55,16 @@ public class StringsUtils {
     public static final String SELECT_FUNCIONARIO = "select f from Funcionario f";
     public static String SELECT_ATIVIDADE = "select at from Atividade at";
     
+    public static String SUM_HORAS_AREA = "select atvArea.codigo, sum(atv.prazo) from Atividade atv join atv.area as atvArea group by atvArea.codigo order by atvArea.codigo";
+    
     /******************************************************************************************************/
     /******************************************************************************************************/
 
     public static final String[] NOMES_FUNC = {"João", "Pedro", "Bernardo", "Cristiano", "Gustavo", "Rafael", 
         "Mário", "Antônio", "Everton", "José", "Julino", "Renato", "Agnaldo"};
     public static final String[] SOBRENOMES_FUNC = {"Vasconcelos", "Souza", "Silva",
-        "Oliveira", "Menezes", "Santos", "Costa", "Albuquerque", "Alves", "Dias", "Mendes", "Filho", "Bernardes"};    
+        "Oliveira", "Menezes", "Santos", "Costa", "Albuquerque", "Alves", "Dias", "Mendes", "Filho", "Bernardes"};
+    
+    
     
 }

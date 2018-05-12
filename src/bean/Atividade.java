@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import utils.Numeros;
 import utils.StringsUtils;
 
 /**
@@ -20,23 +21,23 @@ import utils.StringsUtils;
  */
 @Entity
 public class Atividade implements Serializable {
-    
-    @Id 
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo = null;
-    
+
     private String nome = StringsUtils.VAZIA;
-    
+
     @OneToOne
     private Cargo nivel = null;
-    
+
     @OneToOne
     private Area area = null;
-    
+
     @ManyToOne
     private Funcionario responsavel = null;
-    
-    private Double prazo = null;
+
+    private int prazo = Numeros.ZERO;
 
     public Atividade() {
     }
@@ -90,11 +91,11 @@ public class Atividade implements Serializable {
         this.responsavel = responsavel;
     }
 
-    public Double getPrazo() {
+    public int getPrazo() {
         return prazo;
     }
 
-    public void setPrazo(Double prazo) {
+    public void setPrazo(int prazo) {
         this.prazo = prazo;
-    }        
+    }
 }
