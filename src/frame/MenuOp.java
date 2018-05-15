@@ -14,6 +14,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 import utils.StringsUtils;
 
 /**
@@ -100,8 +101,6 @@ public class MenuOp extends MenuBar {
 
                 Individuo bestInd = Controle.start();
 
-                System.out.println("Maior Nota: " + bestInd.getNota());
-
                 for (Atividade atv : bestInd.getAtividades()) {
                     System.out.println();
                     System.out.println("***********************************************");
@@ -115,6 +114,7 @@ public class MenuOp extends MenuBar {
                     System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
                     System.out.println("***********************************************\n");
                 }
+                JOptionPane.showMessageDialog(null, "Melhor Indivíduo - Nota: " + bestInd.getNota());
             }
         });
 

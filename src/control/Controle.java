@@ -213,7 +213,7 @@ public class Controle {
                 if (Objects.equals(atv.getNivel().getCodigo(), atv.getResponsavel().getCargo().getCodigo())) {
                     nota += 1;
                 } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.3;
+                    nota += 0.5;
                 }
 
                 /*VERIFICA BALANCEAMENTO DE HORAS*/
@@ -306,7 +306,7 @@ public class Controle {
         Individuo pai1 = new Individuo();
         Individuo pai2 = new Individuo();
 
-        int qtdCruzamentos = (int) (Math.random() * 10);
+        int qtdCruzamentos = (int) (Math.random() * Numeros.MAX_CRUZAMENTOS);
 
         for (int i = 0; i < qtdCruzamentos; i++) {
             indexPai01 = (int) (Math.random() * populacao.size());
