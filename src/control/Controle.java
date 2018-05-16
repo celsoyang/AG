@@ -220,7 +220,7 @@ public class Controle {
                 if (Objects.equals(atv.getNivel().getCodigo(), atv.getResponsavel().getCargo().getCodigo())) {
                     nota += 1;
                 } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.5;
+                    nota += 0.1;
                 }
 
                 /*VERIFICA BALANCEAMENTO DE HORAS
