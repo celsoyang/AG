@@ -37,26 +37,15 @@ public class Numeros {
 
     public static final float ZERO_FLOAT = 0.000000f;
 
-    /**
-     * Quantidade de Indivíduos
-     */
-    public static final int NUMERO_INDIVIDUOS = 5000;
+    
+    public static final int NUMERO_INDIVIDUOS = 10000;
 
-    public static int NUMERO_GERACOES = 10000;
+    public static int NUMERO_GERACOES = 2000;
 
-    public static double MAX_CRUZAMENTOS = 500;
-
-    /**
-     * Metade do número de individuos
-     */
-    public static final int NUMERO_CRUZAMENTOS = NUMERO_INDIVIDUOS / DOIS;
-
-    public static final int NUMERO_ATIVIDADES = 60;
-
-    public static final int NUMERO_FUNCIONARIOS = 30;
-
-    public static double NUMERO_GENES_TROCADOS = 3;
+    public static double MAX_CRUZAMENTOS = 1000;
 
     public static double PROBABILIDADE_MUTACAO = 0.2;
+    
+    public static float MAX_NOTA = 0;
 
 }

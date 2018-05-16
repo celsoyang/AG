@@ -15,6 +15,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import utils.Numeros;
 import utils.StringsUtils;
 
 /**
@@ -98,9 +99,12 @@ public class MenuOp extends MenuBar {
         menuOpStart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Individuo bestInd = new Individuo();
 
-                Individuo bestInd = Controle.start();
-
+                do{
+                    bestInd = Controle.start();
+                }while(bestInd.getNota() < Numeros.MAX_NOTA);
+                
                 for (Atividade atv : bestInd.getAtividades()) {
                     System.out.println();
                     System.out.println("***********************************************");

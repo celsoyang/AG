@@ -138,6 +138,8 @@ public class Controle {
 
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
+        
+        Numeros.MAX_NOTA = listaAtv.size() * Numeros.DOIS;
 
         caucularMediasArea(listaAtv, listaFunc);
 
@@ -221,7 +223,7 @@ public class Controle {
                     nota += 0.5;
                 }
 
-                /*VERIFICA BALANCEAMENTO DE HORAS*/
+                /*VERIFICA BALANCEAMENTO DE HORAS
                 int horas = Numeros.ZERO;
                 for (Atividade at : atv.getResponsavel().getAtividades()) {
                     horas += at.getPrazo();
@@ -265,7 +267,7 @@ public class Controle {
                         break;
                     default:
                         break;
-                }
+                }*/
             }
             ind.setNota(nota);
         }
@@ -308,8 +310,8 @@ public class Controle {
         Individuo pai1 = new Individuo();
         Individuo pai2 = new Individuo();
 
-        int qtdCruzamentos = (int) (Math.random() * Numeros.MAX_CRUZAMENTOS);
-        for (int i = 0; i < qtdCruzamentos; i++) {
+        //int qtdCruzamentos = (int) (Math.random() * Numeros.MAX_CRUZAMENTOS);
+        for (int i = 0; i < Numeros.MAX_CRUZAMENTOS; i++) {
             indexPai01 = (int) (Math.random() * populacao.size());
 
             do {
@@ -359,8 +361,8 @@ public class Controle {
 
             melhoresPosCruzamento = avaliarPopulacao(lista);
 
-            populacao.set(indexPai01, melhoresPosCruzamento.get(0));
-            populacao.set(indexPai02, melhoresPosCruzamento.get(1));
+            populacao.set(indexPai01, melhoresPosCruzamento.get(Numeros.ZERO));
+            populacao.set(indexPai02, melhoresPosCruzamento.get(Numeros.UM));
         }
         return populacao;
     }
