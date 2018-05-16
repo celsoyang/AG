@@ -51,13 +51,13 @@ public class Funcionario implements Serializable {
     }
 
     public Funcionario(Funcionario func) {
-        this.area = func.getArea();
-        this.atividades = func.getAtividades();
-        this.cargo = func.getCargo();
-        this.codigo = func.getCodigo();
-        this.nome = func.getNome();
-        this.tempo_exp = func.getTempo_exp();
-        this.tempo_proj = func.getTempo_proj();
+        setArea(func.getArea());
+        setAtividades(func.getAtividades());
+        setCargo(func.getCargo());
+        setCodigo(func.getCodigo());
+        setNome(func.getNome());
+        setTempo_exp(func.getTempo_exp());
+        setTempo_proj(func.getTempo_proj());
     }
 
     public Integer getCodigo() {

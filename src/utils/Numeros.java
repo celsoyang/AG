@@ -40,11 +40,11 @@ public class Numeros {
     /**
      * Quantidade de Indivíduos
      */
-    public static final int NUMERO_INDIVIDUOS = 10000;
+    public static final int NUMERO_INDIVIDUOS = 5000;
 
-    public static int NUMERO_GERACOES = 5000;
+    public static int NUMERO_GERACOES = 10000;
 
-    public static double MAX_CRUZAMENTOS = 100;
+    public static double MAX_CRUZAMENTOS = 500;
 
     /**
      * Metade do número de individuos

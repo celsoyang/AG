@@ -114,7 +114,7 @@ public class MenuOp extends MenuBar {
                     System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
                     System.out.println("***********************************************\n");
                 }
-                JOptionPane.showMessageDialog(null, "Melhor Indivíduo - Nota: " + bestInd.getNota());
+                System.out.println("Melhor Nota: " + bestInd.getNota());
             }
         });
 

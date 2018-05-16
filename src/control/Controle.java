@@ -3,7 +3,6 @@ package control;
 import bean.Atividade;
 import bean.Funcionario;
 import bean.Individuo;
-import bean.MediaArea;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +26,7 @@ public class Controle {
 
     private static Integer medHoraDev = Numeros.ZERO;
     private static Integer medHoraAnalise = Numeros.ZERO;
+    private static Integer medHoraAnaliseReq = Numeros.ZERO;
     private static Integer medHoraBanco = Numeros.ZERO;
     private static Integer medHoraTeste = Numeros.ZERO;
 
@@ -60,11 +60,13 @@ public class Controle {
 
         Integer qtdHoraDev = Numeros.ZERO;
         Integer qtdHoraAnalise = Numeros.ZERO;
+        Integer qtdHoraAnaliseReq = Numeros.ZERO;
         Integer qtdHoraBanco = Numeros.ZERO;
         Integer qtdHoraTeste = Numeros.ZERO;
 
         Integer qtdFuncDev = Numeros.ZERO;
         Integer qtdFuncAnalise = Numeros.ZERO;
+        Integer qtdFuncAnaliseReq = Numeros.ZERO;
         Integer qtdFuncBanco = Numeros.ZERO;
         Integer qtdFuncTeste = Numeros.ZERO;
 
@@ -77,6 +79,7 @@ public class Controle {
                     qtdHoraAnalise += atv.getPrazo();
                     break;
                 case 3:
+                    qtdHoraAnaliseReq += atv.getPrazo();
                     break;
                 case 4:
                     qtdHoraBanco += atv.getPrazo();
@@ -97,6 +100,7 @@ public class Controle {
                     qtdFuncAnalise++;
                     break;
                 case 3:
+                    qtdFuncAnaliseReq++;
                     break;
                 case 4:
                     qtdFuncBanco++;
@@ -112,6 +116,7 @@ public class Controle {
         medHoraAnalise = qtdHoraAnalise / qtdFuncAnalise;
         medHoraBanco = qtdHoraBanco / qtdFuncBanco;
         medHoraTeste = qtdHoraTeste / qtdFuncTeste;
+        medHoraAnaliseReq = qtdHoraAnaliseReq / qtdFuncAnaliseReq;
     }
 
     public void loadFuncionario(Stage stage) {
@@ -224,41 +229,38 @@ public class Controle {
 
                 switch (atv.getResponsavel().getArea().getCodigo()) {
                     case 1:
-                        if (horas == medHoraDev) {
+                        if ((medHoraDev % horas) <= Numeros.DOIS) {
                             nota += 1;
-                        } else if (horas < medHoraDev) {
-                            nota += 0.5;
-                        } else if (horas > medHoraDev) {
-                            nota += 0.5;
+                        } else {
+                            nota += 0.1;
                         }
                         break;
                     case 2:
-                        if (horas == medHoraAnalise) {
+                        if ((medHoraAnalise % horas) <= Numeros.DOIS) {
                             nota += 1;
-                        } else if (horas < medHoraAnalise) {
-                            nota += 0.5;
-                        } else if (horas > medHoraAnalise) {
-                            nota += 0.5;
+                        } else {
+                            nota += 0.1;
                         }
                         break;
                     case 3:
+                        if ((medHoraAnaliseReq % horas) <= Numeros.DOIS) {
+                            nota += 1;
+                        } else {
+                            nota += 0.1;
+                        }
                         break;
                     case 4:
-                        if (horas == medHoraBanco) {
+                        if ((medHoraBanco % horas) <= Numeros.DOIS) {
                             nota += 1;
-                        } else if (horas < medHoraBanco) {
-                            nota += 0.5;
-                        } else if (horas > medHoraBanco) {
-                            nota += 0.5;
+                        } else {
+                            nota += 0.1;
                         }
                         break;
                     case 5:
-                        if (horas == medHoraTeste) {
+                        if ((medHoraTeste % horas) <= Numeros.DOIS) {
                             nota += 1;
-                        } else if (horas < medHoraTeste) {
-                            nota += 0.5;
-                        } else if (horas > medHoraTeste) {
-                            nota += 0.2;
+                        } else {
+                            nota += 0.1;
                         }
                         break;
                     default:
@@ -307,7 +309,6 @@ public class Controle {
         Individuo pai2 = new Individuo();
 
         int qtdCruzamentos = (int) (Math.random() * Numeros.MAX_CRUZAMENTOS);
-
         for (int i = 0; i < qtdCruzamentos; i++) {
             indexPai01 = (int) (Math.random() * populacao.size());
 
@@ -374,9 +375,10 @@ public class Controle {
         if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
 
             index = (int) (Math.random() * ind.getAtividades().size());
-
+            
             for (int i = 0; i < ind.getAtividades().size(); i++) {
-                if (!Objects.equals(ind.getAtividades().get(i).getResponsavel().getArea().getCodigo(), ind.getAtividades().get(i).getArea().getCodigo())) {
+                if (!Objects.equals(ind.getAtividades().get(i).getResponsavel().getArea().getCodigo(), ind.getAtividades().get(i).getArea().getCodigo())
+                        || !Objects.equals(ind.getAtividades().get(i).getResponsavel().getCargo().getCodigo(), ind.getAtividades().get(i).getNivel().getCodigo())) {
                     func = new Funcionario(ind.getAtividades().get(index).getResponsavel());
                     index = i;
                     break;
