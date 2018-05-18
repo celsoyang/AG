@@ -51,7 +51,7 @@ public class Controle {
                 }
             }
 
-            System.out.println("Geração: " + i + " Melhor nota: " + melhorInd.getNota());
+//            System.out.println("Geração: " + i + " Melhor nota: " + melhorInd.getNota());
         }
         return melhorInd;
     }
@@ -139,7 +139,7 @@ public class Controle {
         listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
         listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
         
-        Numeros.MAX_NOTA = listaAtv.size() * Numeros.DOIS;
+        Numeros.MAX_NOTA = listaAtv.size() * Numeros.VINTE;
 
         caucularMediasArea(listaAtv, listaFunc);
 
@@ -211,19 +211,19 @@ public class Controle {
                  * VERIFICAR SE ÁREA É IGUAL
                  */
                 if (Objects.equals(atv.getArea().getCodigo(), atv.getResponsavel().getArea().getCodigo())) {
-                    nota += 1;
+                    nota += 10;
                 } else {
-                    nota += 0.1;
+                    nota += 1;
                 }
 
                 /*VERIFICAR SE NIVEL É IGUAL*/
                 if (Objects.equals(atv.getNivel().getCodigo(), atv.getResponsavel().getCargo().getCodigo())) {
-                    nota += 1;
+                    nota += 10;
                 } else if (atv.getNivel().getCodigo() < atv.getResponsavel().getCargo().getCodigo()) {
-                    nota += 0.1;
+                    nota += 1;
                 }
 
-                /*VERIFICA BALANCEAMENTO DE HORAS
+                //VERIFICA BALANCEAMENTO DE HORAS
                 int horas = Numeros.ZERO;
                 for (Atividade at : atv.getResponsavel().getAtividades()) {
                     horas += at.getPrazo();
@@ -231,43 +231,23 @@ public class Controle {
 
                 switch (atv.getResponsavel().getArea().getCodigo()) {
                     case 1:
-                        if ((medHoraDev % horas) <= Numeros.DOIS) {
-                            nota += 1;
-                        } else {
-                            nota += 0.1;
-                        }
+                        nota += (10 - retornarDiferencaHoras(medHoraDev, horas));
                         break;
                     case 2:
-                        if ((medHoraAnalise % horas) <= Numeros.DOIS) {
-                            nota += 1;
-                        } else {
-                            nota += 0.1;
-                        }
+                        nota += (10 - retornarDiferencaHoras(medHoraAnalise, horas));
                         break;
                     case 3:
-                        if ((medHoraAnaliseReq % horas) <= Numeros.DOIS) {
-                            nota += 1;
-                        } else {
-                            nota += 0.1;
-                        }
+                        nota += (10 - retornarDiferencaHoras(medHoraAnaliseReq, horas));
                         break;
                     case 4:
-                        if ((medHoraBanco % horas) <= Numeros.DOIS) {
-                            nota += 1;
-                        } else {
-                            nota += 0.1;
-                        }
+                        nota += (10 - retornarDiferencaHoras(medHoraBanco, horas));
                         break;
                     case 5:
-                        if ((medHoraTeste % horas) <= Numeros.DOIS) {
-                            nota += 1;
-                        } else {
-                            nota += 0.1;
-                        }
+                        nota += (10 - retornarDiferencaHoras(medHoraTeste, horas));
                         break;
                     default:
                         break;
-                }*/
+                }
             }
             ind.setNota(nota);
         }
@@ -403,6 +383,17 @@ public class Controle {
             }
         }
         return ind;
+    }
+    
+    private static Integer retornarDiferencaHoras(int horaFunc, int mediaArea){
+        Integer diferenca = Numeros.ZERO;
+        
+        if(horaFunc < mediaArea){
+            diferenca = mediaArea - horaFunc;
+        } else {
+            diferenca = horaFunc - mediaArea ;
+        }        
+        return diferenca;
     }
 
     /**

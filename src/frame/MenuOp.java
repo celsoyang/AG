@@ -8,6 +8,8 @@ package frame;
 import bean.Atividade;
 import bean.Individuo;
 import control.Controle;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
@@ -101,15 +103,30 @@ public class MenuOp extends MenuBar {
             public void handle(ActionEvent event) {
                 Individuo bestInd = new Individuo();
 
-                do{
+//                do {
+//                    bestInd = Controle.start();
+//                } while (bestInd.getNota() < Numeros.MAX_NOTA);
+                Individuo melhor = new Individuo();
+                List<String> tentativas = new ArrayList<>();
+                for (int i = 0; i < 20; i++) {
                     bestInd = Controle.start();
-                }while(bestInd.getNota() < Numeros.MAX_NOTA);
+
+                    if (bestInd.getNota() > melhor.getNota()) {
+                        melhor = new Individuo(bestInd);
+                    }
+
+                    tentativas.add("Tentativa: " + (i + 1) + " Melhor nota: " + bestInd.getNota());
+                }
                 
-                for (Atividade atv : bestInd.getAtividades()) {
+                for (String tent : tentativas) {
+                    System.out.println(tent);
+                }
+
+                for (Atividade atv : melhor.getAtividades()) {
                     System.out.println();
                     System.out.println("***********************************************");
                     System.out.println(atv.getNome().toUpperCase());
-                    System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());;
+                    System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());
                     System.out.println("-----------------------------------------------");
                     System.out.println("ÁREA ATIVIDADE  : " + atv.getArea().getDescricao());
                     System.out.println("ÁREA FUNCIONÁRIO: " + atv.getResponsavel().getArea().getDescricao());
@@ -118,7 +135,7 @@ public class MenuOp extends MenuBar {
                     System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
                     System.out.println("***********************************************\n");
                 }
-                System.out.println("Melhor Nota: " + bestInd.getNota());
+                System.out.println("Melhor Nota: " + melhor.getNota());
             }
         });
 

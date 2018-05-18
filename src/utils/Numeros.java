@@ -30,6 +30,12 @@ public class Numeros {
     public static final Integer QUATRO = 4;
 
     public static final Integer CINCO = 5;
+    
+    public static int DEZ = 10;
+    
+    public static int VINTE = 20;
+    
+    public static int TRINTA = 30;
 
     public static final int QTD_FUNC = 30;
 
@@ -38,11 +44,11 @@ public class Numeros {
     public static final float ZERO_FLOAT = 0.000000f;
 
     
-    public static final int NUMERO_INDIVIDUOS = 10000;
+    public static final int NUMERO_INDIVIDUOS = 5000;
 
     public static int NUMERO_GERACOES = 2000;
 
-    public static double MAX_CRUZAMENTOS = 1000;
+    public static double MAX_CRUZAMENTOS = 500;
 
     public static double PROBABILIDADE_MUTACAO = 0.2;
     
