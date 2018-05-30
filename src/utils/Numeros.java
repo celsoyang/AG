@@ -42,16 +42,20 @@ public class Numeros {
     public static final double ZERO_DOUBLE = 0;
 
     public static final float ZERO_FLOAT = 0.000000f;
-
     
-    public static final int NUMERO_INDIVIDUOS = 5000;
+    
+    
+    public static final int NUMERO_INDIVIDUOS = 2000;
 
     public static int NUMERO_GERACOES = 2000;
 
-    public static double MAX_CRUZAMENTOS = 500;
+    public static double MAX_CRUZAMENTOS = 200;
 
-    public static double PROBABILIDADE_MUTACAO = 0.2;
+    public static double PROBABILIDADE_MUTACAO = 0.5;
     
-    public static float MAX_NOTA = 0;
-
+    public static float NOTA_PISO = 1700;
+    
+//    public static float NOTA_PISO = 1350;
+    
+    public static float MAX_NOTA = 1756;
 }

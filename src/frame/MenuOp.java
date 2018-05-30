@@ -8,15 +8,12 @@ package frame;
 import bean.Atividade;
 import bean.Individuo;
 import control.Controle;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import utils.Numeros;
 import utils.StringsUtils;
 
@@ -66,7 +63,7 @@ public class MenuOp extends MenuBar {
         menuOpAssociar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                Controle.caucularMaiorNota();
             }
         });
 
@@ -103,26 +100,28 @@ public class MenuOp extends MenuBar {
             public void handle(ActionEvent event) {
                 Individuo bestInd = new Individuo();
 
-//                do {
-//                    bestInd = Controle.start();
-//                } while (bestInd.getNota() < Numeros.MAX_NOTA);
-                Individuo melhor = new Individuo();
-                List<String> tentativas = new ArrayList<>();
-                for (int i = 0; i < 20; i++) {
+                do {
                     bestInd = Controle.start();
-
-                    if (bestInd.getNota() > melhor.getNota()) {
-                        melhor = new Individuo(bestInd);
-                    }
-
-                    tentativas.add("Tentativa: " + (i + 1) + " Melhor nota: " + bestInd.getNota());
-                }
+                    System.out.println("Melhor nota: " + bestInd.getNota());
+                } while (bestInd.getNota() < Numeros.NOTA_PISO);
                 
-                for (String tent : tentativas) {
-                    System.out.println(tent);
-                }
+//                Individuo melhor = new Individuo();
+//                List<String> tentativas = new ArrayList<>();                
+//                for (int i = 0; i < 20; i++) {
+//                    bestInd = Controle.start();
+//
+//                    if (bestInd.getNota() > melhor.getNota()) {
+//                        melhor = new Individuo(bestInd);
+//                    }
+//
+//                    tentativas.add("Tentativa: " + (i + 1) + " Melhor nota: " + bestInd.getNota());
+//                }
+                
+//                for (String tent : tentativas) {
+//                    System.out.println(tent);
+//                }
 
-                for (Atividade atv : melhor.getAtividades()) {
+                for (Atividade atv : bestInd.getAtividades()) {
                     System.out.println();
                     System.out.println("***********************************************");
                     System.out.println(atv.getNome().toUpperCase());
@@ -135,7 +134,7 @@ public class MenuOp extends MenuBar {
                     System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
                     System.out.println("***********************************************\n");
                 }
-                System.out.println("Melhor Nota: " + melhor.getNota());
+                System.out.println("Melhor Nota: " + bestInd.getNota());
             }
         });
 
