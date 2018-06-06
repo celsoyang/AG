@@ -32,6 +32,7 @@ public class StringsUtils {
     public static final String OPCOES = "Opções";
     public static final String GERAR_POPULACAO = "Gerar população";
     public static final String ASSOCIAR_ATIVIDADES = "Associuar Atividades";
+    public static final String MOSTRAR_MELHOR = "Mostra Melhor Associação";
     public static final Font FONTE_SISTEMA = Font.font("Georgia", 13);
     public static final String PATH_FUNCIONARIOS = "../files/funcionarios.func";
     public static final String PATH_ATIVIDADES = "../files/atividades.atv";
@@ -74,4 +75,5 @@ public class StringsUtils {
         "Mário", "Antônio", "Everton", "José", "Julino", "Renato", "Agnaldo"};
     public static final String[] SOBRENOMES_FUNC = {"Vasconcelos", "Souza", "Silva",
         "Oliveira", "Menezes", "Santos", "Costa", "Albuquerque", "Alves", "Dias", "Mendes", "Filho", "Bernardes"};
+    
 }

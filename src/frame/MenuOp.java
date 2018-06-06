@@ -31,7 +31,7 @@ public class MenuOp extends MenuBar {
     private MenuItem opAtvList;
     private MenuItem opAtvAdd;
     private Menu menuOp;
-    private MenuItem menuOpAssociar;
+    private MenuItem menuOpMelhorAssociacao;
     private MenuItem menuOpStart;
 
     @SuppressWarnings("Convert2Lambda")
@@ -44,10 +44,10 @@ public class MenuOp extends MenuBar {
         opAtvList = new MenuItem(StringsUtils.LISTAR);
         opAtvAdd = new MenuItem(StringsUtils.ADICIONAR);
         menuOp = new Menu(StringsUtils.OPCOES);
-        menuOpAssociar = new MenuItem(StringsUtils.ASSOCIAR_ATIVIDADES);
+        menuOpMelhorAssociacao = new MenuItem(StringsUtils.MOSTRAR_MELHOR);
         menuOpStart = new MenuItem(StringsUtils.START);
 
-        menuOp.getItems().addAll(menuOpAssociar, menuOpStart);
+        menuOp.getItems().addAll(menuOpMelhorAssociacao, menuOpStart);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
@@ -60,7 +60,7 @@ public class MenuOp extends MenuBar {
             }
         });
 
-        menuOpAssociar.setOnAction(new EventHandler<ActionEvent>() {
+        menuOpMelhorAssociacao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Controle.caucularMaiorNota();
@@ -100,40 +100,10 @@ public class MenuOp extends MenuBar {
             public void handle(ActionEvent event) {
                 Individuo bestInd = new Individuo();
 
-                do {
-                    bestInd = Controle.start();
-                    System.out.println("Melhor nota: " + bestInd.getNota());
-                } while (bestInd.getNota() < Numeros.NOTA_PISO);
+                bestInd = Controle.start();
+                System.out.println("Melhor nota: " + bestInd.getNota());
                 
-//                Individuo melhor = new Individuo();
-//                List<String> tentativas = new ArrayList<>();                
-//                for (int i = 0; i < 20; i++) {
-//                    bestInd = Controle.start();
-//
-//                    if (bestInd.getNota() > melhor.getNota()) {
-//                        melhor = new Individuo(bestInd);
-//                    }
-//
-//                    tentativas.add("Tentativa: " + (i + 1) + " Melhor nota: " + bestInd.getNota());
-//                }
-                
-//                for (String tent : tentativas) {
-//                    System.out.println(tent);
-//                }
-
-                for (Atividade atv : bestInd.getAtividades()) {
-                    System.out.println();
-                    System.out.println("***********************************************");
-                    System.out.println(atv.getNome().toUpperCase());
-                    System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());
-                    System.out.println("-----------------------------------------------");
-                    System.out.println("ÁREA ATIVIDADE  : " + atv.getArea().getDescricao());
-                    System.out.println("ÁREA FUNCIONÁRIO: " + atv.getResponsavel().getArea().getDescricao());
-                    System.out.println("-----------------------------------------------");
-                    System.out.println("NÍVEL ATIVIDADE  : " + atv.getNivel().getDescricao());
-                    System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
-                    System.out.println("***********************************************\n");
-                }
+                Controle.mostrarAssociacao(bestInd);
                 System.out.println("Melhor Nota: " + bestInd.getNota());
             }
         });

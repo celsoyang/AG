@@ -24,6 +24,8 @@ public class Controle {
 
     private static int maxAtividadePorFuncionario;
 
+    private static int qtdMutacoes = Numeros.ZERO;
+
     private static Integer medHoraDevJr = Numeros.ZERO;
     private static Integer medHoraDevPl = Numeros.ZERO;
 
@@ -43,6 +45,8 @@ public class Controle {
     private static Integer medHoraTestePl = Numeros.ZERO;
     private static Integer medHoraTesteAP = Numeros.ZERO;
 
+    private static List<Funcionario> listaPossiveis = new ArrayList<>();
+
     public static Individuo start() {
         List<Individuo> populacao = new ArrayList<>();
         List<Individuo> populacaoAlterada = new ArrayList<>();
@@ -52,25 +56,9 @@ public class Controle {
 
         Individuo melhorInd = new Individuo();
 
-        /*
-        for (int i = 0; i < Numeros.NUMERO_GERACOES; i++) {
-
-            populacaoAlterada = cruzarIndividuos(populacao);
-
-            populacao = avaliarPopulacao(populacaoAlterada);
-
-            for (Individuo individuo : populacao) {
-                if (individuo.getNota() > melhorInd.getNota()) {
-                    melhorInd = new Individuo(individuo);
-                }
-            }
-
-            System.out.println("Geração: " + i + " Melhor nota: " + melhorInd.getNota());
-        }
-         */
-        int i = 1;
+        int i = 0;
         do {
-
+            qtdMutacoes = Numeros.ZERO;
             populacaoAlterada = cruzarIndividuos(populacao);
 
             populacao = avaliarPopulacao(populacaoAlterada);
@@ -82,7 +70,7 @@ public class Controle {
             }
             i++;
 
-            System.out.println("Geração: " + i + " Melhor nota: " + melhorInd.getNota());
+            System.out.println("Geração: " + i + " Melhor nota: " + populacao.get(0).getNota() + " Melhor Geral: " + melhorInd.getNota() + " Mutações: " + qtdMutacoes);
         } while (melhorInd.getNota() < Numeros.NOTA_PISO);
 
         return melhorInd;
@@ -317,10 +305,11 @@ public class Controle {
         List<Funcionario> listaFunc = new ArrayList<>();
         List<Atividade> listaAtv = new ArrayList<>();
 
-        listaFunc = (List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO).getResultList();
-        listaAtv = (List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE).getResultList();
+        listaFunc = new ArrayList<>((List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO_TESTE).getResultList());
+        listaAtv = new ArrayList<>((List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE_TESTE).getResultList());
 
-//        Numeros.MAX_NOTA = listaAtv.size() * Numeros.VINTE;
+        listaPossiveis = new ArrayList<>(listaFunc);
+
         caucularMediasArea(listaAtv, listaFunc);
 
         maxAtividadePorFuncionario = listaAtv.size() / listaFunc.size();
@@ -334,7 +323,7 @@ public class Controle {
             listaIndividuos.add(indiv);
         }
         System.out.println("Indivíduos Gerados");
-        manager.close();
+//        manager.close();
         return listaIndividuos;
     }
 
@@ -405,11 +394,11 @@ public class Controle {
 
                 //VERIFICA BALANCEAMENTO DE HORAS
                 int horas = Numeros.ZERO;
+
                 for (Atividade at : atv.getResponsavel().getAtividades()) {
                     horas += at.getPrazo();
                 }
 
-                /*Ajustar pra considerar area e cargo*/
                 switch (atv.getResponsavel().getArea().getCodigo()) {
                     case 1:
                         switch (atv.getResponsavel().getCargo().getCodigo()) {
@@ -488,17 +477,24 @@ public class Controle {
 
         /**
          * ORGANIZA O ARRAY LEVANDO EM CONSIDERAÇÃO A NOTA DO INDIVÍDUO
-         *
-         * Collections.sort(populacao, new Comparator<Individuo>() {
-         *
-         * @Override public int compare(Individuo o1, Individuo o2) { Individuo
-         * ind01 = o1; Individuo ind02 = o2;
-         *
-         * if (ind01.getNota() > ind02.getNota()) { return -1; } else if
-         * (ind01.getNota() < ind02.getNota()) { return 1; } else { return 0; }
-         * }
-        });
          */
+        Collections.sort(populacao, new Comparator<Individuo>() {
+
+            @Override
+            public int compare(Individuo o1, Individuo o2) {
+                Individuo ind01 = o1;
+                Individuo ind02 = o2;
+
+                if (ind01.getNota() > ind02.getNota()) {
+                    return -1;
+                } else if (ind01.getNota() < ind02.getNota()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
         return populacao;
     }
 
@@ -514,23 +510,25 @@ public class Controle {
         List<Individuo> melhoresPosCruzamento = new ArrayList<>();
         int indexPai01;
         int indexPai02;
+        List<Individuo> candidatos = new ArrayList<>(populacao.subList(0, 1000));
 
         Individuo pai1 = new Individuo();
         Individuo pai2 = new Individuo();
 
+        //Problema com refeências de objetos
         //int qtdCruzamentos = (int) (Math.random() * Numeros.MAX_CRUZAMENTOS);
         for (int i = 0; i < Numeros.MAX_CRUZAMENTOS; i++) {
-            indexPai01 = (int) (Math.random() * populacao.size());
+            indexPai01 = (int) (Math.random() * candidatos.size());
 
             do {
-                indexPai02 = (int) (Math.random() * populacao.size());
+                indexPai02 = (int) (Math.random() * candidatos.size());
             } while (indexPai01 == indexPai02);
 
-            pai1 = new Individuo(populacao.get(indexPai01));
-            pai2 = new Individuo(populacao.get(indexPai02));
+            pai1 = new Individuo(candidatos.get(indexPai01));
+            pai2 = new Individuo(candidatos.get(indexPai02));
 
-            Individuo filho1 = new Individuo(pai1);
-            Individuo filho2 = new Individuo(pai1);
+            Individuo filho1 = new Individuo();
+            Individuo filho2 = new Individuo();
 
             int pontoCruzamento = (int) (Math.random() * pai1.getAtividades().size());
 
@@ -538,27 +536,27 @@ public class Controle {
              * PRIMEIRA METADE DO PAI1 COM SEGUNDA METADE DO PAI2
              */
             for (int j = 0; j < pontoCruzamento; j++) {
-                filho1.getAtividades().get(j).setResponsavel(pai1.getAtividades().get(j).getResponsavel());
+                filho1.getAtividades().add(pai1.getAtividades().get(j));
             }
 
             for (int k = pontoCruzamento; k < pai2.getAtividades().size(); k++) {
-                filho1.getAtividades().get(k).setResponsavel(pai2.getAtividades().get(k).getResponsavel());
+                filho1.getAtividades().add(pai2.getAtividades().get(k));
             }
 
-            filho1 = mutarIndividuo(filho1);
+            filho1 = new Individuo(mutarIndividuo(filho1));
 
             /**
              * PRIMEIRA METADE DO PAI2 COM SEGUNDA METADE DO PAI1
              */
             for (int l = 0; l < pontoCruzamento; l++) {
-                filho2.getAtividades().get(l).setResponsavel(pai2.getAtividades().get(l).getResponsavel());
+                filho2.getAtividades().add(pai2.getAtividades().get(l));
             }
 
             for (int m = pontoCruzamento; m < pai1.getAtividades().size(); m++) {
-                filho2.getAtividades().get(m).setResponsavel(pai1.getAtividades().get(m).getResponsavel());
+                filho2.getAtividades().add(pai1.getAtividades().get(m));
             }
 
-            filho2 = mutarIndividuo(filho2);
+            filho2 = new Individuo(mutarIndividuo(filho2));
 
             List<Individuo> lista = new ArrayList<>();
 
@@ -569,71 +567,49 @@ public class Controle {
 
             melhoresPosCruzamento = avaliarPopulacao(lista);
 
-            populacao.set(indexPai01, melhoresPosCruzamento.get(Numeros.ZERO));
-            populacao.set(indexPai02, melhoresPosCruzamento.get(Numeros.UM));
+            candidatos.set(indexPai01, melhoresPosCruzamento.get(Numeros.ZERO));
+            candidatos.set(indexPai02, melhoresPosCruzamento.get(Numeros.UM));
         }
-        return populacao;
+        
+        populacao.addAll(candidatos);        
+        
+        return avaliarPopulacao(populacao).subList(0, Numeros.NUMERO_INDIVIDUOS);
     }
 
     public static Individuo mutarIndividuo(Individuo ind) {
-        Funcionario func = new Funcionario();
-        Funcionario funcAux = new Funcionario();
-        int index;
-        int indexAux;
+        int indexAtv;
+        int indexFunc;
 
         double mutar = (double) (Math.random() * 1);
-        /*
-        if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
-            
-            index = (int) (Math.random() * ind.getAtividades().size());            
-            func = new Funcionario(ind.getAtividades().get(index).getResponsavel());
-            
-            do{
-                indexAux = (int) (Math.random() * ind.getAtividades().size());
-            }while(Objects.equals(index, indexAux));
-            
-            funcAux = new Funcionario(ind.getAtividades().get(indexAux).getResponsavel());            
-            ind.getAtividades().get(index).setResponsavel(funcAux);
-            ind.getAtividades().get(indexAux).setResponsavel(func);            
-        }
-         */
 
- /* MUTAÇÃO FORÇADA*/
-        if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
+        if (mutar < Numeros.PROBABILIDADE_MUTACAO) {
+            qtdMutacoes++;
 
-            index = (int) (Math.random() * ind.getAtividades().size());
+            for (int i = 0; i < Numeros.QTD_GENES_MUTADOS; i++) {
 
-            for (int i = 0; i < ind.getAtividades().size(); i++) {
-                if (!Objects.equals(ind.getAtividades().get(i).getResponsavel().getArea().getCodigo(), ind.getAtividades().get(i).getArea().getCodigo())
-                        || !Objects.equals(ind.getAtividades().get(i).getResponsavel().getCargo().getCodigo(), ind.getAtividades().get(i).getNivel().getCodigo())) {
-                    func = new Funcionario(ind.getAtividades().get(index).getResponsavel());
-                    index = i;
-                    break;
-                }
-            }
-
-            while (true) {
-                Atividade atv = new Atividade();
-
-                atv = ind.getAtividades().get((int) (Math.random() * ind.getAtividades().size()));                
-
-                try {
-                    if (Objects.equals(atv.getArea().getCodigo(), func.getArea().getCodigo())
-                            && Objects.equals(atv.getNivel().getCodigo(), func.getCargo().getCodigo())) {
-                        
-                        funcAux = new Funcionario(atv.getResponsavel());
-
-                        atv.setResponsavel(func);
-
-                        ind.getAtividades().get(index).setResponsavel(funcAux);
-                        break;
-                    }
-                } catch (NullPointerException npe) {
-                    break;
-                }
+                indexAtv = (int) (Math.random() * ind.getAtividades().size());
+                indexFunc = (int) (Math.random() * listaPossiveis.size());
                 
+                ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
             }
+
         }
+        /*  
+            if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
+
+                index = (int) (Math.random() * ind.getAtividades().size());
+                func = new Funcionario(ind.getAtividades().get(index).getResponsavel());
+
+                do {
+                    indexAux = (int) (Math.random() * ind.getAtividades().size());
+                } while (Objects.equals(index, indexAux));
+
+                funcAux = new Funcionario(ind.getAtividades().get(indexAux).getResponsavel());
+
+                ind.getAtividades().get(index).setResponsavel(funcAux);
+                ind.getAtividades().get(indexAux).setResponsavel(func);
+            }
+         */
         return ind;
     }
 
@@ -684,75 +660,73 @@ public class Controle {
 
         listaAtv.get(8).setResponsavel(listaFunc.get(4));
         listaAtv.get(9).setResponsavel(listaFunc.get(4));
+        listaAtv.get(10).setResponsavel(listaFunc.get(4));
+        listaAtv.get(11).setResponsavel(listaFunc.get(4));
+        listaAtv.get(12).setResponsavel(listaFunc.get(4));
 
-        listaAtv.get(10).setResponsavel(listaFunc.get(5));
-        listaAtv.get(11).setResponsavel(listaFunc.get(5));
-        listaAtv.get(12).setResponsavel(listaFunc.get(5));
+        listaAtv.get(13).setResponsavel(listaFunc.get(5));
+        listaAtv.get(14).setResponsavel(listaFunc.get(5));
+        listaAtv.get(15).setResponsavel(listaFunc.get(5));
+        listaAtv.get(16).setResponsavel(listaFunc.get(5));
 
-        listaAtv.get(13).setResponsavel(listaFunc.get(6));
-        listaAtv.get(14).setResponsavel(listaFunc.get(6));
-        listaAtv.get(15).setResponsavel(listaFunc.get(6));
-        listaAtv.get(16).setResponsavel(listaFunc.get(6));
+        listaAtv.get(17).setResponsavel(listaFunc.get(6));
+        listaAtv.get(18).setResponsavel(listaFunc.get(6));
+        listaAtv.get(19).setResponsavel(listaFunc.get(6));
+        listaAtv.get(20).setResponsavel(listaFunc.get(6));
 
-        listaAtv.get(17).setResponsavel(listaFunc.get(7));
-        listaAtv.get(18).setResponsavel(listaFunc.get(7));
-        listaAtv.get(19).setResponsavel(listaFunc.get(7));
-        listaAtv.get(20).setResponsavel(listaFunc.get(7));
+        listaAtv.get(21).setResponsavel(listaFunc.get(7));
+        listaAtv.get(22).setResponsavel(listaFunc.get(7));
+        listaAtv.get(23).setResponsavel(listaFunc.get(7));
+        listaAtv.get(24).setResponsavel(listaFunc.get(7));
+        listaAtv.get(25).setResponsavel(listaFunc.get(7));
 
-        listaAtv.get(21).setResponsavel(listaFunc.get(8));
-        listaAtv.get(22).setResponsavel(listaFunc.get(8));
-        listaAtv.get(23).setResponsavel(listaFunc.get(8));
-        listaAtv.get(24).setResponsavel(listaFunc.get(8));
-        listaAtv.get(25).setResponsavel(listaFunc.get(8));
+        listaAtv.get(26).setResponsavel(listaFunc.get(8));
+        listaAtv.get(27).setResponsavel(listaFunc.get(8));
+        listaAtv.get(28).setResponsavel(listaFunc.get(8));
+        listaAtv.get(29).setResponsavel(listaFunc.get(8));
 
-        listaAtv.get(26).setResponsavel(listaFunc.get(9));
-        listaAtv.get(27).setResponsavel(listaFunc.get(9));
-        listaAtv.get(28).setResponsavel(listaFunc.get(9));
-        listaAtv.get(29).setResponsavel(listaFunc.get(9));
+        listaAtv.get(30).setResponsavel(listaFunc.get(9));
+        listaAtv.get(31).setResponsavel(listaFunc.get(9));
 
-        listaAtv.get(30).setResponsavel(listaFunc.get(10));
+        listaAtv.get(32).setResponsavel(listaFunc.get(10));
+        listaAtv.get(33).setResponsavel(listaFunc.get(10));
 
-        listaAtv.get(31).setResponsavel(listaFunc.get(11));
+        listaAtv.get(34).setResponsavel(listaFunc.get(11));
+        listaAtv.get(35).setResponsavel(listaFunc.get(11));
 
-        listaAtv.get(32).setResponsavel(listaFunc.get(12));
-        listaAtv.get(33).setResponsavel(listaFunc.get(12));
+        listaAtv.get(36).setResponsavel(listaFunc.get(12));
+        listaAtv.get(37).setResponsavel(listaFunc.get(12));
+        listaAtv.get(38).setResponsavel(listaFunc.get(12));
 
-        listaAtv.get(34).setResponsavel(listaFunc.get(13));
-        listaAtv.get(35).setResponsavel(listaFunc.get(13));
+        listaAtv.get(39).setResponsavel(listaFunc.get(13));
+        listaAtv.get(40).setResponsavel(listaFunc.get(13));
+        listaAtv.get(41).setResponsavel(listaFunc.get(13));
+        listaAtv.get(42).setResponsavel(listaFunc.get(13));
 
-        listaAtv.get(36).setResponsavel(listaFunc.get(14));
-        listaAtv.get(37).setResponsavel(listaFunc.get(14));
-        listaAtv.get(38).setResponsavel(listaFunc.get(14));
+        listaAtv.get(43).setResponsavel(listaFunc.get(14));
+        listaAtv.get(44).setResponsavel(listaFunc.get(14));
+        listaAtv.get(45).setResponsavel(listaFunc.get(14));
+        listaAtv.get(46).setResponsavel(listaFunc.get(14));
+        listaAtv.get(47).setResponsavel(listaFunc.get(14));
 
-        listaAtv.get(39).setResponsavel(listaFunc.get(15));
-        listaAtv.get(40).setResponsavel(listaFunc.get(15));
-        listaAtv.get(41).setResponsavel(listaFunc.get(15));
-        listaAtv.get(42).setResponsavel(listaFunc.get(15));
+        listaAtv.get(48).setResponsavel(listaFunc.get(15));
+        listaAtv.get(49).setResponsavel(listaFunc.get(15));
 
-        listaAtv.get(43).setResponsavel(listaFunc.get(16));
-        listaAtv.get(44).setResponsavel(listaFunc.get(16));
-        listaAtv.get(45).setResponsavel(listaFunc.get(16));
-        listaAtv.get(46).setResponsavel(listaFunc.get(16));
-        listaAtv.get(47).setResponsavel(listaFunc.get(16));
+        listaAtv.get(50).setResponsavel(listaFunc.get(16));
+        listaAtv.get(51).setResponsavel(listaFunc.get(16));
 
-        listaAtv.get(48).setResponsavel(listaFunc.get(17));
+        listaAtv.get(52).setResponsavel(listaFunc.get(17));
+        listaAtv.get(53).setResponsavel(listaFunc.get(17));
 
-        listaAtv.get(49).setResponsavel(listaFunc.get(18));
+        listaAtv.get(54).setResponsavel(listaFunc.get(18));
+        listaAtv.get(55).setResponsavel(listaFunc.get(18));
 
-        listaAtv.get(50).setResponsavel(listaFunc.get(19));
-        listaAtv.get(51).setResponsavel(listaFunc.get(19));
+        listaAtv.get(56).setResponsavel(listaFunc.get(19));
+        listaAtv.get(57).setResponsavel(listaFunc.get(19));
+        listaAtv.get(58).setResponsavel(listaFunc.get(19));
+        listaAtv.get(59).setResponsavel(listaFunc.get(19));
 
-        listaAtv.get(52).setResponsavel(listaFunc.get(20));
-        listaAtv.get(53).setResponsavel(listaFunc.get(20));
-
-        listaAtv.get(54).setResponsavel(listaFunc.get(21));
-        listaAtv.get(55).setResponsavel(listaFunc.get(21));
-
-        listaAtv.get(56).setResponsavel(listaFunc.get(22));
-        listaAtv.get(57).setResponsavel(listaFunc.get(22));
-        listaAtv.get(58).setResponsavel(listaFunc.get(22));
-        listaAtv.get(59).setResponsavel(listaFunc.get(22));
-
+        //Associação das atividades dos funcionários
         listaFunc.get(0).getAtividades().add(listaAtv.get(0));
         listaFunc.get(0).getAtividades().add(listaAtv.get(1));
 
@@ -767,74 +741,71 @@ public class Controle {
 
         listaFunc.get(4).getAtividades().add(listaAtv.get(8));
         listaFunc.get(4).getAtividades().add(listaAtv.get(9));
+        listaFunc.get(4).getAtividades().add(listaAtv.get(10));
+        listaFunc.get(4).getAtividades().add(listaAtv.get(11));
+        listaFunc.get(4).getAtividades().add(listaAtv.get(12));
 
-        listaFunc.get(5).getAtividades().add(listaAtv.get(10));
-        listaFunc.get(5).getAtividades().add(listaAtv.get(11));
-        listaFunc.get(5).getAtividades().add(listaAtv.get(12));
+        listaFunc.get(5).getAtividades().add(listaAtv.get(13));
+        listaFunc.get(5).getAtividades().add(listaAtv.get(14));
+        listaFunc.get(5).getAtividades().add(listaAtv.get(15));
+        listaFunc.get(5).getAtividades().add(listaAtv.get(16));
 
-        listaFunc.get(6).getAtividades().add(listaAtv.get(13));
-        listaFunc.get(6).getAtividades().add(listaAtv.get(14));
-        listaFunc.get(6).getAtividades().add(listaAtv.get(15));
-        listaFunc.get(6).getAtividades().add(listaAtv.get(16));
+        listaFunc.get(6).getAtividades().add(listaAtv.get(17));
+        listaFunc.get(6).getAtividades().add(listaAtv.get(18));
+        listaFunc.get(6).getAtividades().add(listaAtv.get(19));
+        listaFunc.get(6).getAtividades().add(listaAtv.get(20));
 
-        listaFunc.get(7).getAtividades().add(listaAtv.get(17));
-        listaFunc.get(7).getAtividades().add(listaAtv.get(18));
-        listaFunc.get(7).getAtividades().add(listaAtv.get(19));
-        listaFunc.get(7).getAtividades().add(listaAtv.get(20));
+        listaFunc.get(7).getAtividades().add(listaAtv.get(21));
+        listaFunc.get(7).getAtividades().add(listaAtv.get(22));
+        listaFunc.get(7).getAtividades().add(listaAtv.get(23));
+        listaFunc.get(7).getAtividades().add(listaAtv.get(24));
+        listaFunc.get(7).getAtividades().add(listaAtv.get(25));
 
-        listaFunc.get(8).getAtividades().add(listaAtv.get(21));
-        listaFunc.get(8).getAtividades().add(listaAtv.get(22));
-        listaFunc.get(8).getAtividades().add(listaAtv.get(23));
-        listaFunc.get(8).getAtividades().add(listaAtv.get(24));
-        listaFunc.get(8).getAtividades().add(listaAtv.get(25));
+        listaFunc.get(8).getAtividades().add(listaAtv.get(26));
+        listaFunc.get(8).getAtividades().add(listaAtv.get(27));
+        listaFunc.get(8).getAtividades().add(listaAtv.get(28));
+        listaFunc.get(8).getAtividades().add(listaAtv.get(29));
 
-        listaFunc.get(9).getAtividades().add(listaAtv.get(26));
-        listaFunc.get(9).getAtividades().add(listaAtv.get(27));
-        listaFunc.get(9).getAtividades().add(listaAtv.get(28));
-        listaFunc.get(9).getAtividades().add(listaAtv.get(29));
+        listaFunc.get(9).getAtividades().add(listaAtv.get(30));
+        listaFunc.get(9).getAtividades().add(listaAtv.get(31));
 
-        listaFunc.get(10).getAtividades().add(listaAtv.get(30));
+        listaFunc.get(10).getAtividades().add(listaAtv.get(32));
+        listaFunc.get(10).getAtividades().add(listaAtv.get(33));
 
-        listaFunc.get(11).getAtividades().add(listaAtv.get(31));
+        listaFunc.get(11).getAtividades().add(listaAtv.get(34));
+        listaFunc.get(11).getAtividades().add(listaAtv.get(35));
 
-        listaFunc.get(12).getAtividades().add(listaAtv.get(32));
-        listaFunc.get(12).getAtividades().add(listaAtv.get(33));
+        listaFunc.get(12).getAtividades().add(listaAtv.get(36));
+        listaFunc.get(12).getAtividades().add(listaAtv.get(37));
+        listaFunc.get(12).getAtividades().add(listaAtv.get(38));
 
-        listaFunc.get(13).getAtividades().add(listaAtv.get(34));
-        listaFunc.get(13).getAtividades().add(listaAtv.get(35));
+        listaFunc.get(13).getAtividades().add(listaAtv.get(39));
+        listaFunc.get(13).getAtividades().add(listaAtv.get(40));
+        listaFunc.get(13).getAtividades().add(listaAtv.get(41));
+        listaFunc.get(13).getAtividades().add(listaAtv.get(42));
 
-        listaFunc.get(14).getAtividades().add(listaAtv.get(36));
-        listaFunc.get(14).getAtividades().add(listaAtv.get(37));
-        listaFunc.get(14).getAtividades().add(listaAtv.get(38));
+        listaFunc.get(14).getAtividades().add(listaAtv.get(43));
+        listaFunc.get(14).getAtividades().add(listaAtv.get(44));
+        listaFunc.get(14).getAtividades().add(listaAtv.get(45));
+        listaFunc.get(14).getAtividades().add(listaAtv.get(46));
+        listaFunc.get(14).getAtividades().add(listaAtv.get(47));
 
-        listaFunc.get(15).getAtividades().add(listaAtv.get(39));
-        listaFunc.get(15).getAtividades().add(listaAtv.get(40));
-        listaFunc.get(15).getAtividades().add(listaAtv.get(41));
-        listaFunc.get(15).getAtividades().add(listaAtv.get(42));
+        listaFunc.get(15).getAtividades().add(listaAtv.get(48));
+        listaFunc.get(15).getAtividades().add(listaAtv.get(49));
 
-        listaFunc.get(16).getAtividades().add(listaAtv.get(43));
-        listaFunc.get(16).getAtividades().add(listaAtv.get(44));
-        listaFunc.get(16).getAtividades().add(listaAtv.get(45));
-        listaFunc.get(16).getAtividades().add(listaAtv.get(46));
-        listaFunc.get(16).getAtividades().add(listaAtv.get(47));
+        listaFunc.get(16).getAtividades().add(listaAtv.get(50));
+        listaFunc.get(16).getAtividades().add(listaAtv.get(51));
 
-        listaFunc.get(17).getAtividades().add(listaAtv.get(48));
+        listaFunc.get(17).getAtividades().add(listaAtv.get(52));
+        listaFunc.get(17).getAtividades().add(listaAtv.get(53));
 
-        listaFunc.get(18).getAtividades().add(listaAtv.get(49));
+        listaFunc.get(18).getAtividades().add(listaAtv.get(54));
+        listaFunc.get(18).getAtividades().add(listaAtv.get(55));
 
-        listaFunc.get(19).getAtividades().add(listaAtv.get(50));
-        listaFunc.get(19).getAtividades().add(listaAtv.get(51));
-
-        listaFunc.get(20).getAtividades().add(listaAtv.get(52));
-        listaFunc.get(20).getAtividades().add(listaAtv.get(53));
-
-        listaFunc.get(21).getAtividades().add(listaAtv.get(54));
-        listaFunc.get(21).getAtividades().add(listaAtv.get(55));
-
-        listaFunc.get(22).getAtividades().add(listaAtv.get(56));
-        listaFunc.get(22).getAtividades().add(listaAtv.get(57));
-        listaFunc.get(22).getAtividades().add(listaAtv.get(58));
-        listaFunc.get(22).getAtividades().add(listaAtv.get(59));
+        listaFunc.get(19).getAtividades().add(listaAtv.get(56));
+        listaFunc.get(19).getAtividades().add(listaAtv.get(57));
+        listaFunc.get(19).getAtividades().add(listaAtv.get(58));
+        listaFunc.get(19).getAtividades().add(listaAtv.get(59));
 
         caucularMediasArea(listaAtv, listaFunc);
 
@@ -849,5 +820,23 @@ public class Controle {
         manager.close();
 
         System.out.println("Maior Nota: " + lista.get(0).getNota());
+
+        mostrarAssociacao(ind);
+    }
+
+    public static void mostrarAssociacao(Individuo ind) {
+        for (Atividade atv : ind.getAtividades()) {
+            System.out.println();
+            System.out.println("***********************************************");
+            System.out.println(atv.getNome().toUpperCase());
+            System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());
+            System.out.println("-----------------------------------------------");
+            System.out.println("ÁREA ATIVIDADE  : " + atv.getArea().getDescricao());
+            System.out.println("ÁREA FUNCIONÁRIO: " + atv.getResponsavel().getArea().getDescricao());
+            System.out.println("-----------------------------------------------");
+            System.out.println("NÍVEL ATIVIDADE  : " + atv.getNivel().getDescricao());
+            System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
+            System.out.println("***********************************************\n");
+        }
     }
 }
