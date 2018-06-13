@@ -19,6 +19,14 @@ import utils.StringsUtils;
  *
  * @author Celso Souza
  * @version 1.0
+ *
+ *
+ * ANOTAÇÕES:
+ *
+ * 01 - Na mutação e cruzamento a lista de atividades de cada funcionário deve
+ * ser atualizada para o cauculo do balanceamento de horas.
+ *
+ *
  */
 public class Controle {
 
@@ -51,13 +59,16 @@ public class Controle {
         List<Individuo> populacao = new ArrayList<>();
         List<Individuo> populacaoAlterada = new ArrayList<>();
 
+        Integer contadorDeConvergencia = Numeros.ZERO;
+        float notaAnterior = Numeros.ZERO_FLOAT;
+
         populacao = gerarPopulacao();
         populacao = avaliarPopulacao(populacao);
 
         Individuo melhorInd = new Individuo();
 
-        int i = 0;
-        do {
+        int i = Numeros.ZERO;
+        do {            
             qtdMutacoes = Numeros.ZERO;
             populacaoAlterada = cruzarIndividuos(populacao);
 
@@ -71,7 +82,23 @@ public class Controle {
             i++;
 
             System.out.println("Geração: " + i + " Melhor nota: " + populacao.get(0).getNota() + " Melhor Geral: " + melhorInd.getNota() + " Mutações: " + qtdMutacoes);
-        } while (melhorInd.getNota() < Numeros.NOTA_PISO);
+            
+        /*****************************************************************/
+        /***************VERIFICA SE A POPUILAÇÃO CONVERGIU****************/
+        /*****************************************************************/
+        /**/if (notaAnterior == melhorInd.getNota()) {  /**/
+        /**/    contadorDeConvergencia++;                              /**/
+        /**/} else{                                                    /**/
+        /**/    contadorDeConvergencia = Numeros.ZERO;                 /**/
+        /**/}                                                          /**/
+        /**/                                                           /**/
+        /**/if (contadorDeConvergencia > Numeros.LIMITE_CONVERGENCIA) {/**/
+        /**/    break;                                                 /**/
+        /**/}                                                          /**/
+        /*****************************************************************/
+        /*****************************************************************/
+        notaAnterior = melhorInd.getNota();
+        } while (true);
 
         return melhorInd;
     }
@@ -374,6 +401,7 @@ public class Controle {
         float nota = Numeros.ZERO_FLOAT;
 
         for (Individuo ind : populacao) {
+            ind = ordenarListaAtvFunc(ind);
             nota = Numeros.ZERO_FLOAT;
             for (Atividade atv : ind.getAtividades()) {
                 /**
@@ -392,84 +420,87 @@ public class Controle {
                     nota += 1;
                 }
 
-                //VERIFICA BALANCEAMENTO DE HORAS
+                /*VERIFICA BALANCEAMENTO DE HORAS*/
                 int horas = Numeros.ZERO;
 
                 for (Atividade at : atv.getResponsavel().getAtividades()) {
                     horas += at.getPrazo();
                 }
 
-                switch (atv.getResponsavel().getArea().getCodigo()) {
-                    case 1:
-                        switch (atv.getResponsavel().getCargo().getCodigo()) {
-                            case 1:
-                                nota += (10 - retornarDiferencaHoras(medHoraDevJr, horas));
-                                break;
-                            case 2:
-                                nota += (10 - retornarDiferencaHoras(medHoraDevPl, horas));
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case 2:
-                        switch (atv.getResponsavel().getCargo().getCodigo()) {
-                            case 3:
-                                nota += (10 - retornarDiferencaHoras(medHoraAnaliseJr, horas));
-                                break;
-                            case 4:
-                                nota += (10 - retornarDiferencaHoras(medHoraAnalisePl, horas));
-                                break;
-                            case 5:
-                                nota += (10 - retornarDiferencaHoras(medHoraAnaliseSr, horas));
-                                break;
-                            default:
-                        }
-                        break;
-                    case 3:
-                        switch (atv.getResponsavel().getCargo().getCodigo()) {
-                            case 1:
-                                nota += (10 - retornarDiferencaHoras(medHoraAnaliseReqJr, horas));
-                                break;
-                            case 5:
-                                nota += (10 - retornarDiferencaHoras(medHoraAnaliseReqSr, horas));
-                                break;
-                            default:
-                        }
-                        break;
-                    case 4:
-                        switch (atv.getResponsavel().getCargo().getCodigo()) {
-                            case 1:
-                                nota += (10 - retornarDiferencaHoras(medHoraBancoJr, horas));
-                                break;
-                            case 2:
-                                nota += (10 - retornarDiferencaHoras(medHoraBancoPl, horas));
-                                break;
-                            case 4:
-                                nota += (10 - retornarDiferencaHoras(medHoraBancoAP, horas));
-                                break;
-                            case 5:
-                                nota += (10 - retornarDiferencaHoras(medHoraBancoAS, horas));
-                                break;
-                            default:
-                        }
-                        break;
-                    case 5:
-                        switch (atv.getResponsavel().getCargo().getCodigo()) {
-                            case 1:
-                                nota += (10 - retornarDiferencaHoras(medHoraTesteJr, horas));
-                                break;
-                            case 2:
-                                nota += (10 - retornarDiferencaHoras(medHoraTestePl, horas));
-                                break;
-                            case 4:
-                                nota += (10 - retornarDiferencaHoras(medHoraTesteAP, horas));
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                if (horas > Numeros.ZERO) {
+
+                    switch (atv.getResponsavel().getArea().getCodigo()) {
+                        case 1:
+                            switch (atv.getResponsavel().getCargo().getCodigo()) {
+                                case 1:
+                                    nota += (10 - retornarDiferencaHoras(medHoraDevJr, horas));
+                                    break;
+                                case 2:
+                                    nota += (10 - retornarDiferencaHoras(medHoraDevPl, horas));
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            switch (atv.getResponsavel().getCargo().getCodigo()) {
+                                case 3:
+                                    nota += (10 - retornarDiferencaHoras(medHoraAnaliseJr, horas));
+                                    break;
+                                case 4:
+                                    nota += (10 - retornarDiferencaHoras(medHoraAnalisePl, horas));
+                                    break;
+                                case 5:
+                                    nota += (10 - retornarDiferencaHoras(medHoraAnaliseSr, horas));
+                                    break;
+                                default:
+                            }
+                            break;
+                        case 3:
+                            switch (atv.getResponsavel().getCargo().getCodigo()) {
+                                case 1:
+                                    nota += (10 - retornarDiferencaHoras(medHoraAnaliseReqJr, horas));
+                                    break;
+                                case 5:
+                                    nota += (10 - retornarDiferencaHoras(medHoraAnaliseReqSr, horas));
+                                    break;
+                                default:
+                            }
+                            break;
+                        case 4:
+                            switch (atv.getResponsavel().getCargo().getCodigo()) {
+                                case 1:
+                                    nota += (10 - retornarDiferencaHoras(medHoraBancoJr, horas));
+                                    break;
+                                case 2:
+                                    nota += (10 - retornarDiferencaHoras(medHoraBancoPl, horas));
+                                    break;
+                                case 4:
+                                    nota += (10 - retornarDiferencaHoras(medHoraBancoAP, horas));
+                                    break;
+                                case 5:
+                                    nota += (10 - retornarDiferencaHoras(medHoraBancoAS, horas));
+                                    break;
+                                default:
+                            }
+                            break;
+                        case 5:
+                            switch (atv.getResponsavel().getCargo().getCodigo()) {
+                                case 1:
+                                    nota += (10 - retornarDiferencaHoras(medHoraTesteJr, horas));
+                                    break;
+                                case 2:
+                                    nota += (10 - retornarDiferencaHoras(medHoraTestePl, horas));
+                                    break;
+                                case 4:
+                                    nota += (10 - retornarDiferencaHoras(medHoraTesteAP, horas));
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             ind.setNota(nota);
@@ -510,12 +541,11 @@ public class Controle {
         List<Individuo> melhoresPosCruzamento = new ArrayList<>();
         int indexPai01;
         int indexPai02;
-        List<Individuo> candidatos = new ArrayList<>(populacao.subList(0, 1000));
+        List<Individuo> candidatos = new ArrayList<>(populacao.subList(Numeros.ZERO, Numeros.QTD_MELHORES));
 
         Individuo pai1 = new Individuo();
         Individuo pai2 = new Individuo();
 
-        //Problema com refeências de objetos
         //int qtdCruzamentos = (int) (Math.random() * Numeros.MAX_CRUZAMENTOS);
         for (int i = 0; i < Numeros.MAX_CRUZAMENTOS; i++) {
             indexPai01 = (int) (Math.random() * candidatos.size());
@@ -535,6 +565,10 @@ public class Controle {
             /**
              * PRIMEIRA METADE DO PAI1 COM SEGUNDA METADE DO PAI2
              */
+//            System.out.println();
+//            imprimirGene("P 01", pai1);
+//            imprimirGene("P 02", pai2);
+//            System.out.println("Ponto de Cruzamento: " + pontoCruzamento);
             for (int j = 0; j < pontoCruzamento; j++) {
                 filho1.getAtividades().add(pai1.getAtividades().get(j));
             }
@@ -543,6 +577,7 @@ public class Controle {
                 filho1.getAtividades().add(pai2.getAtividades().get(k));
             }
 
+//            imprimirGene("F 01", filho1);
             filho1 = new Individuo(mutarIndividuo(filho1));
 
             /**
@@ -556,6 +591,7 @@ public class Controle {
                 filho2.getAtividades().add(pai1.getAtividades().get(m));
             }
 
+//            imprimirGene("F 02", filho2);
             filho2 = new Individuo(mutarIndividuo(filho2));
 
             List<Individuo> lista = new ArrayList<>();
@@ -570,9 +606,9 @@ public class Controle {
             candidatos.set(indexPai01, melhoresPosCruzamento.get(Numeros.ZERO));
             candidatos.set(indexPai02, melhoresPosCruzamento.get(Numeros.UM));
         }
-        
-        populacao.addAll(candidatos);        
-        
+
+        populacao.addAll(candidatos);
+
         return avaliarPopulacao(populacao).subList(0, Numeros.NUMERO_INDIVIDUOS);
     }
 
@@ -586,13 +622,28 @@ public class Controle {
             qtdMutacoes++;
 
             for (int i = 0; i < Numeros.QTD_GENES_MUTADOS; i++) {
+                ind = ordenarListaAtvFunc(ind);
+                Boolean continuar = Boolean.TRUE;
 
+//                while (continuar) {
                 indexAtv = (int) (Math.random() * ind.getAtividades().size());
                 indexFunc = (int) (Math.random() * listaPossiveis.size());
-                
-                ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
-            }
 
+                if (!Objects.equals(ind.getAtividades().get(indexAtv).getArea().getCodigo(), ind.getAtividades().get(indexAtv).getResponsavel().getArea().getCodigo())
+                        || !Objects.equals(ind.getAtividades().get(indexAtv).getNivel().getCodigo(), ind.getAtividades().get(indexAtv).getResponsavel().getCargo().getCodigo())) {
+
+                    if (Objects.equals(ind.getAtividades().get(indexAtv).getArea().getCodigo(), listaPossiveis.get(indexFunc).getArea().getCodigo())) {
+
+                        listaPossiveis.get(indexFunc).getAtividades().add(ind.getAtividades().get(indexAtv));
+                        ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
+                        continuar = Boolean.FALSE;
+                    }
+
+                }
+//                }
+//                System.out.println("Mutação - Índice: " + indexAtv + " Cod: " + listaPossiveis.get(indexFunc).getCodigo());
+//                imprimirGene("F 0X", ind);
+            }
         }
         /*  
             if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
@@ -634,6 +685,67 @@ public class Controle {
             }
         }
         return Boolean.FALSE;
+    }
+
+    /**
+     * @param Individou a ser atualizado
+     * @return Individou atualizado
+     *
+     * Atualiza a lista de atividades de cada funcionário para avaliação correta
+     * das horas
+     */
+    private static Individuo ordenarListaAtvFunc(Individuo ind) {
+
+        for (Atividade atividade : ind.getAtividades()) {
+            atividade.getResponsavel().setAtividades(new ArrayList<>());
+        }
+
+        for (Atividade atv : ind.getAtividades()) {
+            atv.getResponsavel().getAtividades().add(atv);
+        }
+
+        return ind;
+    }
+
+    public static void imprimirGene(String tag, Individuo ind) {
+        System.out.print(tag + ": ");
+        for (Atividade atv : ind.getAtividades()) {
+            System.out.print(atv.getResponsavel().getCodigo() + "-");
+        }
+        System.out.println();
+    }
+
+    public static void imprimirAssociacao(Individuo ind) {
+        for (Atividade atv : ind.getAtividades()) {
+            System.out.println();
+            System.out.println("***********************************************");
+            System.out.println(atv.getNome().toUpperCase());
+            System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());
+            System.out.println("-----------------------------------------------");
+            System.out.println("ÁREA ATIVIDADE  : " + atv.getArea().getDescricao());
+            System.out.println("ÁREA FUNCIONÁRIO: " + atv.getResponsavel().getArea().getDescricao());
+            System.out.println("-----------------------------------------------");
+            System.out.println("NÍVEL ATIVIDADE  : " + atv.getNivel().getDescricao());
+            System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
+            System.out.println("***********************************************");
+        }
+    }
+    
+    public static void gerarTabelaAssociacao(Individuo ind){
+        List<Funcionario> funcionarios = new ArrayList<>();
+        for (Atividade atividade : ind.getAtividades()) {
+            if(!funcionarios.contains(atividade.getResponsavel()))
+                funcionarios.add(atividade.getResponsavel());
+        }
+        
+        for (Funcionario func : funcionarios) {
+            System.out.println("***********************************************");
+            System.out.println("Funcionário: " + func.getNome());
+            System.out.println("Atividades: ");
+            for (Atividade atv : func.getAtividades()) {
+                System.out.println(atv.getCodigo()+" - "+atv.getNome());
+            }
+        }
     }
 
     public static void caucularMaiorNota() {
@@ -821,22 +933,6 @@ public class Controle {
 
         System.out.println("Maior Nota: " + lista.get(0).getNota());
 
-        mostrarAssociacao(ind);
-    }
-
-    public static void mostrarAssociacao(Individuo ind) {
-        for (Atividade atv : ind.getAtividades()) {
-            System.out.println();
-            System.out.println("***********************************************");
-            System.out.println(atv.getNome().toUpperCase());
-            System.out.println("RESPONSÁVEL: " + atv.getResponsavel().getNome());
-            System.out.println("-----------------------------------------------");
-            System.out.println("ÁREA ATIVIDADE  : " + atv.getArea().getDescricao());
-            System.out.println("ÁREA FUNCIONÁRIO: " + atv.getResponsavel().getArea().getDescricao());
-            System.out.println("-----------------------------------------------");
-            System.out.println("NÍVEL ATIVIDADE  : " + atv.getNivel().getDescricao());
-            System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
-            System.out.println("***********************************************\n");
-        }
+        imprimirAssociacao(ind);
     }
 }

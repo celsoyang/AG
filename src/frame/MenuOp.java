@@ -100,11 +100,13 @@ public class MenuOp extends MenuBar {
             public void handle(ActionEvent event) {
                 Individuo bestInd = new Individuo();
 
-                bestInd = Controle.start();
-                System.out.println("Melhor nota: " + bestInd.getNota());
+                do {
+                    bestInd = Controle.start();
+                } while(bestInd.getNota() < Numeros.NOTA_PISO);
                 
-                Controle.mostrarAssociacao(bestInd);
+                Controle.imprimirAssociacao(bestInd);
                 System.out.println("Melhor Nota: " + bestInd.getNota());
+                Controle.gerarTabelaAssociacao(bestInd);
             }
         });
 
