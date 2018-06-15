@@ -4,12 +4,16 @@ import bean.Atividade;
 import bean.Funcionario;
 import bean.Individuo;
 import bean.Registro;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javafx.stage.Stage;
+import java.util.Timer;
+import javafx.util.Duration;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -71,10 +75,11 @@ public class Controle {
         Individuo melhorInd = new Individuo();
 
         int i = Numeros.ZERO;
+        
+        Date inicio = Calendar.getInstance().getTime();
+        qtdCruzamentos = Numeros.ZERO;
         do {
-            long inicio = System.currentTimeMillis();
             qtdMutacoes = Numeros.ZERO;
-            qtdCruzamentos = Numeros.ZERO;
             populacaoAlterada = cruzarIndividuos(populacao);
 
             populacao = avaliarPopulacao(populacaoAlterada);
@@ -99,17 +104,26 @@ public class Controle {
         /**/}                                                          /**/
         /**/                                                           /**/
         /**/if (contadorDeConvergencia > Numeros.LIMITE_CONVERGENCIA) {/**/
-        /**/    long fim  = System.currentTimeMillis();                /**/
-        /**/    salvarRegistro(new Registro                            /**/
-        /**/    ((i - Numeros.LIMITE_CONVERGENCIA), qtdMutacoes,       /**/
-        /**/    melhorInd.getNota(),qtdCruzamentos,                    /**/
-        /**/    ((fim - inicio)/ Numeros.MIL)));                       /**/
+        /**/                    /**/
+        /**/                                          /**/
+        
         /**/    break;                                                 /**/
         /**/}                                                          /**/
         /*****************************************************************/
         /*****************************************************************/
+            
         notaAnterior = melhorInd.getNota();
         } while (true);
+        Date fim = Calendar.getInstance().getTime();
+        System.out.println(new SimpleDateFormat("HH:mm:ss").format(inicio));
+        System.out.println(new SimpleDateFormat("HH:mm:ss").format(fim));
+        
+        salvarRegistro(new Registro((i - Numeros.LIMITE_CONVERGENCIA), qtdMutacoes,
+                melhorInd.getNota(), qtdCruzamentos,
+                String.valueOf(new SimpleDateFormat("HH:mm:ss").format(inicio)),
+                String.valueOf(new SimpleDateFormat("HH:mm:ss").format(fim))));
+
+        
 
         return melhorInd;
     }
@@ -641,7 +655,6 @@ public class Controle {
 
             for (int i = 0; i < Numeros.QTD_GENES_MUTADOS; i++) {
                 ind = ordenarListaAtvFunc(ind);
-                Boolean continuar = Boolean.TRUE;
 
 //                while (continuar) {
                 indexAtv = (int) (Math.random() * ind.getAtividades().size());
@@ -654,7 +667,6 @@ public class Controle {
 
                         listaPossiveis.get(indexFunc).getAtividades().add(ind.getAtividades().get(indexAtv));
                         ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
-                        continuar = Boolean.FALSE;
                     }
 
                 }

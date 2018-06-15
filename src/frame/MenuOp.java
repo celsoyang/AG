@@ -106,7 +106,8 @@ public class MenuOp extends MenuBar {
                 
                 Controle.imprimirAssociacao(bestInd);
                 System.out.println("Melhor Nota: " + bestInd.getNota());
-                Controle.gerarTabelaAssociacao(bestInd);
+                System.exit(Numeros.ZERO);
+//                Controle.gerarTabelaAssociacao(bestInd);
             }
         });
 

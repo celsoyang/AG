@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import utils.Numeros;
+import utils.StringsUtils;
 
 /**
  *
@@ -39,17 +40,24 @@ public class Registro implements Serializable {
     private Integer qtdCruzamentos = Numeros.ZERO;
     
     @Column
-    private long tempoGasto = Numeros.ZERO_LONG;
+    private String tempoGasto = StringsUtils.VAZIA;
+    
+    @Column
+    private String inicio = StringsUtils.VAZIA;
+    
+    @Column
+    private String fim = StringsUtils.VAZIA;
 
     public Registro() {
     }
 
-    public Registro(Integer QG, Integer QM, float MN, Integer QC, long TG) {
+    public Registro(Integer QG, Integer QM, float MN, Integer QC, String IN, String FN) {
         setQtdGeracoes(QG);
         setQtdMutacoes(QM);
         setMelhorNota(MN);
         setQtdCruzamentos(QC);
-        setTempoGasto(TG);
+        setInicio(IN);
+        setFim(FN);
     }
 
     public Integer getQtdCruzamentos() {
@@ -92,11 +100,27 @@ public class Registro implements Serializable {
         this.cod = cod;
     }
 
-    public long getTempoGasto() {
+    public String getTempoGasto() {
         return tempoGasto;
     }
 
-    public void setTempoGasto(long tempoGasto) {
+    public void setTempoGasto(String tempoGasto) {
         this.tempoGasto = tempoGasto;
+    }
+
+    public String getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(String inicio) {
+        this.inicio = inicio;
+    }
+
+    public String getFim() {
+        return fim;
+    }
+
+    public void setFim(String fim) {
+        this.fim = fim;
     }
 }
