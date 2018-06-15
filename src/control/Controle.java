@@ -3,6 +3,7 @@ package control;
 import bean.Atividade;
 import bean.Funcionario;
 import bean.Individuo;
+import bean.Registro;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,6 +34,8 @@ public class Controle {
     private static int maxAtividadePorFuncionario;
 
     private static int qtdMutacoes = Numeros.ZERO;
+    private static int qtdCruzamentos = Numeros.ZERO;
+    private static int mutacoesTotal = Numeros.ZERO;
 
     private static Integer medHoraDevJr = Numeros.ZERO;
     private static Integer medHoraDevPl = Numeros.ZERO;
@@ -68,8 +71,10 @@ public class Controle {
         Individuo melhorInd = new Individuo();
 
         int i = Numeros.ZERO;
-        do {            
+        do {
+            long inicio = System.currentTimeMillis();
             qtdMutacoes = Numeros.ZERO;
+            qtdCruzamentos = Numeros.ZERO;
             populacaoAlterada = cruzarIndividuos(populacao);
 
             populacao = avaliarPopulacao(populacaoAlterada);
@@ -82,17 +87,23 @@ public class Controle {
             i++;
 
             System.out.println("Geração: " + i + " Melhor nota: " + populacao.get(0).getNota() + " Melhor Geral: " + melhorInd.getNota() + " Mutações: " + qtdMutacoes);
+            mutacoesTotal += qtdMutacoes;
             
         /*****************************************************************/
         /***************VERIFICA SE A POPUILAÇÃO CONVERGIU****************/
         /*****************************************************************/
-        /**/if (notaAnterior == melhorInd.getNota()) {  /**/
+        /**/if (notaAnterior == melhorInd.getNota()) {                 /**/
         /**/    contadorDeConvergencia++;                              /**/
         /**/} else{                                                    /**/
         /**/    contadorDeConvergencia = Numeros.ZERO;                 /**/
         /**/}                                                          /**/
         /**/                                                           /**/
         /**/if (contadorDeConvergencia > Numeros.LIMITE_CONVERGENCIA) {/**/
+        /**/    long fim  = System.currentTimeMillis();                /**/
+        /**/    salvarRegistro(new Registro                            /**/
+        /**/    ((i - Numeros.LIMITE_CONVERGENCIA), qtdMutacoes,       /**/
+        /**/    melhorInd.getNota(),qtdCruzamentos,                    /**/
+        /**/    ((fim - inicio)/ Numeros.MIL)));                       /**/
         /**/    break;                                                 /**/
         /**/}                                                          /**/
         /*****************************************************************/
@@ -315,11 +326,16 @@ public class Controle {
         medHoraTesteAP = qtdHoraTesteAP / qtdFuncTesteAP;
     }
 
-    public void loadFuncionario(Stage stage) {
-//        Integer codigo = Integer.parseInt(JOptionPane.showInputDialog(StringsUtils.MSG_INFORME_CODIGO));
-//        Funcionario f = manager.find(Funcionario.class, codigo);
-//
-//        AG.loadFuncFrame(stage, f);
+    private static void salvarRegistro(Registro registro) {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManager manager = factory.createEntityManager();
+        manager.getTransaction().begin();
+
+        manager.persist(registro);
+
+        manager.getTransaction().commit();
+        manager.close();
+        factory.close();
     }
 
     public static List<Individuo> gerarPopulacao() {
@@ -349,7 +365,7 @@ public class Controle {
 
             listaIndividuos.add(indiv);
         }
-        System.out.println("Indivíduos Gerados");
+//        System.out.println("Indivíduos Gerados");
 //        manager.close();
         return listaIndividuos;
     }
@@ -578,6 +594,7 @@ public class Controle {
             }
 
 //            imprimirGene("F 01", filho1);
+            qtdCruzamentos++;
             filho1 = new Individuo(mutarIndividuo(filho1));
 
             /**
@@ -592,6 +609,7 @@ public class Controle {
             }
 
 //            imprimirGene("F 02", filho2);
+            qtdCruzamentos++;
             filho2 = new Individuo(mutarIndividuo(filho2));
 
             List<Individuo> lista = new ArrayList<>();
@@ -731,19 +749,20 @@ public class Controle {
         }
     }
     
-    public static void gerarTabelaAssociacao(Individuo ind){
+    public static void gerarTabelaAssociacao(Individuo ind) {
         List<Funcionario> funcionarios = new ArrayList<>();
         for (Atividade atividade : ind.getAtividades()) {
-            if(!funcionarios.contains(atividade.getResponsavel()))
+            if (!funcionarios.contains(atividade.getResponsavel())) {
                 funcionarios.add(atividade.getResponsavel());
+            }
         }
-        
+
         for (Funcionario func : funcionarios) {
             System.out.println("***********************************************");
             System.out.println("Funcionário: " + func.getNome());
             System.out.println("Atividades: ");
             for (Atividade atv : func.getAtividades()) {
-                System.out.println(atv.getCodigo()+" - "+atv.getNome());
+                System.out.println(atv.getCodigo() + " - " + atv.getNome());
             }
         }
     }

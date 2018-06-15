@@ -40,8 +40,12 @@ public class Numeros {
     public static final int QTD_FUNC = 30;
 
     public static final double ZERO_DOUBLE = 0;
+    
+    public static long ZERO_LONG = 0;
 
     public static final float ZERO_FLOAT = 0.000000f;
+    
+    public static long MIL = 1000;
     
     
     
@@ -53,15 +57,13 @@ public class Numeros {
 
     public static double PROBABILIDADE_MUTACAO = 0.1;
     
-    public static int LIMITE_CONVERGENCIA = 20;
+    public static int LIMITE_CONVERGENCIA = 50;
     
     public static int QTD_MELHORES = 5000;
     
     public static float NOTA_PISO = 1650;
     
-//    public static float NOTA_PISO = 1350;
-    
     public static float MAX_NOTA = 1786;
     
-    public static int QTD_GENES_MUTADOS = 2;
+    public static int QTD_GENES_MUTADOS = 1;
 }

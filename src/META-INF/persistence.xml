@@ -7,6 +7,7 @@
     <class>bean.Cargo</class>
     <class>bean.Atividade</class>
     <class>bean.Associacao</class>
+    <class>bean.Registro</class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <property name="hibernate.show_sql" value="true"/>
