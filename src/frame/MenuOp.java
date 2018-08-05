@@ -8,12 +8,15 @@ package frame;
 import bean.Atividade;
 import bean.Individuo;
 import control.Controle;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 import utils.Numeros;
 import utils.StringsUtils;
 
@@ -33,6 +36,7 @@ public class MenuOp extends MenuBar {
     private Menu menuOp;
     private MenuItem menuOpMelhorAssociacao;
     private MenuItem menuOpStart;
+    private MenuItem menuOpTeste;
 
     @SuppressWarnings("Convert2Lambda")
     public MenuOp(Stage stage) {
@@ -46,8 +50,9 @@ public class MenuOp extends MenuBar {
         menuOp = new Menu(StringsUtils.OPCOES);
         menuOpMelhorAssociacao = new MenuItem(StringsUtils.MOSTRAR_MELHOR);
         menuOpStart = new MenuItem(StringsUtils.START);
+        menuOpTeste = new MenuItem(StringsUtils.TESTE);
 
-        menuOp.getItems().addAll(menuOpMelhorAssociacao, menuOpStart);
+        menuOp.getItems().addAll(menuOpMelhorAssociacao, menuOpStart, menuOpTeste);
         menuFunc.getItems().addAll(opFuncList, opFuncAdd);
         menuAtv.getItems().addAll(opAtvList, opAtvAdd);
 
@@ -106,8 +111,21 @@ public class MenuOp extends MenuBar {
                 
                 Controle.imprimirAssociacao(bestInd);
                 System.out.println("Melhor Nota: " + bestInd.getNota());
+                Controle.salvarAssociacao(bestInd);
                 System.exit(Numeros.ZERO);
 //                Controle.gerarTabelaAssociacao(bestInd);
+            }
+        });
+        
+        menuOpTeste.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+                List<Individuo> lista = new ArrayList<>();
+                lista = Controle.avaliarPopulacao(Controle.gerarPopulacao());
+                
+                Controle.salvarAssociacao(lista.get(0));
+                System.out.println("Nota: " + lista.get(0).getNota());
             }
         });
 

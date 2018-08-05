@@ -47,7 +47,8 @@ public class StringsUtils {
     public static final String MSG_CONFIRMA_EXCLUSAO = "Confirma Exclusão?";
     public static final String MSG_INFORME_IDIVIDUOS = "Informe a quantidade de indivíduos";
     public static final String MSG_GERADOS = "Gerados";
-    public static final String MSG_INFORME_CODIGO = "Informe o código";
+    public static final String MSG_INFORME_CODIGO = "Informe o código";    
+    public static final String TESTE = "Teste";
 
     /**
      * ***************************************************************************************************

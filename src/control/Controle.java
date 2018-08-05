@@ -761,6 +761,25 @@ public class Controle {
         }
     }
     
+    public static void salvarAssociacao(Individuo ind){
+        Atividade atv;
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(StringsUtils.ENTITY_MANAGER);
+        EntityManager manager = factory.createEntityManager();
+        
+        manager.getTransaction().begin();
+        
+        for (Atividade a : ind.getAtividades()) {
+            atv = new Atividade();
+            atv = manager.find(Atividade.class, a.getCodigo());
+            atv.setResponsavel(a.getResponsavel());
+            manager.persist(atv);
+        }
+        
+        manager.getTransaction().commit();
+        manager.close();
+        factory.close();
+    }
+    
     public static void gerarTabelaAssociacao(Individuo ind) {
         List<Funcionario> funcionarios = new ArrayList<>();
         for (Atividade atividade : ind.getAtividades()) {
