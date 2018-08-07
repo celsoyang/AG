@@ -57,7 +57,7 @@ public class Numeros {
 
     public static double PROBABILIDADE_MUTACAO = 0.1;
     
-    public static int LIMITE_CONVERGENCIA = 30;
+    public static int LIMITE_CONVERGENCIA = 200;
     
     public static int QTD_MELHORES = 5000;
     

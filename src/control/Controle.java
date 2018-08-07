@@ -12,8 +12,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import javafx.util.Duration;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -104,9 +102,6 @@ public class Controle {
         /**/}                                                          /**/
         /**/                                                           /**/
         /**/if (contadorDeConvergencia > Numeros.LIMITE_CONVERGENCIA) {/**/
-        /**/                    /**/
-        /**/                                          /**/
-        
         /**/    break;                                                 /**/
         /**/}                                                          /**/
         /*****************************************************************/
@@ -118,10 +113,14 @@ public class Controle {
         System.out.println(new SimpleDateFormat("HH:mm:ss").format(inicio));
         System.out.println(new SimpleDateFormat("HH:mm:ss").format(fim));
         
+        /**
+         * MOVER
+         * 
         salvarRegistro(new Registro((i - Numeros.LIMITE_CONVERGENCIA), qtdMutacoes,
                 melhorInd.getNota(), qtdCruzamentos,
                 String.valueOf(new SimpleDateFormat("HH:mm:ss").format(inicio)),
                 String.valueOf(new SimpleDateFormat("HH:mm:ss").format(fim))));
+        */
 
         
 
@@ -381,6 +380,7 @@ public class Controle {
         }
 //        System.out.println("Indivíduos Gerados");
 //        manager.close();
+//        factory.close();
         return listaIndividuos;
     }
 
@@ -649,14 +649,16 @@ public class Controle {
         int indexFunc;
 
         double mutar = (double) (Math.random() * 1);
-
+        
+        /***********************************************
+         ****MUTAÇÃO FORÇADA****************************
+         ***********************************************/
         if (mutar < Numeros.PROBABILIDADE_MUTACAO) {
             qtdMutacoes++;
 
             for (int i = 0; i < Numeros.QTD_GENES_MUTADOS; i++) {
                 ind = ordenarListaAtvFunc(ind);
 
-//                while (continuar) {
                 indexAtv = (int) (Math.random() * ind.getAtividades().size());
                 indexFunc = (int) (Math.random() * listaPossiveis.size());
 
@@ -670,27 +672,28 @@ public class Controle {
                     }
 
                 }
-//                }
-//                System.out.println("Mutação - Índice: " + indexAtv + " Cod: " + listaPossiveis.get(indexFunc).getCodigo());
-//                imprimirGene("F 0X", ind);
             }
         }
-        /*  
-            if (mutar > Numeros.PROBABILIDADE_MUTACAO) {
+        
+        
+        /***********************************************
+         ****MUTAÇÃO SEM FORÇAR*************************
+        /**********************************************
+        if (mutar < Numeros.PROBABILIDADE_MUTACAO) {
+            qtdMutacoes++;
 
-                index = (int) (Math.random() * ind.getAtividades().size());
-                func = new Funcionario(ind.getAtividades().get(index).getResponsavel());
+            for (int i = 0; i < Numeros.QTD_GENES_MUTADOS; i++) {
+                ind = ordenarListaAtvFunc(ind);
 
-                do {
-                    indexAux = (int) (Math.random() * ind.getAtividades().size());
-                } while (Objects.equals(index, indexAux));
+                indexAtv = (int) (Math.random() * ind.getAtividades().size());
+                indexFunc = (int) (Math.random() * listaPossiveis.size());
 
-                funcAux = new Funcionario(ind.getAtividades().get(indexAux).getResponsavel());
+                listaPossiveis.get(indexFunc).getAtividades().add(ind.getAtividades().get(indexAtv));
+                ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
 
-                ind.getAtividades().get(index).setResponsavel(funcAux);
-                ind.getAtividades().get(indexAux).setResponsavel(func);
             }
-         */
+        }*/
+            
         return ind;
     }
 
@@ -759,6 +762,9 @@ public class Controle {
             System.out.println("NÍVEL FUNCIONÁRIO: " + atv.getResponsavel().getCargo().getDescricao());
             System.out.println("***********************************************");
         }
+        System.out.println("Nota: " + ind.getNota());
+        System.out.println("Cruzamentos: " + qtdCruzamentos);
+        System.out.println("Mutações: " + mutacoesTotal);
     }
     
     public static void salvarAssociacao(Individuo ind){

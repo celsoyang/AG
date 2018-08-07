@@ -5,7 +5,6 @@
  */
 package frame;
 
-import bean.Atividade;
 import bean.Individuo;
 import control.Controle;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 import utils.Numeros;
 import utils.StringsUtils;
 
@@ -110,7 +108,6 @@ public class MenuOp extends MenuBar {
                 } while(bestInd.getNota() < Numeros.NOTA_PISO);
                 
                 Controle.imprimirAssociacao(bestInd);
-                System.out.println("Melhor Nota: " + bestInd.getNota());
                 Controle.salvarAssociacao(bestInd);
                 System.exit(Numeros.ZERO);
 //                Controle.gerarTabelaAssociacao(bestInd);
