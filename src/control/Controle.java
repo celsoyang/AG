@@ -653,6 +653,7 @@ public class Controle {
         /***********************************************
          ****MUTAÇÃO FORÇADA****************************
          ***********************************************/
+        
         if (mutar < Numeros.PROBABILIDADE_MUTACAO) {
             qtdMutacoes++;
 
@@ -665,12 +666,12 @@ public class Controle {
                 if (!Objects.equals(ind.getAtividades().get(indexAtv).getArea().getCodigo(), ind.getAtividades().get(indexAtv).getResponsavel().getArea().getCodigo())
                         || !Objects.equals(ind.getAtividades().get(indexAtv).getNivel().getCodigo(), ind.getAtividades().get(indexAtv).getResponsavel().getCargo().getCodigo())) {
 
-                    if (Objects.equals(ind.getAtividades().get(indexAtv).getArea().getCodigo(), listaPossiveis.get(indexFunc).getArea().getCodigo())) {
+                        if (Objects.equals(ind.getAtividades().get(indexAtv).getArea().getCodigo(), listaPossiveis.get(indexFunc).getArea().getCodigo())) {
 
-                        listaPossiveis.get(indexFunc).getAtividades().add(ind.getAtividades().get(indexAtv));
-                        ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
-                    }
-
+                            listaPossiveis.get(indexFunc).getAtividades().add(ind.getAtividades().get(indexAtv));
+                            ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
+                        }
+                    
                 }
             }
         }
@@ -990,5 +991,13 @@ public class Controle {
         System.out.println("Maior Nota: " + lista.get(0).getNota());
 
         imprimirAssociacao(ind);
+    }
+
+    private static Integer somaTotalHoras(Funcionario f) {
+        Integer total = Numeros.ZERO;
+        for (Atividade atv : f.getAtividades()) {
+            total += atv.getPrazo();
+        }
+        return total;
     }
 }
