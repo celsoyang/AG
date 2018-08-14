@@ -75,7 +75,6 @@ public class Controle {
         int i = Numeros.ZERO;
         
         Date inicio = Calendar.getInstance().getTime();
-        qtdCruzamentos = Numeros.ZERO;
         do {
             qtdMutacoes = Numeros.ZERO;
             populacaoAlterada = cruzarIndividuos(populacao);
@@ -325,7 +324,7 @@ public class Controle {
         medHoraAnaliseJr = qtdHoraAnaliseJr / qtdFuncAnaliseJr;
         medHoraAnalisePl = qtdHoraAnalisePl / qtdFuncAnalisePl;
         medHoraAnaliseSr = qtdHoraAnaliseSr / qtdFuncAnaliseSr;
-
+/*
         medHoraAnaliseReqJr = qtdHoraAnaliseReqJr / qtdFuncAnaliseReqJr;
         medHoraAnaliseReqSr = qtdHoraAnaliseReqSr / qtdFuncAnaliseReqSr;
 
@@ -336,7 +335,7 @@ public class Controle {
 
         medHoraTesteJr = qtdHoraTesteJr / qtdFuncTesteJr;
         medHoraTestePl = qtdHoraTestePl / qtdFuncTestePl;
-        medHoraTesteAP = qtdHoraTesteAP / qtdFuncTesteAP;
+        medHoraTesteAP = qtdHoraTesteAP / qtdFuncTesteAP;*/
     }
 
     private static void salvarRegistro(Registro registro) {
@@ -363,6 +362,8 @@ public class Controle {
 
         listaFunc = new ArrayList<>((List<Funcionario>) manager.createQuery(StringsUtils.SELECT_FUNCIONARIO_TESTE).getResultList());
         listaAtv = new ArrayList<>((List<Atividade>) manager.createQuery(StringsUtils.SELECT_ATIVIDADE_TESTE).getResultList());
+        
+        Numeros.NOTA_PISO = (float) ((listaAtv.size() * Numeros.TRINTA) * 0.95);
 
         listaPossiveis = new ArrayList<>(listaFunc);
 
@@ -655,7 +656,6 @@ public class Controle {
          ***********************************************/
         
         if (mutar < Numeros.PROBABILIDADE_MUTACAO) {
-            qtdMutacoes++;
 
             for (int i = 0; i < Numeros.QTD_GENES_MUTADOS; i++) {
                 ind = ordenarListaAtvFunc(ind);
@@ -670,8 +670,8 @@ public class Controle {
 
                             listaPossiveis.get(indexFunc).getAtividades().add(ind.getAtividades().get(indexAtv));
                             ind.getAtividades().get(indexAtv).setResponsavel(listaPossiveis.get(indexFunc));
-                        }
-                    
+                            qtdMutacoes++;
+                        }                    
                 }
             }
         }

@@ -105,7 +105,7 @@ public class MenuOp extends MenuBar {
 
                 do {
                     bestInd = Controle.start();
-                } while(bestInd.getNota() < Numeros.NOTA_PISO);
+                } while(bestInd.getNota() > Numeros.NOTA_PISO);
                 
                 Controle.imprimirAssociacao(bestInd);
                 Controle.salvarAssociacao(bestInd);

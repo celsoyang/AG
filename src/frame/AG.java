@@ -7,6 +7,8 @@ package frame;
 
 import bean.Atividade;
 import bean.Funcionario;
+import bean.Individuo;
+import control.Controle;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -34,6 +36,15 @@ public class AG extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         loadInitialFrame(primaryStage);
+        Individuo bestInd = new Individuo();
+
+        do {
+            bestInd = Controle.start();
+        } while (bestInd.getNota() < Numeros.NOTA_PISO);
+
+        Controle.imprimirAssociacao(bestInd);
+        Controle.salvarAssociacao(bestInd);
+        System.exit(Numeros.ZERO);
     }
     
     @SuppressWarnings("Convert2Lambda")
